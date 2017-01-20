@@ -102,7 +102,7 @@ public class KinectGestures : MonoBehaviour
 		KickRight,
 		Run,
 
-		UserGesture1 = 101,
+		Clap = 101,
 		UserGesture2 = 102,
 		UserGesture3 = 103,
 		UserGesture4 = 104,
@@ -408,8 +408,50 @@ public class KinectGestures : MonoBehaviour
 				}
 				break;
 
-			// check for Tpose
-			case Gestures.Tpose:
+            // check for Clap (new!) - currently set to a swipe!
+            case Gestures.Clap:
+                switch (gestureData.state)
+                {
+                    case 0:  // gesture detection - phase 1
+                        if (jointsTracked[rightHandIndex] && jointsTracked[hipCenterIndex] && jointsTracked[shoulderCenterIndex] && jointsTracked[leftHipIndex] && jointsTracked[rightHipIndex] &&
+                           jointsPos[rightHandIndex].y >= gestureBottom && jointsPos[rightHandIndex].y <= gestureTop &&
+                               jointsPos[rightHandIndex].x >= gestureRight /**&& jointsPos[rightHandIndex].x > gestureLeft*/)
+                        {
+                            SetGestureJoint(ref gestureData, timestamp, rightHandIndex, jointsPos[rightHandIndex]);
+                            gestureData.progress = 0.1f;
+                        }
+                        break;
+
+                    case 1:  // gesture phase 2 = complete
+                        if ((timestamp - gestureData.timestamp) <= 1.0f)
+                        {
+                            bool isInPose = jointsTracked[rightHandIndex] && jointsTracked[hipCenterIndex] && jointsTracked[shoulderCenterIndex] && jointsTracked[leftHipIndex] && jointsTracked[rightHipIndex] &&
+                                    jointsPos[rightHandIndex].y >= gestureBottom && jointsPos[rightHandIndex].y <= gestureTop &&
+                                    jointsPos[rightHandIndex].x <= gestureLeft;
+
+                            if (isInPose)
+                            {
+                                Vector3 jointPos = jointsPos[gestureData.joint];
+                                CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, 0f);
+                            }
+                            else if (jointsPos[rightHandIndex].x <= gestureRight)
+                            {
+                                float gestureSize = gestureRight - gestureLeft;
+                                gestureData.progress = gestureSize > 0.01f ? (gestureRight - jointsPos[rightHandIndex].x) / gestureSize : 0f;
+                            }
+
+                        }
+                        else
+                        {
+                            // cancel the gesture
+                            SetGestureCancelled(ref gestureData);
+                        }
+                        break;
+                }
+                break;
+
+            // check for Tpose
+            case Gestures.Tpose:
 				switch(gestureData.state)
 				{
 					case 0:  // gesture detection
