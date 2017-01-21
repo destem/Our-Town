@@ -1,0 +1,10 @@
+Color tree map for different speeds
+Update tree growth shader to accommodate different speeds (what's with the slow startup?)
+Implement coroutine to set specific UV for a short time and set back
+Start master FSM to go through the scene
+
+Implement clap gesture
+
+Start final star image. Write to texture?
+
+Form moon drawing from scans
