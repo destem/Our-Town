@@ -46,6 +46,12 @@ public class TreeScene : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || addingToMask)
+        {
+            growMat.SetVector("_LeftHand", new Vector4(-1, -1, -1, -1));
+            growMat.SetVector("_RightHand", new Vector4(-1, -1, -1, -1));
+            addingToMask = false;
+        }
         if (Input.GetKeyDown(KeyCode.N) || gesture.IsPsi())
         {
             growMat.SetTexture("_RightHandMask", rightHandMask);
@@ -53,20 +59,23 @@ public class TreeScene : MonoBehaviour {
             StartCoroutine(EnableScreenCollision());
         }
 
-        if (gesture.IsClap())
+        if (gesture.IsClap() || Input.GetKeyDown(KeyCode.S))
         {
             print("CLAP!!");
+            growMat.SetVector("_LeftHand", new Vector4(0.481f, 0.05f, brushSize, -1f));
+            growMat.SetVector("_RightHand", new Vector4(0.52f, 0.05f, brushSize, -1f));
+            addingToMask = true;
         }
        
         Vector3 mousePos = Input.mousePosition;
         t.text = string.Format("{0:0.000}, {1:0.000}", mousePos.x / Screen.width, mousePos.y / Screen.height);
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
 
         {
             float u = Input.mousePosition.x / Screen.width;
             float v = Mathf.Min(Input.mousePosition.y / Screen.height, 0.08f);
-
+            //print("Click at " + u + ", " + v);
             growMat.SetVector("_RightHand", new Vector4(u, v, brushSize, -1f));
         }
         if (Input.GetMouseButton(1))
@@ -77,20 +86,8 @@ public class TreeScene : MonoBehaviour {
 
             growMat.SetVector("_LeftHand", new Vector4(u, v, brushSize, -1f));
         }
-        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || addingToMask)
-        {
-            growMat.SetVector("_LeftHand", new Vector4(-1, -1, -1, -1));
-            growMat.SetVector("_RightHand", new Vector4(-1, -1, -1, -1));
-            addingToMask = false;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            growMat.SetVector("_LeftHand", new Vector4(0.481f, 0.05f, brushSize, -1f));
-            growMat.SetVector("_RightHand", new Vector4(0.52f, 0.05f, brushSize, -1f));
-            addingToMask = true;
-        }
-
-
+       
+     
 
         //for (int i = 0; i < 1; i++)
         //{
@@ -138,4 +135,6 @@ public class TreeScene : MonoBehaviour {
         yield return new WaitForSeconds(5f);
         screen.GetComponent<MeshCollider>().enabled = true;
     }
+
+ 
 }
