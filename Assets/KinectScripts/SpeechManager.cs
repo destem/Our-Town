@@ -323,7 +323,7 @@ public class SpeechManager : MonoBehaviour
 
 			if(debugText != null)
 			{
-				debugText.text = "Ready.";
+				debugText.text = "Speech recognizer is ready.";
 			}
 
 			// try to automatically detect the available speech recognition listeners in the scene

@@ -64,14 +64,11 @@ public class BodySlicer : MonoBehaviour
 //	// background image texture, if any
 //	public GUITexture bgImage;
 
-	//Is Kinect initialized and user calibrated?
-	private bool kinectConnected = false;
-
 	private long calibratedUserId;
 	private byte userBodyIndex;
 
 
-	// The singleton instance of KinectController
+	// The singleton instance of BodySlicer
 	private static BodySlicer instance = null;
 	private KinectManager manager;
 	private KinectInterop.SensorData sensorData;
@@ -174,13 +171,12 @@ public class BodySlicer : MonoBehaviour
 	void Start()
 	{
 		manager = KinectManager.Instance;
-		kinectConnected = manager ? manager.IsInitialized() : false;
-		sensorData = manager.GetSensorData();
+		sensorData = manager ? manager.GetSensorData() : null;
 	}
 
 	void Update()
 	{
-		if(!manager || !kinectConnected)
+		if(!manager || !manager.IsInitialized())
 			return;
 
 		// get required player

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.EventSystems;
@@ -6,7 +7,10 @@ using UnityEngine.EventSystems;
 
 public class InteractionInputModule : PointerInputModule, InteractionListenerInterface
 {
-	private InteractionManager m_IntManager;
+	[Tooltip("Interaction manager instance, used to detect hand interactions. If left empty, it will be the first interaction manager found in the scene.")]
+	public InteractionManager interactionManager;
+
+
 	private bool m_isLeftHandDrag = false;
 	private Vector3 m_screenNormalPos = Vector3.zero;
 
@@ -32,7 +36,7 @@ public class InteractionInputModule : PointerInputModule, InteractionListenerInt
 
     public override bool IsModuleSupported()
     {
-        return m_ForceModuleActive || InteractionManager.Instance != null;
+        return m_ForceModuleActive || interactionManager != null || InteractionManager.Instance != null;
     }
 
     public override bool ShouldActivateModule()
@@ -40,7 +44,7 @@ public class InteractionInputModule : PointerInputModule, InteractionListenerInt
         if (!base.ShouldActivateModule())
             return false;
 
-        bool shouldActivate = m_ForceModuleActive;
+        bool shouldActivate = m_ForceModuleActive || (interactionManager != null && interactionManager.IsInteractionInited());
 	    shouldActivate |= (InteractionManager.Instance != null && InteractionManager.Instance.IsInteractionInited());
 
         return shouldActivate;
@@ -50,8 +54,12 @@ public class InteractionInputModule : PointerInputModule, InteractionListenerInt
     {
         base.ActivateModule();
 	    
-	    m_IntManager = InteractionManager.Instance;
-		m_isLeftHandDrag = m_IntManager.IsLeftHandPrimary();
+		if (interactionManager == null) 
+		{
+			interactionManager = InteractionManager.Instance;
+		}
+
+		m_isLeftHandDrag = interactionManager ? interactionManager.IsLeftHandPrimary() : false;
 
         var toSelect = eventSystem.currentSelectedGameObject;
         if (toSelect == null)
@@ -96,7 +104,11 @@ public class InteractionInputModule : PointerInputModule, InteractionListenerInt
 
 		leftData.Reset();
 
-		m_screenNormalPos = m_isLeftHandDrag ? m_IntManager.GetLeftHandScreenPos() : m_IntManager.GetRightHandScreenPos();
+		if (interactionManager) 
+		{
+			m_screenNormalPos = m_isLeftHandDrag ? interactionManager.GetLeftHandScreenPos() : interactionManager.GetRightHandScreenPos();
+		}
+
 		Vector2 handPos = new Vector2(m_screenNormalPos.x * Screen.width, m_screenNormalPos.y * Screen.height);
 
 		if (created) 
@@ -244,7 +256,24 @@ public class InteractionInputModule : PointerInputModule, InteractionListenerInt
 
 	public bool HandClickDetected(long userId, int userIndex, bool isRightHand, Vector3 handScreenPos)
 	{
+		StartCoroutine(EmulateMouseClick(isRightHand, handScreenPos));
 		return true;
+	}
+
+
+	private IEnumerator EmulateMouseClick(bool isRightHand, Vector3 handScreenPos)
+	{
+		m_framePressState = PointerEventData.FramePressState.Pressed;
+		m_isLeftHandDrag = !isRightHand;
+		m_screenNormalPos = handScreenPos;
+
+		yield return new WaitForSeconds(0.2f);
+
+		m_framePressState = PointerEventData.FramePressState.Released;
+		m_isLeftHandDrag = !isRightHand;
+		m_screenNormalPos = handScreenPos;
+
+		yield return null;
 	}
 
 

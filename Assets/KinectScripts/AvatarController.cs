@@ -34,7 +34,7 @@ public class AvatarController : MonoBehaviour
 	public float moveRate = 1f;
 	
 	[Tooltip("Smooth factor used for avatar movements and joint rotations.")]
-	public float smoothFactor = 5f;
+	public float smoothFactor = 10f;
 	
 	[Tooltip("Game object this transform is relative to (optional).")]
 	public GameObject offsetNode;

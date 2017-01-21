@@ -22,6 +22,9 @@ public class BackgroundRemovalManager : MonoBehaviour
 	[Tooltip("Whether only the body alpha texture is needed.")]
 	public bool computeBodyTexOnly = false;
 
+	[Tooltip("Whether the color texture will be inverted or not (F=silhouettes only, T=everything except silhouettes).")]
+	public bool invertAlphaColorMask = false;
+
 	[Tooltip("Color used to paint pixels, where the foreground color data is not available.")]
 	private Color32 defaultColor = new Color32(64, 64, 64, 255);
 
@@ -32,7 +35,7 @@ public class BackgroundRemovalManager : MonoBehaviour
 	[Tooltip("(Advanced) Number of dilate iterations used.")]
 	[Range(0, 9)]
 	public int dilateIterations = 0; // 3;
-	
+
 	[Tooltip("GUI-Text to display the BR-Manager debug messages.")]
 	public GUIText debugText;
 
@@ -167,6 +170,9 @@ public class BackgroundRemovalManager : MonoBehaviour
 				throw new Exception(sInterfaceName + ": Background removal is not supported!");
 			}
 			
+			// inverted alpha-body mask to color texture
+			sensorData.invertAlphaColorMask = invertAlphaColorMask;
+
 			// Initialize the background removal
 			bSuccess = sensorData.sensorInterface.InitBackgroundRemoval(sensorData, colorCameraResolution);
 

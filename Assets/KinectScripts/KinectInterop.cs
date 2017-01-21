@@ -25,7 +25,7 @@ public class KinectInterop
 //		typeof(Kinect2Interface), typeof(Kinect1Interface), typeof(OpenNI2Interface)
 //	};
 	public static DepthSensorInterface[] SensorInterfaceOrder = new DepthSensorInterface[] { 
-		new Kinect2Interface(), new Kinect1Interface(), new OpenNI2Interface()
+		new Kinect2Interface(), new Kinect1Interface()/**, new OpenNI2Interface()*/
 	};
 
 	// graphics shader level
@@ -359,6 +359,7 @@ public class KinectInterop
 		public bool spaceCoordsBufferReady = false;
 		public object spaceCoordsBufferLock = new object();
 
+		public bool invertAlphaColorMask = false;
 		public RenderTexture color2DepthTexture;
 		public Material color2DepthMaterial;
 		public ComputeBuffer color2DepthBuffer;
@@ -1691,7 +1692,10 @@ public class KinectInterop
 
 			if(sensorData.color2DepthCoords != null)
 			{
-				vPoint = sensorData.color2DepthCoords[cIndex];
+				if (cIndex >= 0 && cIndex < sensorData.color2DepthCoords.Length) 
+				{
+					vPoint = sensorData.color2DepthCoords[cIndex];
+				}
 			}
 			else if(bReadDepthCoordsIfNeeded)
 			{
@@ -1699,7 +1703,10 @@ public class KinectInterop
 
 				if(MapColorFrameToDepthCoords(sensorData, ref vDepthCoords))
 				{
-					vPoint = vDepthCoords[cIndex];
+					if (cIndex >= 0 && cIndex < vDepthCoords.Length) 
+					{
+						vPoint = vDepthCoords[cIndex];
+					}
 				}
 
 				vDepthCoords = null;
@@ -1708,8 +1715,34 @@ public class KinectInterop
 		
 		return vPoint;
 	}
-	
-	// draws a line in a texture
+
+	// draws a rectangle on texture-2d
+	public static void DrawRect(Texture2D a_Texture, Rect a_rect, Color a_Color)
+	{
+		Vector2 pt1, pt2;
+
+		// bottom
+		pt1.x = a_rect.x; pt1.y = a_rect.y;
+		pt2.x = a_rect.x + a_rect.width - 1; pt2.y = pt1.y;
+		DrawLine(a_Texture, (int)pt1.x, (int)pt1.y, (int)pt2.x, (int)pt2.y, a_Color);
+
+		// right
+		pt1.x = pt2.x; pt1.y = pt2.y;
+		pt2.x = pt1.x; pt2.y = a_rect.y + a_rect.height - 1;
+		DrawLine(a_Texture, (int)pt1.x, (int)pt1.y, (int)pt2.x, (int)pt2.y, a_Color);
+
+		// top
+		pt1.x = pt2.x; pt1.y = pt2.y;
+		pt2.x = a_rect.x; pt2.y = pt1.y;
+		DrawLine(a_Texture, (int)pt1.x, (int)pt1.y, (int)pt2.x, (int)pt2.y, a_Color);
+
+		// left
+		pt1.x = pt2.x; pt1.y = pt2.y;
+		pt2.x = pt1.x; pt2.y = a_rect.y;
+		DrawLine(a_Texture, (int)pt1.x, (int)pt1.y, (int)pt2.x, (int)pt2.y, a_Color);
+	}
+
+	// draws a line on texture-2d
 	public static void DrawLine(Texture2D a_Texture, int x1, int y1, int x2, int y2, Color a_Color)
 	{
 		int width = a_Texture.width;
@@ -2227,7 +2260,7 @@ public class KinectInterop
 					sensorData.alphaBodyMaterial.SetBuffer("_DepthCoords", sensorData.color2DepthBuffer);
 				}
 
-				Shader color2DepthShader = Shader.Find("Kinect/Color2DepthShader");
+				Shader color2DepthShader = !sensorData.invertAlphaColorMask ? Shader.Find("Kinect/Color2DepthShader") : Shader.Find("Kinect/Color2DepthShaderInv");
 				
 				if(color2DepthShader)
 				{

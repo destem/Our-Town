@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
@@ -19,6 +20,9 @@ public class KinectDataServer : MonoBehaviour
 	[Tooltip("Maximum number of allowed connections.")]
 	public int maxConnections = 5;
 
+	[Tooltip("Whether the server should run as websocket host or not.")]
+	public bool websocketHost = false;
+
 	[Tooltip("Transform representing this sensor's position and rotation in world space. If missing, the sensor height and angle settings from KinectManager-component are used.")]
 	public Transform sensorTransform;
 
@@ -30,6 +34,9 @@ public class KinectDataServer : MonoBehaviour
 
 	[Tooltip("GUI-Text to display server status messages.")]
 	public GUIText serverStatusText;
+
+	[Tooltip("UI-Text to display server console.")]
+	public Text consoleMessages;
 
 
 	private ConnectionConfig serverConfig;
@@ -81,6 +88,152 @@ public class KinectDataServer : MonoBehaviour
 	}
 
 
+	// enables or disables the speech recognition component
+	public void EnableSpeechRecognition(bool bEnable)
+	{
+		SpeechManager speechManager = gameObject.GetComponent<SpeechManager>();
+
+		if (speechManager) 
+		{
+			speechManager.enabled = bEnable;
+			LogToConsole("Speech recognition is " + (bEnable ? "enabled" : "disabled"));
+
+			if (bEnable) 
+			{
+				StartCoroutine(CheckSpeechManager());
+			}
+		} 
+		else 
+		{
+			LogErrorToConsole("SpeechManager-component not found.");
+		}
+	}
+
+
+	// enables or disables the visual gestures component
+	public void EnableVisualGestures(bool bEnable)
+	{
+		VisualGestureManager vgbManager = gameObject.GetComponent<VisualGestureManager>();
+
+		if (vgbManager) 
+		{
+			vgbManager.enabled = bEnable;
+			LogToConsole("Visual gestures are " + (bEnable ? "enabled" : "disabled"));
+
+			if (bEnable) 
+			{
+				StartCoroutine(CheckVisualGestureManager());
+			}
+
+			// enable SimpleVisualGestureListener as well
+			SimpleVisualGestureListener vgbListener = gameObject.GetComponent<SimpleVisualGestureListener>();
+			if (vgbListener) 
+			{
+				vgbListener.enabled = bEnable;
+			}
+		}
+		else
+		{
+			LogErrorToConsole("VisualGestureManager-component not found.");
+		}
+	}
+
+
+	// checks if SpeechManager is initialized or not
+	private IEnumerator CheckSpeechManager()
+	{
+		// wait for 2 seconds
+		yield return new WaitForSeconds(2f);
+
+		string sStatusMsg = string.Empty;
+		SpeechManager speechManager = SpeechManager.Instance;
+
+		if (!speechManager)
+			sStatusMsg = "SpeechManager is missing!";
+		else if(!speechManager.IsSapiInitialized())
+			sStatusMsg = "SpeechManager not initialized! Check the log-file for details.";
+		else
+			LogToConsole("SpeechManager is ready.");
+
+		if (sStatusMsg.Length > 0) 
+		{
+			LogErrorToConsole(sStatusMsg);
+		}
+	}
+
+
+	// checks if VisualGestureManager is initialized or not
+	private IEnumerator CheckVisualGestureManager()
+	{
+		// wait for 2 seconds
+		yield return new WaitForSeconds(2f);
+
+		string sStatusMsg = string.Empty;
+		VisualGestureManager vgbManager = VisualGestureManager.Instance;
+
+		if (!vgbManager)
+			sStatusMsg = "VisualGestureManager is missing!";
+		else if(!vgbManager.IsVisualGestureInitialized())
+			sStatusMsg = "VisualGestureManager not initialized! Check the log-file for details.";
+		else
+			LogToConsole("VisualGestureManager is ready.");
+
+		if (sStatusMsg.Length > 0) 
+		{
+			LogErrorToConsole(sStatusMsg);
+		}
+	}
+
+
+	// logs message to the console
+	private void LogToConsole(string sMessage)
+	{
+		Debug.Log(sMessage);
+
+		if (consoleMessages) 
+		{
+			consoleMessages.text += "\r\n" + sMessage;
+
+			// scroll to end
+			ScrollRect scrollRect = consoleMessages.gameObject.GetComponentInParent<ScrollRect>();
+			if (scrollRect) 
+			{
+				Canvas.ForceUpdateCanvases();
+				scrollRect.verticalScrollbar.value = 0f;
+				Canvas.ForceUpdateCanvases();		
+			}
+		}
+	}
+
+
+	// logs error message to the console
+	private void LogErrorToConsole(string sMessage)
+	{
+		Debug.LogError(sMessage);
+
+		if (consoleMessages) 
+		{
+			consoleMessages.text += "\r\n" + sMessage;
+
+			// scroll to end
+			ScrollRect scrollRect = consoleMessages.gameObject.GetComponentInParent<ScrollRect>();
+			if (scrollRect) 
+			{
+				Canvas.ForceUpdateCanvases();
+				scrollRect.verticalScrollbar.value = 0f;
+				Canvas.ForceUpdateCanvases();		
+			}
+		}
+	}
+
+
+	// logs error message to the console
+	private void LogErrorToConsole(System.Exception ex)
+	{
+		LogErrorToConsole(ex.Message + "\n" + ex.StackTrace);
+	}
+
+
 	void Awake () 
 	{
 		try 
@@ -93,7 +246,11 @@ public class KinectDataServer : MonoBehaviour
 
 			// start data server
 			serverTopology = new HostTopology(serverConfig, maxConnections);
-			serverHostId = NetworkTransport.AddHost(serverTopology, listenOnPort);
+
+			if(!websocketHost)
+				serverHostId = NetworkTransport.AddHost(serverTopology, listenOnPort);
+			else
+				serverHostId = NetworkTransport.AddWebsocketHost(serverTopology, listenOnPort);
 
 			if(serverHostId < 0)
 			{
@@ -101,7 +258,7 @@ public class KinectDataServer : MonoBehaviour
 			}
 
 			// add broadcast host
-			if(broadcastPort > 0)
+			if(broadcastPort > 0 && !websocketHost)
 			{
 				broadcastHostId = NetworkTransport.AddHost(serverTopology, 0);
 
@@ -133,7 +290,7 @@ public class KinectDataServer : MonoBehaviour
 				}
 
 				sHostInfo += ", Port: " + listenOnPort;
-				Debug.Log(sHostInfo);
+				LogToConsole(sHostInfo);
 
 				if(serverStatusText)
 				{
@@ -142,7 +299,7 @@ public class KinectDataServer : MonoBehaviour
 			} 
 			catch (System.Exception ex) 
 			{
-				Debug.LogError(ex.Message + "\n\n" + ex.StackTrace);
+				LogErrorToConsole(ex.Message + "\n\n" + ex.StackTrace);
 
 				if(serverStatusText)
 				{
@@ -154,7 +311,7 @@ public class KinectDataServer : MonoBehaviour
 #endif
 
 			// start broadcast discovery
-			if(broadcastPort > 0)
+			if(broadcastHostId >= 0)
 			{
 				broadcastOutBuffer = System.Text.Encoding.UTF8.GetBytes(sBroadcastData);
 				byte error = 0;
@@ -169,7 +326,12 @@ public class KinectDataServer : MonoBehaviour
 			fCurrentTime = Time.time;
 
 			System.DateTime dtNow = System.DateTime.UtcNow;
-			Debug.Log("Kinect data server started at " + dtNow.ToString() + " - " + dtNow.Ticks);
+			LogToConsole("Kinect data server started at " + dtNow.ToString());
+
+			if(consoleMessages)
+			{
+				consoleMessages.text = "Kinect data server started at " + dtNow.ToString();
+			}
 
 			if(connStatusText)
 			{
@@ -178,7 +340,7 @@ public class KinectDataServer : MonoBehaviour
 		} 
 		catch (System.Exception ex) 
 		{
-			Debug.LogError(ex.Message + "\n" + ex.StackTrace);
+			LogErrorToConsole(ex.Message + "\n" + ex.StackTrace);
 
 			if(connStatusText)
 			{
@@ -293,7 +455,7 @@ public class KinectDataServer : MonoBehaviour
 					dictConnection[connectionId] = conn;
 					connListUpdated = true;
 
-					//Debug.Log(connectionId + "-conn: " + conn.reqDataType);
+					//LogToConsole(connectionId + "-conn: " + conn.reqDataType);
 				}
 
 //				// reset chunked face messages
@@ -331,14 +493,14 @@ public class KinectDataServer : MonoBehaviour
 						conn.reqDataType = sRecvMessage;
 						dictConnection[connectionId] = conn;
 
-						//Debug.Log(connectionId + "-recv: " + conn.reqDataType);
+						//LogToConsole(connectionId + "-recv: " + conn.reqDataType);
 
 						// check for SR phrase-reset
 						int iIndexSR = sRecvMessage.IndexOf(",sr");
 						if(iIndexSR >= 0 && speechManager)
 						{
 							speechManager.ClearPhraseRecognized();
-							//Debug.Log("phrase cleared");
+							//LogToConsole("phrase cleared");
 						}
 					}
 				}
@@ -374,7 +536,7 @@ public class KinectDataServer : MonoBehaviour
 					}
 				}
 
-				Debug.Log(sbConnStatus);
+				LogToConsole(sbConnStatus.ToString());
 
 				if(connStatusText)
 				{
@@ -411,8 +573,11 @@ public class KinectDataServer : MonoBehaviour
 
 				byte[] btSendMessage = System.Text.Encoding.UTF8.GetBytes(sbSendMessage.ToString());
 
+				//Debug.Log("Message " + sbSendMessage.Length + " chars: " + sbSendMessage.ToString());
+				//Debug.Log("Encoded into " + btSendMessage.Length + " bytes: " + ByteArrayToString(btSendMessage, btSendMessage.Length));
+
 				int compSize = 0;
-				if(compressor != null && btSendMessage.Length > 100)
+				if(compressor != null && btSendMessage.Length > 100 && !websocketHost)
 				{
 					compSize = compressor.Compress(btSendMessage, 0, btSendMessage.Length, compressBuffer, 0);
 				}
@@ -421,6 +586,8 @@ public class KinectDataServer : MonoBehaviour
 					System.Buffer.BlockCopy(btSendMessage, 0, compressBuffer, 0, btSendMessage.Length);
 					compSize = btSendMessage.Length;
 				}
+
+				//Debug.Log("Compressed into " + compSize + " bytes: " + ByteArrayToString(compressBuffer, compSize));
 
 //				// check face-tracking requests
 //				bool bFaceParams = false, bFaceVertices = false, bFaceUvs = false, bFaceTriangles = false;
@@ -456,14 +623,14 @@ public class KinectDataServer : MonoBehaviour
 
 						if(conn.reqDataType != null && conn.reqDataType.Contains("kb,"))
 						{
-							//Debug.Log(conn.connectionId + "-sendkb: " + conn.reqDataType);
+							//LogToConsole(conn.connectionId + "-sendkb: " + conn.reqDataType);
 
 							error = 0;
 							//if(!NetworkTransport.Send(conn.hostId, conn.connectionId, conn.channelId, btSendMessage, btSendMessage.Length, out error))
 							if(!NetworkTransport.Send(conn.hostId, conn.connectionId, conn.channelId, compressBuffer, compSize, out error))
 							{
 								string sMessage = "Error sending body data via conn " + conn.connectionId + ": " + (NetworkError)error;
-								Debug.LogError(sMessage);
+								LogErrorToConsole(sMessage);
 
 								if(serverStatusText)
 								{
@@ -533,7 +700,7 @@ public class KinectDataServer : MonoBehaviour
 		} 
 		catch (System.Exception ex) 
 		{
-			Debug.LogError(ex.Message + "\n" + ex.StackTrace);
+			LogErrorToConsole(ex.Message + "\n" + ex.StackTrace);
 
 			if(serverStatusText)
 			{
@@ -542,6 +709,37 @@ public class KinectDataServer : MonoBehaviour
 		}
 	}
 
+
+	// converts byte array to string
+	public string ByteArrayToString(byte[] ba, int baLength)
+	{
+		StringBuilder hex = new StringBuilder(ba.Length * 2);
+
+		for (int i = 0; i < baLength; i++) 
+		{
+			byte b = ba[i];
+			hex.AppendFormat("{0:x2}", b);
+		}
+
+		return hex.ToString();
+	}
+
+	// converts byte array to string, by using the system bit-converter
+	public string ByteArrayToString2(byte[] ba)
+	{
+		string hex = System.BitConverter.ToString(ba);
+		return hex.Replace("-","");
+	}
+
+	// converts string to byte array
+	public byte[] StringToByteArray(string hex)
+	{
+		int NumberChars = hex.Length;
+		byte[] bytes = new byte[NumberChars / 2];
+		for (int i = 0; i < NumberChars; i += 2)
+			bytes[i / 2] = System.Convert.ToByte(hex.Substring(i, 2), 16);
+		return bytes;
+	}
 
 //	// checks whether facetracking data was requested by any connection
 //	private void CheckFacetrackRequests(out bool bFaceParams, out bool bFaceVertices, out bool bFaceUvs, out bool bFaceTriangles)

@@ -11,19 +11,19 @@ public class AvatarScaler : MonoBehaviour
 	public bool mirroredAvatar = false;
 
 	[Tooltip("Full body scale factor (incl. height, arms and legs) that might be used for fine tuning of body-scale.")]
-	[Range(0.5f, 1.5f)]
+	[Range(0.0f, 2.0f)]
 	public float bodyScaleFactor = 1.0f;
 
 	[Tooltip("Body width scale factor that might be used for fine tuning of body-scale.")]
-	[Range(0.5f, 1.5f)]
+	[Range(0.0f, 2.0f)]
 	public float bodyWidthFactor = 1.0f;
 
 	[Tooltip("Additional scale factor for arms that might be used for fine tuning of arm-scale.")]
-	[Range(0.5f, 1.5f)]
+	[Range(0.0f, 2.0f)]
 	public float armScaleFactor = 1.0f;
 
 	[Tooltip("Additional scale factor for legs that might be used for fine tuning of leg-scale.")]
-	[Range(0.5f, 1.5f)]
+	[Range(0.0f, 2.0f)]
 	public float legScaleFactor = 1.0f;
 	
 	[Tooltip("Whether the scale is updated continuously or just after the calibration pose.")]
@@ -289,44 +289,53 @@ public class AvatarScaler : MonoBehaviour
 //			return;
 
 		// scale body
-//		SetupBoneScale(bodyScaleTransform, modelBodyScale, modelBodyHeight, 
-//		               userBodyHeight, 0f, fSmooth, ref fScaleBodyHeight);
-		SetupBodyScale(bodyScaleTransform, modelBodyScale, modelBodyHeight, modelBodyWidth, userBodyHeight, userBodyWidth, 
-			fSmooth, ref fScaleBodyHeight, ref fScaleBodyWidth);
+		if (bodyScaleFactor > 0f && bodyWidthFactor > 0f) 
+		{
+//			SetupBoneScale(bodyScaleTransform, modelBodyScale, modelBodyHeight, 
+//			               userBodyHeight, 0f, fSmooth, ref fScaleBodyHeight);
+			SetupBodyScale(bodyScaleTransform, modelBodyScale, modelBodyHeight, modelBodyWidth, userBodyHeight, userBodyWidth, 
+				fSmooth, ref fScaleBodyHeight, ref fScaleBodyWidth);
+		}
 
 		// scale arms
-		float fLeftUpperArmLength = !mirroredAvatar ? leftUpperArmLength : rightUpperArmLength;
-		SetupBoneScale(leftShoulderScaleTransform, modelLeftShoulderScale, modelLeftUpperArmLength, 
-		               fLeftUpperArmLength, fScaleBodyHeight, fSmooth, ref fScaleLeftUpperArm);
+		if (armScaleFactor > 0f) 
+		{
+			float fLeftUpperArmLength = !mirroredAvatar ? leftUpperArmLength : rightUpperArmLength;
+			SetupBoneScale(leftShoulderScaleTransform, modelLeftShoulderScale, modelLeftUpperArmLength, 
+				fLeftUpperArmLength, fScaleBodyHeight, fSmooth, ref fScaleLeftUpperArm);
 
-		float fLeftLowerArmLength = !mirroredAvatar ? leftLowerArmLength : rightLowerArmLength;
-		SetupBoneScale(leftElbowScaleTransform, modelLeftElbowScale, modelLeftLowerArmLength, 
-		               fLeftLowerArmLength, fScaleLeftUpperArm, fSmooth, ref fScaleLeftLowerArm);
+			float fLeftLowerArmLength = !mirroredAvatar ? leftLowerArmLength : rightLowerArmLength;
+			SetupBoneScale(leftElbowScaleTransform, modelLeftElbowScale, modelLeftLowerArmLength, 
+				fLeftLowerArmLength, fScaleLeftUpperArm, fSmooth, ref fScaleLeftLowerArm);
 
-		float fRightUpperArmLength = !mirroredAvatar ? rightUpperArmLength : leftUpperArmLength;
-		SetupBoneScale(rightShoulderScaleTransform, modelRightShoulderScale, modelRightUpperArmLength, 
-		               fRightUpperArmLength, fScaleBodyHeight, fSmooth, ref fScaleRightUpperArm);
-		
-		float fRightLowerArmLength = !mirroredAvatar ? rightLowerArmLength : leftLowerArmLength;
-		SetupBoneScale(rightElbowScaleTransform, modelRightElbowScale, modelLeftLowerArmLength, 
-		               fRightLowerArmLength, fScaleRightUpperArm, fSmooth, ref fScaleRightLowerArm);
+			float fRightUpperArmLength = !mirroredAvatar ? rightUpperArmLength : leftUpperArmLength;
+			SetupBoneScale(rightShoulderScaleTransform, modelRightShoulderScale, modelRightUpperArmLength, 
+				fRightUpperArmLength, fScaleBodyHeight, fSmooth, ref fScaleRightUpperArm);
+
+			float fRightLowerArmLength = !mirroredAvatar ? rightLowerArmLength : leftLowerArmLength;
+			SetupBoneScale(rightElbowScaleTransform, modelRightElbowScale, modelLeftLowerArmLength, 
+				fRightLowerArmLength, fScaleRightUpperArm, fSmooth, ref fScaleRightLowerArm);
+		}
 
 		// scale legs
-		float fLeftUpperLegLength = !mirroredAvatar ? leftUpperLegLength : rightUpperLegLength;
-		SetupBoneScale(leftHipScaleTransform, modelLeftHipScale, modelLeftUpperLegLength, 
-		               fLeftUpperLegLength, fScaleBodyHeight, fSmooth, ref fScaleLeftUpperLeg);
-		
-		float fLeftLowerLegLength = !mirroredAvatar ? leftLowerLegLength : rightLowerLegLength;
-		SetupBoneScale(leftKneeScaleTransform, modelLeftKneeScale, modelLeftLowerLegLength, 
-		               fLeftLowerLegLength, fScaleLeftUpperLeg, fSmooth, ref fScaleLeftLowerLeg);
-		
-		float fRightUpperLegLength = !mirroredAvatar ? rightUpperLegLength : leftUpperLegLength;
-		SetupBoneScale(rightHipScaleTransform, modelRightHipScale, modelRightUpperLegLength, 
-		               fRightUpperLegLength, fScaleBodyHeight, fSmooth, ref fScaleRightUpperLeg);
-		
-		float fRightLowerLegLength = !mirroredAvatar ? rightLowerLegLength : leftLowerLegLength;
-		SetupBoneScale(rightKneeScaleTransform, modelRightKneeScale, modelRightLowerLegLength, 
-		               fRightLowerLegLength, fScaleRightUpperLeg, fSmooth, ref fScaleRightLowerLeg);
+		if (legScaleFactor > 0) 
+		{
+			float fLeftUpperLegLength = !mirroredAvatar ? leftUpperLegLength : rightUpperLegLength;
+			SetupBoneScale(leftHipScaleTransform, modelLeftHipScale, modelLeftUpperLegLength, 
+				fLeftUpperLegLength, fScaleBodyHeight, fSmooth, ref fScaleLeftUpperLeg);
+
+			float fLeftLowerLegLength = !mirroredAvatar ? leftLowerLegLength : rightLowerLegLength;
+			SetupBoneScale(leftKneeScaleTransform, modelLeftKneeScale, modelLeftLowerLegLength, 
+				fLeftLowerLegLength, fScaleLeftUpperLeg, fSmooth, ref fScaleLeftLowerLeg);
+
+			float fRightUpperLegLength = !mirroredAvatar ? rightUpperLegLength : leftUpperLegLength;
+			SetupBoneScale(rightHipScaleTransform, modelRightHipScale, modelRightUpperLegLength, 
+				fRightUpperLegLength, fScaleBodyHeight, fSmooth, ref fScaleRightUpperLeg);
+
+			float fRightLowerLegLength = !mirroredAvatar ? rightLowerLegLength : leftLowerLegLength;
+			SetupBoneScale(rightKneeScaleTransform, modelRightKneeScale, modelRightLowerLegLength, 
+				fRightLowerLegLength, fScaleRightUpperLeg, fSmooth, ref fScaleRightLowerLeg);
+		}
 
 		if(debugText != null)
 		{
@@ -659,8 +668,9 @@ public class AvatarScaler : MonoBehaviour
 				// get the color overlay position
 				vPosJoint = manager.GetJointPosColorOverlay(currentUserId, joint, foregroundCamera, backgroundRect);
 			}
-			else
-			//if(vPosJoint == Vector3.zero)
+
+//			else
+			if(vPosJoint == Vector3.zero)
 			{
 				vPosJoint = manager.GetJointPosition(currentUserId, joint);
 			}

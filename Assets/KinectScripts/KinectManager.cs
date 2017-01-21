@@ -416,7 +416,22 @@ public class KinectManager : MonoBehaviour
 	{
 		return kinectInitialized && (alUserIds.Count > 0);
 	}
-	
+
+	/// <summary>
+	/// Determines whether the user with the specified index is currently detected by the sensor
+	/// </summary>
+	/// <returns><c>true</c> if the user is detected; otherwise, <c>false</c>.</returns>
+	/// <param name="i">The user index.</param>
+	public bool IsUserDetected(int i)
+	{
+		if(i >= 0 && i < KinectInterop.Constants.MaxBodyCount)
+		{
+			return (aUserIndexIds[i] != 0);
+		}
+
+		return false;
+	}
+
 	/// <summary>
 	/// Determines whether the user with the specified userId is in the list of tracked users or not.
 	/// </summary>
@@ -2693,11 +2708,15 @@ public class KinectManager : MonoBehaviour
 
 		// convert the body indices to string
 		string sTrackedIndices = string.Empty;
-		foreach(int bodyIndex in dictUserIdToIndex.Values)
+
+		if (bLimitedUsers) 
 		{
-			sTrackedIndices += (char)(0x30 + bodyIndex);
+			foreach(int bodyIndex in dictUserIdToIndex.Values)
+			{
+				sTrackedIndices += (char)(0x30 + bodyIndex);
+			}
 		}
-		
+
 		// Create the actual users texture based on label map and depth histogram
 		for (int i = 0; i < usersMapSize; i++)
 		{
@@ -3937,17 +3956,25 @@ public class KinectManager : MonoBehaviour
 								Quaternion headRotation = Quaternion.identity;
 								if(sensorData.sensorInterface.GetHeadRotation(bodyData.liTrackingID, ref headRotation))
 								{
-									Vector3 rotAngles = headRotation.eulerAngles;
-									rotAngles.x = -rotAngles.x;
-									rotAngles.y = -rotAngles.y;
+									if (headRotation != Quaternion.identity) 
+									{
+										Vector3 rotAngles = headRotation.eulerAngles;
+										rotAngles.x = -rotAngles.x;
+										rotAngles.y = -rotAngles.y;
 
-									bodyData.headOrientation = bodyData.headOrientation != Quaternion.identity ?
-										Quaternion.Slerp(bodyData.headOrientation, Quaternion.Euler(rotAngles), 5f * Time.deltaTime) :
-										Quaternion.Euler(rotAngles);
+										bodyData.headOrientation = bodyData.headOrientation != Quaternion.identity ?
+											Quaternion.Slerp(bodyData.headOrientation, Quaternion.Euler(rotAngles), 10f * Time.deltaTime) :
+											Quaternion.Euler(rotAngles);
 
-									jointData.normalRotation = bodyData.headOrientation;
+										//jointData.normalRotation = bodyData.headOrientation;
+									}
 								}
 							}
+						}
+
+						if (bodyData.headOrientation != Quaternion.identity) 
+						{
+							jointData.normalRotation = bodyData.headOrientation;
 						}
 					}
 
