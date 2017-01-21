@@ -412,10 +412,10 @@ public class KinectGestures : MonoBehaviour
             case Gestures.Clap:
                 switch (gestureData.state)
                 {
-                    case 0:  // gesture detection - phase 1
+                    case 0:  // gesture detection - phase 1. Hands are above hips and at least one meter apart
                         if (jointsTracked[rightHandIndex] && jointsTracked[hipCenterIndex] && jointsTracked[shoulderCenterIndex] && jointsTracked[leftHipIndex] && jointsTracked[rightHipIndex] &&
                            jointsPos[rightHandIndex].y >= gestureBottom && jointsPos[rightHandIndex].y <= gestureTop &&
-                               jointsPos[rightHandIndex].x >= gestureRight /**&& jointsPos[rightHandIndex].x > gestureLeft*/)
+                               jointsPos[rightHandIndex].x >= gestureRight && jointsPos[leftHandIndex].x > gestureLeft)
                         {
                             SetGestureJoint(ref gestureData, timestamp, rightHandIndex, jointsPos[rightHandIndex]);
                             gestureData.progress = 0.1f;
@@ -423,11 +423,12 @@ public class KinectGestures : MonoBehaviour
                         break;
 
                     case 1:  // gesture phase 2 = complete
-                        if ((timestamp - gestureData.timestamp) <= 1.0f)
+                        if ((timestamp - gestureData.timestamp) <= 0.5f)
                         {
                             bool isInPose = jointsTracked[rightHandIndex] && jointsTracked[hipCenterIndex] && jointsTracked[shoulderCenterIndex] && jointsTracked[leftHipIndex] && jointsTracked[rightHipIndex] &&
                                     jointsPos[rightHandIndex].y >= gestureBottom && jointsPos[rightHandIndex].y <= gestureTop &&
-                                    jointsPos[rightHandIndex].x <= gestureLeft;
+                                   //distance between hands is less than a decimeter apart
+                                   Mathf.Abs(jointsPos[rightHandIndex].x - jointsPos[leftHandIndex].x) < 0.1f;
 
                             if (isInPose)
                             {

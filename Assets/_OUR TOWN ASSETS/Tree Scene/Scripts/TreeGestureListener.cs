@@ -23,6 +23,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 	private bool swipeRight;
 	private bool swipeUp;
     private bool psi;
+    private bool clap;
 	
 
 	/// <summary>
@@ -93,6 +94,17 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
         return false;
     }
 
+    public bool IsClap()
+    {
+        if (clap)
+        {
+            clap = false;
+            return true;
+        }
+
+        return false;
+    }
+
 
     /// <summary>
     /// Invoked when a new user is detected. Here you can start gesture tracking by invoking KinectManager.DetectGesture()-function.
@@ -107,10 +119,11 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 			return;
 		
 		// detect these user specific gestures
-		manager.DetectGesture(userId, KinectGestures.Gestures.SwipeLeft);
-		manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
-		manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
+		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeLeft);
+		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
+		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
         manager.DetectGesture(userId, KinectGestures.Gestures.Psi);
+        manager.DetectGesture(userId, KinectGestures.Gestures.Clap);
 
 
 	}
@@ -215,6 +228,8 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 			swipeUp = true;
         else if (gesture == KinectGestures.Gestures.Psi)
             psi = true;
+        else if (gesture == KinectGestures.Gestures.Clap)
+            clap = true;
 
         return true;
 	}

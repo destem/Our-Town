@@ -52,6 +52,11 @@ public class TreeScene : MonoBehaviour {
             growMat.SetTexture("_LeftHandMask", leftHandMask);
             StartCoroutine(EnableScreenCollision());
         }
+
+        if (gesture.IsClap())
+        {
+            print("CLAP!!");
+        }
        
         Vector3 mousePos = Input.mousePosition;
         t.text = string.Format("{0:0.000}, {1:0.000}", mousePos.x / Screen.width, mousePos.y / Screen.height);
