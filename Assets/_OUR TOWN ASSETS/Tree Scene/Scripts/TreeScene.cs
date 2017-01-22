@@ -18,7 +18,10 @@ public class TreeScene : MonoBehaviour {
     float brushSize = 10f;
     bool addingToMask = false;
     TreeGestureListener gesture;
-    public GameObject screen;
+    public GameObject screenModel;
+    public float slowSpeed = 0f;
+    public float mediumSpeed = 0f;
+    public float fastSpeed = 0f;
 
     RenderTexture _createTexture(int w, int h)
     {
@@ -36,6 +39,7 @@ public class TreeScene : MonoBehaviour {
     {
         growMat.SetTexture("_RightHandMask", chapelMask);
         growMat.SetTexture("_LeftHandMask", chapelMask);
+        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, 0f));
         buff = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
         Graphics.Blit(startMask, buff);//, growMat);
@@ -46,17 +50,18 @@ public class TreeScene : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || addingToMask)
-        {
-            growMat.SetVector("_LeftHand", new Vector4(-1, -1, -1, -1));
-            growMat.SetVector("_RightHand", new Vector4(-1, -1, -1, -1));
-            addingToMask = false;
-        }
+        //if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || addingToMask)
+        //{
+        //    growMat.SetVector("_LeftHand", new Vector4(-1, -1, -1, -1));
+        //    growMat.SetVector("_RightHand", new Vector4(-1, -1, -1, -1));
+        //    addingToMask = false;
+        //}
+        ResetUVs();
         if (Input.GetKeyDown(KeyCode.N) || gesture.IsPsi())
         {
             growMat.SetTexture("_RightHandMask", rightHandMask);
             growMat.SetTexture("_LeftHandMask", leftHandMask);
-            StartCoroutine(EnableScreenCollision());
+            //StartCoroutine(EnableScreenCollision());
         }
 
         if (gesture.IsClap() || Input.GetKeyDown(KeyCode.S))
@@ -133,7 +138,7 @@ public class TreeScene : MonoBehaviour {
     IEnumerator EnableScreenCollision()
     {
         yield return new WaitForSeconds(5f);
-        screen.GetComponent<MeshCollider>().enabled = true;
+        screenModel.GetComponent<MeshCollider>().enabled = true;
     }
 
  

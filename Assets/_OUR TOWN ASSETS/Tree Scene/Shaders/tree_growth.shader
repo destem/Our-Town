@@ -7,6 +7,7 @@
 		_LeftHandMask("Left Hand Mask", 2D) = "white" {}
 		_LeftHand("Left Hand Coordinates", Vector) = (-1., -1., -1., -1.)
 		_RightHand("Right Hand Coordinates", Vector) = (-1., -1., -1., -1.)
+		_Speeds("Values for slow, medium, and fast growth rates", Vector) = (0., 0., 0., 0.)
 	}
 	SubShader
 	{
@@ -48,6 +49,7 @@
 			sampler2D _LeftHandMask;
 			float4 _LeftHand;
 			float4 _RightHand;
+			float4 _Speeds;
 
 			float4 when_eq(float4 x, float4 y) {
 				return 1.0 - abs(sign(x - y));
@@ -88,16 +90,20 @@
 			float4 not(float4 a) {
 				return 1.0 - a;
 			}
-
+			
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float4 sourceVal = tex2D(_MainTex, i.uv);
 				float sourceRight = sourceVal.r;
 				float sourceLeft = sourceVal.b;
-				float rightFastVal = tex2D(_RightHandMask, i.uv).r;
-				float rightSlowVal = tex2D(_RightHandMask, i.uv).g;
-				float leftFastVal = tex2D(_LeftHandMask, i.uv).r;
-				float leftSlowVal = tex2D(_LeftHandMask, i.uv).g;
+				float4 rightVal = tex2D(_RightHandMask, i.uv);
+				float rightSlowVal = rightVal.r;
+				float rightMedVal = rightVal.g;
+				float rightFastVal = rightVal.b;
+				float4 leftVal = tex2D(_LeftHandMask, i.uv);
+				float leftSlowVal = leftVal.r;
+				float leftMedVal = leftVal.g;
+				float leftFastVal = leftVal.b;
 
 				float step_w = 1. / 8192;
 				float step_h = 1. / 1024;
@@ -122,25 +128,26 @@
 				//	outVal = sourceRight + 0.001;
 				//}
 				//clamp(outVal, 0., 1.);
-				//red fast, green slow
 
 				//float outVal = clamp(sourceRight + (0.004 * step(0.01, sumRight) * step(0.5, rightFastVal)) + (0.002 * step(0.01, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
 				// grow right hand
-				float rightOut = clamp(sourceRight + (1 * step(3, sumRight) * step(0.5, rightFastVal)) + (0.5 * step(3, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
+				//float rightOut = clamp(sourceRight + (1 * step(3, sumRight) * step(0.5, rightFastVal)) + (0.5 * step(3, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
+				float rightOut = clamp(sourceRight + (_Speeds.z * step(1, sumRight) * step(0.5, rightFastVal)) + (_Speeds.y * step(1, sumRight) * step(0.5, rightMedVal)) + (_Speeds.x * step(1, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
 				//grow left hand
-				float leftOut = clamp(sourceLeft + (1 * step(3, sumLeft) * step(0.5, leftFastVal)) + (0.5 * step(3, sumLeft) * step(0.5, leftSlowVal)), 0., 1.);
+				//float leftOut = clamp(sourceLeft + (1 * step(3, sumLeft) * step(0.5, leftFastVal)) + (0.5 * step(3, sumLeft) * step(0.5, leftSlowVal)), 0., 1.);
+				float leftOut = clamp(sourceLeft + (_Speeds.z * step(1, sumLeft) * step(0.5, leftFastVal)) + (_Speeds.y * step(1, sumLeft) * step(0.5, leftMedVal)) + (_Speeds.x * step(1, sumLeft) * step(0.5, leftSlowVal)), 0., 1.);
 
 				// increment "fade" of left and right values, then just clamp it!
 				float rightFade = clamp(sourceVal.g + .003, 0., 1.) * step(.001, rightOut);
 				float leftFade = clamp(sourceVal.a + .003, 0., 1.) * step(.001, leftOut);
 
-				float aspectX = _ScreenParams.x / _ScreenParams.y;
 				//adding new start position with the right hand?
+				float aspectX = _ScreenParams.x / _ScreenParams.y;
 				float rrange = 0.001 * _RightHand.z;
 				//need to correct for aspect ratio
 				float rdist = distance(float2(_RightHand.x * aspectX, _RightHand.y), float2(i.uv.x * aspectX, i.uv.y));
 				// add to outVal if we have a right hand coordinate, it's in the bottom 10% of the screen, we're in range of brush size, and there's either red or green in right mask
-				float rightAppend = fixed4(1, 1, 1, cos(rdist / rrange) * .2) * step(0.01, _RightHand.x) * max(sign(.1 - _RightHand.y), 0.0) * step(rdist, rrange) * min(step(.01, rightFastVal) + step(.01, rightSlowVal), 1.);
+				float rightAppend = fixed4(1, 1, 1, cos(rdist / rrange) * .2) * step(0.01, _RightHand.x) * max(sign(.1 - _RightHand.y), 0.0) * step(rdist, rrange) * min(step(.01, rightFastVal) + step(.01, rightMedVal) + step(.01, rightSlowVal), 1.);
 				rightOut += rightAppend;
 				rightFade += .1 * step(.1, rightAppend);
 				clamp(rightOut, 0, 1);
@@ -149,8 +156,8 @@
 				float lrange = 0.001 * _LeftHand.z;
 				//need to correct for aspect ratio
 				float ldist = distance(float2(_LeftHand.x * aspectX, _LeftHand.y), float2(i.uv.x * aspectX, i.uv.y));
-				// add to outVal if we have a left hand coordinat, it's in the bottom 10% of the screene, we're in range of brush size, and there's either red or green in left mask
-				float leftAppend = fixed4(1, 1, 1, cos(ldist / lrange) * .2) * step(0.01, _LeftHand.x) * max(sign(.1 - _LeftHand.y), 0.0) * step(ldist, lrange) * min(step(.01, leftFastVal) + step(.01, leftSlowVal), 1.);
+				// add to outVal if we have a left hand coordinat, it's in the bottom 10% of the screen, we're in range of brush size, and there's either red or green in left mask
+				float leftAppend = fixed4(1, 1, 1, cos(ldist / lrange) * .2) * step(0.01, _LeftHand.x) * max(sign(.1 - _LeftHand.y), 0.0) * step(ldist, lrange) * min(step(.01, leftFastVal) + step(.01, leftMedVal) + step(.01, leftSlowVal), 1.);
 				leftOut += leftAppend;
 				leftFade += .1 * step(.1, leftAppend);
 				clamp(leftOut, 0, 1);
