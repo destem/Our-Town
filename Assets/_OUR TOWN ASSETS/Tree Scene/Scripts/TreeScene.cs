@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#define BLIT_TO_SCREEN
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +24,7 @@ public class TreeScene : MonoBehaviour {
     public float slowSpeed = 0f;
     public float mediumSpeed = 0f;
     public float fastSpeed = 0f;
+    public float growthThreshhold = 1f;
 
     RenderTexture _createTexture(int w, int h)
     {
@@ -39,7 +42,7 @@ public class TreeScene : MonoBehaviour {
     {
         growMat.SetTexture("_RightHandMask", chapelMask);
         growMat.SetTexture("_LeftHandMask", chapelMask);
-        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, 0f));
+        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         buff = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
         Graphics.Blit(startMask, buff);//, growMat);
@@ -91,17 +94,18 @@ public class TreeScene : MonoBehaviour {
 
             growMat.SetVector("_LeftHand", new Vector4(u, v, brushSize, -1f));
         }
-       
-     
 
-        //for (int i = 0; i < 1; i++)
-        //{
-        //    Graphics.Blit(buff, final, growMat);
-        //    Graphics.Blit(final, buff, growMat);
-        //}
 
+#if !BLIT_TO_SCREEN
+        for (int i = 0; i < 1; i++)
+        {
+            Graphics.Blit(buff, final, growMat);
+            Graphics.Blit(final, buff, growMat);
+        }
+#endif
     }
 
+#if BLIT_TO_SCREEN
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
         for (int i = 0; i < 1; i++)
@@ -112,6 +116,8 @@ public class TreeScene : MonoBehaviour {
         ////Graphics.Blit(buff, dest);
         Graphics.Blit(buff, dest, displayMat);
     }
+
+#endif
 
     public void SetLeftHand(Vector2 coords)
     {

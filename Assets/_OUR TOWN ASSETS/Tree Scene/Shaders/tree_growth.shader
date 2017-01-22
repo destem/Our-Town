@@ -104,6 +104,7 @@
 				float leftSlowVal = leftVal.r;
 				float leftMedVal = leftVal.g;
 				float leftFastVal = leftVal.b;
+				float threshhold = _Speeds.w;
 
 				float step_w = 1. / 8192;
 				float step_h = 1. / 1024;
@@ -132,10 +133,10 @@
 				//float outVal = clamp(sourceRight + (0.004 * step(0.01, sumRight) * step(0.5, rightFastVal)) + (0.002 * step(0.01, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
 				// grow right hand
 				//float rightOut = clamp(sourceRight + (1 * step(3, sumRight) * step(0.5, rightFastVal)) + (0.5 * step(3, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
-				float rightOut = clamp(sourceRight + (_Speeds.z * step(1, sumRight) * step(0.5, rightFastVal)) + (_Speeds.y * step(1, sumRight) * step(0.5, rightMedVal)) + (_Speeds.x * step(1, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
+				float rightOut = clamp(sourceRight + (_Speeds.z * step(threshhold, sumRight) * step(0.5, rightFastVal)) + (_Speeds.y * step(threshhold, sumRight) * step(0.5, rightMedVal)) + (_Speeds.x * step(threshhold, sumRight) * step(0.5, rightSlowVal)), 0., 1.);
 				//grow left hand
 				//float leftOut = clamp(sourceLeft + (1 * step(3, sumLeft) * step(0.5, leftFastVal)) + (0.5 * step(3, sumLeft) * step(0.5, leftSlowVal)), 0., 1.);
-				float leftOut = clamp(sourceLeft + (_Speeds.z * step(1, sumLeft) * step(0.5, leftFastVal)) + (_Speeds.y * step(1, sumLeft) * step(0.5, leftMedVal)) + (_Speeds.x * step(1, sumLeft) * step(0.5, leftSlowVal)), 0., 1.);
+				float leftOut = clamp(sourceLeft + (_Speeds.z * step(threshhold, sumLeft) * step(0.5, leftFastVal)) + (_Speeds.y * step(threshhold, sumLeft) * step(0.5, leftMedVal)) + (_Speeds.x * step(threshhold, sumLeft) * step(0.5, leftSlowVal)), 0., 1.);
 
 				// increment "fade" of left and right values, then just clamp it!
 				float rightFade = clamp(sourceVal.g + .003, 0., 1.) * step(.001, rightOut);
