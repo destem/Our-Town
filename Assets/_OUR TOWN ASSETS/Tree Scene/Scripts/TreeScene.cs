@@ -12,6 +12,8 @@ public class TreeScene : MonoBehaviour {
     //public Texture2D nextMask;
     public Texture2D leftHandMask;
     public Texture2D rightHandMask;
+    public Texture2D full;
+    public Material chapelMat;
     public Material growMat;
     public Material displayMat;
     RenderTexture buff;
@@ -24,7 +26,14 @@ public class TreeScene : MonoBehaviour {
     public float slowSpeed = 0f;
     public float mediumSpeed = 0f;
     public float fastSpeed = 0f;
+    public int iterations = 1;
     public float growthThreshhold = 1f;
+    bool next = false;
+   // bool useGrowMat = false;
+    //Texture2D chapelTex;
+
+    enum TreeStates {TREE_START, TREE_CHAPEL, TREE_FIRST_WORDS, TREE_CHAPEL_BRANCH, TREE_CENTRAL_SLOW, TREE_SIDE_GROWTH, TREE_SECOND_WORDS, TREE_ANGRY_FAST, TREE_THIRD_WORDS, TREE_FINAL_WORDS }
+    TreeStates state = TreeStates.TREE_START;
 
     RenderTexture _createTexture(int w, int h)
     {
@@ -48,18 +57,16 @@ public class TreeScene : MonoBehaviour {
         Graphics.Blit(startMask, buff);//, growMat);
         displayMat.SetTexture("_MainTex", buff);
         gesture = TreeGestureListener.Instance;
+        //chapelTex = startMask;
+        StartCoroutine(RunScene());
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || addingToMask)
-        //{
-        //    growMat.SetVector("_LeftHand", new Vector4(-1, -1, -1, -1));
-        //    growMat.SetVector("_RightHand", new Vector4(-1, -1, -1, -1));
-        //    addingToMask = false;
-        //}
+      
         ResetUVs();
+        next = false;
         if (Input.GetKeyDown(KeyCode.N) || gesture.IsPsi())
         {
             growMat.SetTexture("_RightHandMask", rightHandMask);
@@ -67,70 +74,102 @@ public class TreeScene : MonoBehaviour {
             //StartCoroutine(EnableScreenCollision());
         }
 
-        if (gesture.IsClap() || Input.GetKeyDown(KeyCode.S))
-        {
-            print("CLAP!!");
-            growMat.SetVector("_LeftHand", new Vector4(0.481f, 0.05f, brushSize, -1f));
-            growMat.SetVector("_RightHand", new Vector4(0.52f, 0.05f, brushSize, -1f));
-            addingToMask = true;
-        }
-       
+           
         Vector3 mousePos = Input.mousePosition;
         t.text = string.Format("{0:0.000}, {1:0.000}", mousePos.x / Screen.width, mousePos.y / Screen.height);
 
-        if (Input.GetMouseButtonDown(0))
-
+        if (Input.GetButtonDown("Jump"))
         {
-            float u = Input.mousePosition.x / Screen.width;
-            float v = Mathf.Min(Input.mousePosition.y / Screen.height, 0.08f);
-            //print("Click at " + u + ", " + v);
-            growMat.SetVector("_RightHand", new Vector4(u, v, brushSize, -1f));
-        }
-        if (Input.GetMouseButton(1))
-
-        {
-            float u = Input.mousePosition.x / Screen.width;
-            float v = Mathf.Min(Input.mousePosition.y / Screen.height, 0.08f);
-
-            growMat.SetVector("_LeftHand", new Vector4(u, v, brushSize, -1f));
+            next = true;
         }
 
+        //if (Input.GetMouseButtonDown(0))
 
-#if !BLIT_TO_SCREEN
-        for (int i = 0; i < 1; i++)
-        {
-            Graphics.Blit(buff, final, growMat);
-            Graphics.Blit(final, buff, growMat);
-        }
-#endif
+        //{
+            //float u = Input.mousePosition.x / Screen.width;
+            //float v = Mathf.Min(Input.mousePosition.y / Screen.height, 0.08f);
+            ////print("Click at " + u + ", " + v);
+            //growMat.SetVector("_RightHand", new Vector4(u, v, brushSize, -1f));
+        //}
+        //if (Input.GetMouseButton(1))
+
+        //{
+        //    float u = Input.mousePosition.x / Screen.width;
+        //    float v = Mathf.Min(Input.mousePosition.y / Screen.height, 0.08f);
+
+        //    growMat.SetVector("_LeftHand", new Vector4(u, v, brushSize, -1f));
+        //}
+
+
+
     }
 
 #if BLIT_TO_SCREEN
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
-        for (int i = 0; i < 1; i++)
+      
+        for (int i = 0; i < iterations; i++)
         {
             Graphics.Blit(buff, final, growMat);
             Graphics.Blit(final, buff, growMat);
         }
-        ////Graphics.Blit(buff, dest);
         Graphics.Blit(buff, dest, displayMat);
+        //Graphics.Blit(full, dest);
+
     }
 
 #endif
 
-    public void SetLeftHand(Vector2 coords)
+    IEnumerator RunScene()
     {
-        float u = coords.x;
-        float v = Mathf.Min(coords.y, 0.08f);
+        while (!next && !gesture.IsClap())
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("starting chapel");
+        SetRightHand(.52f, 0.025f);
+        SetLeftHand(.48f, 0.025f);
+        while (!next && !gesture.IsPsi())
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("first branches");
+        growMat.SetTexture("_RightHandMask", rightHandMask);
+        growMat.SetTexture("_LeftHandMask", leftHandMask);
+        while (!next)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("First words");
+        SetRightHand(.215f, .994f);
+        yield return null;
+        SetRightHand(.222f, .942f);
+        yield return null;
+        SetRightHand(.24f, .886f);
+        yield return null;
+        SetRightHand(.58f, .065f);
+        yield return null;
+        SetRightHand(.335f, .15f);
+    }
+
+    public void SetLeftHand(float u, float v)
+    {
+        //float u = coords.x;
+        //float v = Mathf.Min(coords.y, 0.08f);
 
         growMat.SetVector("_LeftHand", new Vector4(u, v, brushSize, -1f));
     }
 
-    public void SetRightHand(Vector2 coords)
+    public void SetRightHand(float u, float v)
     {
-        float u = coords.x;
-        float v = Mathf.Min(coords.y, 0.08f);
+        //float u = coords.x;
+        //float v = Mathf.Min(coords.y, 0.08f);
 
         growMat.SetVector("_RightHand", new Vector4(u, v, brushSize, -1f));
     }
@@ -147,5 +186,15 @@ public class TreeScene : MonoBehaviour {
         screenModel.GetComponent<MeshCollider>().enabled = true;
     }
 
- 
-}
+    void Blit()
+    {
+#if !BLIT_TO_SCREEN
+        for (int i = 0; i < iterations; i++)
+        {
+            Graphics.Blit(buff, final, growMat);
+            Graphics.Blit(final, buff, growMat);
+        }
+#endif
+        return;
+    }
+    }

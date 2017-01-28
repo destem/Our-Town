@@ -147,8 +147,8 @@
 				float rrange = 0.001 * _RightHand.z;
 				//need to correct for aspect ratio
 				float rdist = distance(float2(_RightHand.x * aspectX, _RightHand.y), float2(i.uv.x * aspectX, i.uv.y));
-				// add to outVal if we have a right hand coordinate, it's in the bottom 10% of the screen, we're in range of brush size, and there's either red or green in right mask
-				float rightAppend = fixed4(1, 1, 1, cos(rdist / rrange) * .2) * step(0.01, _RightHand.x) * max(sign(.1 - _RightHand.y), 0.0) * step(rdist, rrange) * min(step(.01, rightFastVal) + step(.01, rightMedVal) + step(.01, rightSlowVal), 1.);
+				// add to outVal if we have a right hand coordinate, we're in range of brush size, and there's either red or green in right mask
+				float rightAppend = fixed4(1, 1, 1, cos(rdist / rrange) * .2) * step(0.01, _RightHand.x) *  step(rdist, rrange) * min(step(.01, rightFastVal) + step(.01, rightMedVal) + step(.01, rightSlowVal), 1.);
 				rightOut += rightAppend;
 				rightFade += .1 * step(.1, rightAppend);
 				clamp(rightOut, 0, 1);
@@ -157,8 +157,8 @@
 				float lrange = 0.001 * _LeftHand.z;
 				//need to correct for aspect ratio
 				float ldist = distance(float2(_LeftHand.x * aspectX, _LeftHand.y), float2(i.uv.x * aspectX, i.uv.y));
-				// add to outVal if we have a left hand coordinat, it's in the bottom 10% of the screen, we're in range of brush size, and there's either red or green in left mask
-				float leftAppend = fixed4(1, 1, 1, cos(ldist / lrange) * .2) * step(0.01, _LeftHand.x) * max(sign(.1 - _LeftHand.y), 0.0) * step(ldist, lrange) * min(step(.01, leftFastVal) + step(.01, leftMedVal) + step(.01, leftSlowVal), 1.);
+				// add to outVal if we have a left hand coordinat, we're in range of brush size, and there's either red or green in left mask
+				float leftAppend = fixed4(1, 1, 1, cos(ldist / lrange) * .2) * step(0.01, _LeftHand.x) * step(ldist, lrange) * min(step(.01, leftFastVal) + step(.01, leftMedVal) + step(.01, leftSlowVal), 1.);
 				leftOut += leftAppend;
 				leftFade += .1 * step(.1, leftAppend);
 				clamp(leftOut, 0, 1);

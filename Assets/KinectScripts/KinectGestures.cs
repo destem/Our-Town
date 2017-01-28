@@ -408,7 +408,7 @@ public class KinectGestures : MonoBehaviour
 				}
 				break;
 
-            // check for Clap (new!) - currently set to a swipe!
+            // check for Clap (new!)
             case Gestures.Clap:
                 switch (gestureData.state)
                 {

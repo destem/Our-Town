@@ -24,7 +24,7 @@ public class UVHandCoordinates : MonoBehaviour {
             {
                 flag = true;
                 Vector2 coords = new Vector2(lHit.textureCoord.x, lHit.textureCoord.y);
-                scene.SetLeftHand(coords);
+                //scene.SetLeftHand(coords);
                 //t.text = string.Format("{0:0.000}, {1:0.000}", coords.x, coords.y);
             }
         }
@@ -34,7 +34,7 @@ public class UVHandCoordinates : MonoBehaviour {
             {
                 flag = true;
                 Vector2 coords = new Vector2(rHit.textureCoord.x, rHit.textureCoord.y);
-                scene.SetRightHand(coords);
+                //scene.SetRightHand(coords);
                 //t.text = string.Format("{0:0.000}, {1:0.000}", coords.x, coords.y);
             }
         }
