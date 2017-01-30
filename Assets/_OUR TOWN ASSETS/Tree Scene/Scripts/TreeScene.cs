@@ -28,9 +28,10 @@ public class TreeScene : MonoBehaviour {
     public float fastSpeed = 0f;
     public int iterations = 1;
     public float growthThreshhold = 1f;
+    public float chapelFadeTime = 2f;
     bool next = false;
-   // bool useGrowMat = false;
-    //Texture2D chapelTex;
+    bool usingGrowth = false;
+    
 
     enum TreeStates {TREE_START, TREE_CHAPEL, TREE_FIRST_WORDS, TREE_CHAPEL_BRANCH, TREE_CENTRAL_SLOW, TREE_SIDE_GROWTH, TREE_SECOND_WORDS, TREE_ANGRY_FAST, TREE_THIRD_WORDS, TREE_FINAL_WORDS }
     TreeStates state = TreeStates.TREE_START;
@@ -57,6 +58,7 @@ public class TreeScene : MonoBehaviour {
         Graphics.Blit(startMask, buff);//, growMat);
         displayMat.SetTexture("_MainTex", buff);
         gesture = TreeGestureListener.Instance;
+        chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
         //chapelTex = startMask;
         StartCoroutine(RunScene());
     }
@@ -67,13 +69,6 @@ public class TreeScene : MonoBehaviour {
       
         ResetUVs();
         next = false;
-        if (Input.GetKeyDown(KeyCode.N) || gesture.IsPsi())
-        {
-            growMat.SetTexture("_RightHandMask", rightHandMask);
-            growMat.SetTexture("_LeftHandMask", leftHandMask);
-            //StartCoroutine(EnableScreenCollision());
-        }
-
            
         Vector3 mousePos = Input.mousePosition;
         t.text = string.Format("{0:0.000}, {1:0.000}", mousePos.x / Screen.width, mousePos.y / Screen.height);
@@ -83,38 +78,25 @@ public class TreeScene : MonoBehaviour {
             next = true;
         }
 
-        //if (Input.GetMouseButtonDown(0))
-
-        //{
-            //float u = Input.mousePosition.x / Screen.width;
-            //float v = Mathf.Min(Input.mousePosition.y / Screen.height, 0.08f);
-            ////print("Click at " + u + ", " + v);
-            //growMat.SetVector("_RightHand", new Vector4(u, v, brushSize, -1f));
-        //}
-        //if (Input.GetMouseButton(1))
-
-        //{
-        //    float u = Input.mousePosition.x / Screen.width;
-        //    float v = Mathf.Min(Input.mousePosition.y / Screen.height, 0.08f);
-
-        //    growMat.SetVector("_LeftHand", new Vector4(u, v, brushSize, -1f));
-        //}
-
-
-
     }
 
 #if BLIT_TO_SCREEN
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
-      
-        for (int i = 0; i < iterations; i++)
+        if (usingGrowth)
         {
-            Graphics.Blit(buff, final, growMat);
-            Graphics.Blit(final, buff, growMat);
+            for (int i = 0; i < iterations; i++)
+            {
+                Graphics.Blit(buff, final, growMat);
+                Graphics.Blit(final, buff, growMat);
+            }
+            Graphics.Blit(buff, dest, displayMat);
+            //Graphics.Blit(full, dest);
         }
-        Graphics.Blit(buff, dest, displayMat);
-        //Graphics.Blit(full, dest);
+        else
+        {
+            Graphics.Blit(buff, dest, chapelMat);
+        }
 
     }
 
@@ -129,8 +111,14 @@ public class TreeScene : MonoBehaviour {
         }
         next = false;
         print("starting chapel");
-        SetRightHand(.52f, 0.025f);
-        SetLeftHand(.48f, 0.025f);
+        float startTime = Time.time;
+        while (Time.time - startTime < chapelFadeTime)
+        {
+            chapelMat.SetVector("_Value", new Vector4((Time.time - startTime) / chapelFadeTime, 0f, 0f, 0f));
+            yield return null;
+        }
+        
+
         while (!next && !gesture.IsPsi())
         {
             Blit();
@@ -138,6 +126,8 @@ public class TreeScene : MonoBehaviour {
         }
         next = false;
         print("first branches");
+        usingGrowth = true;
+        screenModel.GetComponent<Renderer>().material = growMat;
         growMat.SetTexture("_RightHandMask", rightHandMask);
         growMat.SetTexture("_LeftHandMask", leftHandMask);
         while (!next)
@@ -189,10 +179,12 @@ public class TreeScene : MonoBehaviour {
     void Blit()
     {
 #if !BLIT_TO_SCREEN
-        for (int i = 0; i < iterations; i++)
-        {
-            Graphics.Blit(buff, final, growMat);
-            Graphics.Blit(final, buff, growMat);
+        if (usingGrowth){
+            for (int i = 0; i < iterations; i++)
+                {
+                    Graphics.Blit(buff, final, growMat);
+                    Graphics.Blit(final, buff, growMat);
+                }
         }
 #endif
         return;

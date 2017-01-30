@@ -4,7 +4,8 @@
 	{
 		_MainTex("Mask", 2D) = "white" {}
 		_Paper("Background", 2D) = "white" {}
-		_Trees("Image to Mask", 2D) = "white" {}
+		_Chapel("Image to Fade to", 2D) = "white" {}
+		_Value("Value to lerp in Chapel", Vector) = (0., 0., 0., 0.)
 	}
 	SubShader
 	{
@@ -41,16 +42,16 @@
 			
 			sampler2D _Paper;
 			sampler2D _MainTex;
-			sampler2D _Trees;
+			sampler2D _Chapel;
+			float4 _Value;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 mask = tex2D(_MainTex, i.uv);
-				fixed4 col = tex2D(_Trees, i.uv);
+				//fixed4 mask = tex2D(_MainTex, i.uv);
+				fixed4 col = tex2D(_Chapel, i.uv);
 				fixed4 paper = tex2D(_Paper, i.uv);
-				if (mask.r < 1.)
-					col = paper;
-				return col;
+				
+				return lerp(paper, col, _Value.x);
 			}
 			ENDCG
 		}
