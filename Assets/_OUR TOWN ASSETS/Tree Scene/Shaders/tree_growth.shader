@@ -150,7 +150,7 @@
 				// add to outVal if we have a right hand coordinate, we're in range of brush size, and there's either red or green in right mask
 				float rightAppend = fixed4(1, 1, 1, cos(rdist / rrange) * .2) * step(0.01, _RightHand.x) *  step(rdist, rrange) * min(step(.01, rightFastVal) + step(.01, rightMedVal) + step(.01, rightSlowVal), 1.);
 				rightOut += rightAppend;
-				rightFade += .1 * step(.1, rightAppend);
+				rightFade += .001 * step(.1, rightAppend);
 				clamp(rightOut, 0, 1);
 
 				//left hand
@@ -160,7 +160,7 @@
 				// add to outVal if we have a left hand coordinat, we're in range of brush size, and there's either red or green in left mask
 				float leftAppend = fixed4(1, 1, 1, cos(ldist / lrange) * .2) * step(0.01, _LeftHand.x) * step(ldist, lrange) * min(step(.01, leftFastVal) + step(.01, leftMedVal) + step(.01, leftSlowVal), 1.);
 				leftOut += leftAppend;
-				leftFade += .1 * step(.1, leftAppend);
+				leftFade += .001 * step(.1, leftAppend);
 				clamp(leftOut, 0, 1);
 
 				

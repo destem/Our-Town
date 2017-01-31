@@ -104,7 +104,7 @@ public class TreeScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
-        while (!next && !gesture.IsClap())
+        while (!next)// && !gesture.IsClap())
         {
             Blit();
             yield return null;
@@ -119,7 +119,7 @@ public class TreeScene : MonoBehaviour {
         }
         
 
-        while (!next && !gesture.IsPsi())
+        while (!next)// && !gesture.IsPsi())
         {
             Blit();
             yield return null;
@@ -146,6 +146,111 @@ public class TreeScene : MonoBehaviour {
         SetRightHand(.58f, .065f);
         yield return null;
         SetRightHand(.335f, .15f);
+        while (!next)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("central growth");
+        SetLeftHand(.425f, .01f);
+        yield return null;
+        SetLeftHand(.446f, .01f);
+        yield return null;
+        SetLeftHand(.553f, .01f);
+        yield return null;
+        SetLeftHand(.574f, .01f);
+        while (!next)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("part 4 - growth from sides");
+        SetLeftHand(.005f, .01f);
+        yield return null;
+        SetLeftHand(.02f, .01f);
+        yield return null;
+        SetRightHand(.055f, .01f);
+        yield return null;
+        SetRightHand(.078f, .01f);
+        yield return null;
+        SetRightHand(.09f, .01f);
+        yield return null;
+        SetRightHand(.103f, .01f);
+        yield return null;
+        SetRightHand(.11f, .01f);
+        yield return null;
+        SetRightHand(.965f, .01f);
+        yield return null;
+        SetRightHand(.98f, .01f);
+        yield return null;
+        SetRightHand(.999f, .01f);
+        yield return null;
+        SetRightHand(.595f, .01f);
+        yield return null;
+        while (!next)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("Second set of words");
+        SetLeftHand(.196f, .019f);
+        yield return null;
+        SetLeftHand(.209f, .029f);
+        yield return null;
+        SetLeftHand(.231f, .032f);
+        yield return null;
+        SetLeftHand(.248f, .023f);
+        yield return null;
+        SetLeftHand(.023f, .97f);
+        yield return null;
+        SetRightHand(.254f, .726f);
+        yield return null;
+        SetRightHand(.74f, .82f);
+        yield return null;
+        SetRightHand(.594f, .462f);
+        yield return null;
+        while (!next)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("Stage 5 fast");
+        SetRightHand(.275f, .005f);
+        yield return null;
+        SetRightHand(.391f, .005f);
+        yield return null;
+        SetLeftHand(.326f, .005f);
+        yield return null;
+        SetLeftHand(.834f, .005f);
+        yield return new WaitForSeconds(5f);
+        print("Stage 5 fast - stage 2");
+        SetLeftHand(.697f, .005f);
+        yield return null;
+        SetLeftHand(.183f, .005f);
+        yield return null;
+        SetLeftHand(.202f, .005f);
+        yield return null;
+        SetLeftHand(.224f, .005f);
+        yield return null;
+        SetRightHand(.126f, .005f);
+        yield return null;
+        SetRightHand(.156f, .005f);
+        yield return null;
+        SetRightHand(.727f, .005f);
+        yield return null;
+        SetRightHand(.748f, .005f);
+        yield return null;
+        while (!next)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("third set of words");
     }
 
     public void SetLeftHand(float u, float v)
