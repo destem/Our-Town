@@ -12,6 +12,8 @@ public class TreeScene : MonoBehaviour {
     //public Texture2D nextMask;
     public Texture2D MaskOneTex;
     public Texture2D MaskTwoTex;
+    public Texture2D MaskThreeTex;
+    public Texture2D MaskFourTex;
     public Texture2D full;
     public Material chapelMat;
     public Material growMat;
@@ -33,10 +35,6 @@ public class TreeScene : MonoBehaviour {
     bool next = false;
     bool usingGrowth = false;
     
-
-    enum TreeStates {TREE_START, TREE_CHAPEL, TREE_FIRST_WORDS, TREE_CHAPEL_BRANCH, TREE_CENTRAL_SLOW, TREE_SIDE_GROWTH, TREE_SECOND_WORDS, TREE_ANGRY_FAST, TREE_THIRD_WORDS, TREE_FINAL_WORDS }
-    TreeStates state = TreeStates.TREE_START;
-
     RenderTexture _createTexture(int w, int h)
     {
         RenderTexture t = new RenderTexture(w, h, 0, RenderTextureFormat.ARGBFloat);
@@ -52,7 +50,6 @@ public class TreeScene : MonoBehaviour {
     void Start()
     {
         growMat.SetTexture("_MaskOneTex", chapelMask);
-        growMat.SetTexture("_MaskTwoTex", chapelMask);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         buff = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
@@ -131,6 +128,8 @@ public class TreeScene : MonoBehaviour {
         screenModel.GetComponent<Renderer>().material = growMat;
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
+        growMat.SetTexture("_MaskThreeTex", MaskThreeTex);
+        growMat.SetTexture("_MaskFourTex", MaskFourTex);
         while (!next)
         {
             Blit();
@@ -254,26 +253,32 @@ public class TreeScene : MonoBehaviour {
         print("third set of words");
     }
 
+    public void SetMaskOne(float u, float v)
+    {
+        growMat.SetVector("_MaskOneCoords", new Vector4(u, v, brushSize, -1f));
+    }
+
     public void SetMaskTwo(float u, float v)
     {
-        //float u = coords.x;
-        //float v = Mathf.Min(coords.y, 0.08f);
-
         growMat.SetVector("_MaskTwoCoords", new Vector4(u, v, brushSize, -1f));
     }
 
-    public void SetMaskOne(float u, float v)
+    public void SetMaskThree(float u, float v)
     {
-        //float u = coords.x;
-        //float v = Mathf.Min(coords.y, 0.08f);
+        growMat.SetVector("_MaskThreeCoords", new Vector4(u, v, brushSize, -1f));
+    }
 
-        growMat.SetVector("_MaskOneCoords", new Vector4(u, v, brushSize, -1f));
+    public void SetMaskFour(float u, float v)
+    {
+        growMat.SetVector("_MaskFourCoords", new Vector4(u, v, brushSize, -1f));
     }
 
     public void ResetUVs()
     {
-        growMat.SetVector("_MaskTwoCoords", new Vector4(-1, -1, -1, -1));
         growMat.SetVector("_MaskOneCoords", new Vector4(-1, -1, -1, -1));
+        growMat.SetVector("_MaskTwoCoords", new Vector4(-1, -1, -1, -1));
+        growMat.SetVector("_MaskThreeCoords", new Vector4(-1, -1, -1, -1));
+        growMat.SetVector("_MaskFourCoords", new Vector4(-1, -1, -1, -1));
     }
 
     IEnumerator EnableScreenCollision()

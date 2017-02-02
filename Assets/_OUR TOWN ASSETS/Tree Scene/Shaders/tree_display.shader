@@ -54,12 +54,15 @@
 			{
 				float4 source = tex2D(_MainTex, i.uv);
 				float maskOneAmount = unpack(source.r).x;
-				//maskOneAmount = clamp(maskOneAmount, 0., 1.);
-
 				float maskTwoAmount = unpack(source.g).x;
-				//maskTwoAmount = clamp(maskTwoAmount, 0., 1.);
+				float maskThreeAmount = unpack(source.b).x;
+				float maskFourAmount = unpack(source.a).x;
+
 				float maskOneFade = unpack(source.r).y;
 				float maskTwoFade = unpack(source.g).y;
+				float maskThreeFade = unpack(source.b).y;
+				float maskFourFade = unpack(source.a).y;
+
 				fixed4 paperCol = tex2D(_BGTex, i.uv);
 				fixed4 finalCol = tex2D(_FinalTex, i.uv);
 				fixed4 col;
@@ -70,8 +73,10 @@
 				//change amount to be its own step value - mutate the mask in place, then lerp colors
 				maskOneAmount = 1 - step(transVal, 1 - maskOneFade);
 				maskTwoAmount = 1 - step(transVal, 1 - maskTwoFade);
+				maskThreeAmount = 1 - step(transVal, 1 - maskThreeFade);
+				maskFourAmount = 1 - step(transVal, 1 - maskFourFade);
 				
-				col = lerp(paperCol, finalCol, max(maskTwoAmount, maskOneAmount));
+				col = lerp(paperCol, finalCol, max(max(maskTwoAmount, maskOneAmount), max(maskThreeAmount, maskFourAmount)));
 				//return tex2D(_TransTex, transUV.xy);
 				//return finalCol;
 				return col;
