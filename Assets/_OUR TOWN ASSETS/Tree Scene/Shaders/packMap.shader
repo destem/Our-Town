@@ -44,11 +44,7 @@
 				return asfloat(packed);
 			}
 
-			half2 unpack(float packed) {
-				uint packedAsUint = asuint(packed); // packed * 0xffffffff;
-				return half2((packedAsUint & 0xffff), (packedAsUint >> 16)) / 65535.0h;
-			}
-
+			
 			sampler2D _MainTex;
 
 			fixed4 frag (v2f i) : SV_Target

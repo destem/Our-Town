@@ -41,7 +41,7 @@
 			}
 
 			half2 unpack(float packed) {
-				uint packedAsUint = asuint(packed); // packed * 0xffffffff;
+				uint packedAsUint = asuint(packed); 
 				return half2((packedAsUint & 0xffff), (packedAsUint >> 16)) / 65535.0h;
 			}
 			
@@ -53,13 +53,13 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float4 source = tex2D(_MainTex, i.uv);
-				float rightAmount = unpack(source.r).x;
-				//rightAmount = clamp(rightAmount, 0., 1.);
+				float maskOneAmount = unpack(source.r).x;
+				//maskOneAmount = clamp(maskOneAmount, 0., 1.);
 
-				float leftAmount = unpack(source.g).x;
-				//leftAmount = clamp(leftAmount, 0., 1.);
-				float rightFade = unpack(source.r).y;
-				float leftFade = unpack(source.g).y;
+				float maskTwoAmount = unpack(source.g).x;
+				//maskTwoAmount = clamp(maskTwoAmount, 0., 1.);
+				float maskOneFade = unpack(source.r).y;
+				float maskTwoFade = unpack(source.g).y;
 				fixed4 paperCol = tex2D(_BGTex, i.uv);
 				fixed4 finalCol = tex2D(_FinalTex, i.uv);
 				fixed4 col;
@@ -68,10 +68,10 @@
 				transUV.y = i.uv.y * 4;
 				fixed4 transVal = tex2D(_TransTex, transUV.xy);
 				//change amount to be its own step value - mutate the mask in place, then lerp colors
-				rightAmount = 1 - step(transVal, 1 - rightFade);
-				leftAmount = 1 - step(transVal, 1 - leftFade);
+				maskOneAmount = 1 - step(transVal, 1 - maskOneFade);
+				maskTwoAmount = 1 - step(transVal, 1 - maskTwoFade);
 				
-				col = lerp(paperCol, finalCol, max(leftAmount, rightAmount));
+				col = lerp(paperCol, finalCol, max(maskTwoAmount, maskOneAmount));
 				//return tex2D(_TransTex, transUV.xy);
 				//return finalCol;
 				return col;

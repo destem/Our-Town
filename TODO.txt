@@ -4,10 +4,14 @@
 
 --Implement coroutine to set specific UV for a short time and set back. Continuing to check boolean at top of update()
 
-Start master FSM to go through the scene
+** Start master FSM to go through the scene
 
 ** Implement clap gesture
 
 Start final star image. Write to texture?
 
 ** Form moon drawing from scans
+
+stitch final two drawings
+
+separate town scene into four masks
