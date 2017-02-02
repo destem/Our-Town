@@ -39,6 +39,11 @@
 				o.uv = v.uv;
 				return o;
 			}
+
+			half2 unpack(float packed) {
+				uint packedAsUint = asuint(packed); // packed * 0xffffffff;
+				return half2((packedAsUint & 0xffff), (packedAsUint >> 16)) / 65535.0h;
+			}
 			
 			sampler2D _MainTex;
 			sampler2D _BGTex;
@@ -48,13 +53,13 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float4 source = tex2D(_MainTex, i.uv);
-				float rightAmount = source.r;
-				rightAmount = clamp(rightAmount, 0., 1.);
+				float rightAmount = unpack(source.r).x;
+				//rightAmount = clamp(rightAmount, 0., 1.);
 
-				float leftAmount = source.b;
-				leftAmount = clamp(leftAmount, 0., 1.);
-				float rightFade = source.g;
-				float leftFade = source.a;
+				float leftAmount = unpack(source.g).x;
+				//leftAmount = clamp(leftAmount, 0., 1.);
+				float rightFade = unpack(source.r).y;
+				float leftFade = unpack(source.g).y;
 				fixed4 paperCol = tex2D(_BGTex, i.uv);
 				fixed4 finalCol = tex2D(_FinalTex, i.uv);
 				fixed4 col;

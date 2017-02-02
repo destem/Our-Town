@@ -16,6 +16,7 @@ public class TreeScene : MonoBehaviour {
     public Material chapelMat;
     public Material growMat;
     public Material displayMat;
+    public Material packer;
     RenderTexture buff;
     RenderTexture final;
     public Text t;
@@ -55,7 +56,7 @@ public class TreeScene : MonoBehaviour {
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         buff = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
-        Graphics.Blit(startMask, buff);//, growMat);
+        Graphics.Blit(startMask, buff, packer);
         displayMat.SetTexture("_MainTex", buff);
         gesture = TreeGestureListener.Instance;
         chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
@@ -91,7 +92,7 @@ public class TreeScene : MonoBehaviour {
                 Graphics.Blit(final, buff, growMat);
             }
             Graphics.Blit(buff, dest, displayMat);
-            //Graphics.Blit(full, dest);
+            //Graphics.Blit(buff, dest);
         }
         else
         {
