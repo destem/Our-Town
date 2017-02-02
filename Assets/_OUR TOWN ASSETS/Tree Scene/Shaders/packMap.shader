@@ -51,7 +51,7 @@
 			{
 				float4 col = tex2D(_MainTex, i.uv);
 				// the packing algorithm fails when the "high" value is < 0.002h, so we set that as our minimum
-				return float4(pack(col.r, .002h), pack(col.g, .002h), pack(col.b, .002h), pack(col.a, .002h));
+				return float4(pack(col.r, .002h), pack(0.0, .002h), pack(0.0, .002h), pack(0.0, .002h));
 			}
 			ENDCG
 		}

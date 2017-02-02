@@ -8,8 +8,6 @@ using UnityEngine.UI;
 public class TreeScene : MonoBehaviour {
 
     public Texture2D startMask;
-    public Texture2D chapelMask;
-    //public Texture2D nextMask;
     public Texture2D MaskOneTex;
     public Texture2D MaskTwoTex;
     public Texture2D MaskThreeTex;
@@ -23,7 +21,6 @@ public class TreeScene : MonoBehaviour {
     RenderTexture final;
     public Text t;
     float brushSize = 10f;
-    //bool addingToMask = false;
     TreeGestureListener gesture;
     public GameObject screenModel;
     public float slowSpeed = 0f;
@@ -49,7 +46,6 @@ public class TreeScene : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        growMat.SetTexture("_MaskOneTex", chapelMask);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         buff = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
@@ -137,6 +133,8 @@ public class TreeScene : MonoBehaviour {
         }
         next = false;
         print("First words");
+        SetMaskThree(.25f, .25f);
+        SetMaskFour(.25f, .75f);
         SetMaskOne(.215f, .994f);
         yield return null;
         SetMaskOne(.222f, .942f);
