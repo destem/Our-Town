@@ -12,6 +12,7 @@ public class TreeScene : MonoBehaviour {
     public Texture2D MaskTwoTex;
     public Texture2D MaskThreeTex;
     public Texture2D MaskFourTex;
+    public Texture2D black;
     public Texture2D full;
     public Material chapelMat;
     public Material growMat;
@@ -51,6 +52,9 @@ public class TreeScene : MonoBehaviour {
         final = _createTexture(startMask.width, startMask.height);
         Graphics.Blit(startMask, buff, packer);
         displayMat.SetTexture("_MainTex", buff);
+        growMat.SetTexture("_MaskOneTex", black);
+        growMat.SetTexture("_MaskTwoTex", black);
+        growMat.SetTexture("_MaskFourTex", black);
         gesture = TreeGestureListener.Instance;
         chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
         //chapelTex = startMask;
@@ -119,31 +123,30 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("first branches");
+        print("first words");
         usingGrowth = true;
         screenModel.GetComponent<Renderer>().material = growMat;
-        growMat.SetTexture("_MaskOneTex", MaskOneTex);
-        growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
         growMat.SetTexture("_MaskThreeTex", MaskThreeTex);
-        growMat.SetTexture("_MaskFourTex", MaskFourTex);
+        SetMaskThree(.215f, .994f);
+        yield return null;
+        SetMaskThree(.222f, .942f);
+        yield return null;
+        SetMaskThree(.24f, .886f);
+        yield return null;
+        SetMaskThree(.58f, .065f);
+        yield return null;
+        SetMaskThree(.335f, .15f);
+        yield return null;   
         while (!next)
         {
             Blit();
             yield return null;
         }
         next = false;
-        print("First words");
-        SetMaskThree(.25f, .25f);
-        SetMaskFour(.25f, .75f);
-        SetMaskOne(.215f, .994f);
-        yield return null;
-        SetMaskOne(.222f, .942f);
-        yield return null;
-        SetMaskOne(.24f, .886f);
-        yield return null;
-        SetMaskOne(.58f, .065f);
-        yield return null;
-        SetMaskOne(.335f, .15f);
+        print("First branches");
+        growMat.SetTexture("_MaskOneTex", MaskOneTex);
+        growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
+        growMat.SetTexture("_MaskFourTex", MaskFourTex);
         while (!next)
         {
             Blit();
@@ -165,7 +168,8 @@ public class TreeScene : MonoBehaviour {
         }
         next = false;
         print("part 4 - growth from sides");
-        SetMaskTwo(.005f, .01f);
+       
+        SetMaskTwo(.004f, .01f);
         yield return null;
         SetMaskTwo(.02f, .01f);
         yield return null;
@@ -178,6 +182,8 @@ public class TreeScene : MonoBehaviour {
         SetMaskOne(.103f, .01f);
         yield return null;
         SetMaskOne(.11f, .01f);
+        yield return null;
+        SetMaskThree(.391f, .005f);
         yield return null;
         SetMaskOne(.965f, .01f);
         yield return null;
@@ -219,8 +225,7 @@ public class TreeScene : MonoBehaviour {
         print("Stage 5 fast");
         SetMaskOne(.275f, .005f);
         yield return null;
-        SetMaskOne(.391f, .005f);
-        yield return null;
+        
         SetMaskTwo(.326f, .005f);
         yield return null;
         SetMaskTwo(.834f, .005f);
