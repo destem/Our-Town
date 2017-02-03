@@ -73,11 +73,10 @@
 				//change amount to be its own step value - mutate the mask in place, then lerp colors
 				maskOneAmount = 1 - step(transVal, 1 - maskOneFade);
 				maskTwoAmount = 1 - step(transVal, 1 - maskTwoFade);
-				//maskThreeAmount = 1 - step(transVal, 1 - maskThreeFade);
+				maskThreeAmount = 1 - step(transVal, 1 - maskThreeFade);
 				maskFourAmount = 1 - step(transVal, 1 - maskFourFade);
 				
 				col = lerp(paperCol, finalCol, max(max(maskTwoAmount, maskOneAmount), max(maskThreeAmount, maskFourAmount)));
-				//col = fixed4(maskTwoAmount, maskTwoFade, 0., 1.);
 				return col;
 			}
 			ENDCG

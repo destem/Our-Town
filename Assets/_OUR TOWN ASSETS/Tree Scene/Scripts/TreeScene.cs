@@ -225,12 +225,37 @@ public class TreeScene : MonoBehaviour {
         print("Stage 5 fast");
         SetMaskOne(.275f, .005f);
         yield return null;
-        
+        SetMaskOne(.36f, .005f);
+        yield return null;
+        SetMaskOne(.375f, .005f);
+        yield return null;
         SetMaskTwo(.326f, .005f);
         yield return null;
-        SetMaskTwo(.834f, .005f);
+        SetMaskThree(.834f, .01f);
+        yield return null;
+        SetMaskThree(.767f, .01f);
+        yield return null;
+        SetMaskThree(.778f, .01f);
+        yield return null;
+        SetMaskThree(.784f, .01f);
+        yield return null;
+        SetMaskThree(.788f, .01f);
+        yield return null;
+        SetMaskThree(.81f, .01f);
+        yield return null;
+        SetMaskThree(.845f, .01f);
+        yield return null;
+        SetMaskThree(.858f, .01f);
+        yield return null;
+        SetMaskThree(.877f, .01f);
+        yield return null;
+        SetMaskThree(.899f, .01f);
+        yield return null;
+        SetMaskThree(.912f, .01f);
         yield return new WaitForSeconds(5f);
         print("Stage 5 fast - stage 2");
+        SetMaskTwo(.687f, .005f);
+        yield return null;
         SetMaskTwo(.697f, .005f);
         yield return null;
         SetMaskTwo(.183f, .005f);
@@ -254,6 +279,29 @@ public class TreeScene : MonoBehaviour {
         }
         next = false;
         print("third set of words");
+        SetMaskOne(.401f, .027f);
+        yield return null;
+        SetMaskOne(.442f, .84f);
+        yield return null;
+        SetMaskOne(.594f, .371f);
+        yield return null;
+        while (!next)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("final set of words");
+        SetMaskTwo(.027f, .815f);
+        yield return null;
+        SetMaskOne(.744f, .502f);
+        yield return null;
+        SetMaskTwo(.652f, .686f);
+        yield return null;
+        SetMaskOne(.933f, .563f);
+        yield return null;
+        SetMaskOne(.956f, .97f);
+        yield return null;
     }
 
     public void SetMaskOne(float u, float v)
