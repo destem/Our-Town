@@ -22,6 +22,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 	private bool swipeLeft;
 	private bool swipeRight;
 	private bool swipeUp;
+    private bool swipeDown;
     private bool psi;
     private bool clap;
 	
@@ -83,6 +84,17 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 		return false;
 	}
 
+    public bool IsSwipeDown()
+    {
+        if (swipeDown)
+        {
+            swipeDown = false;
+            return true;
+        }
+
+        return false;
+    }
+
     public bool IsPsi()
     {
         if (psi)
@@ -119,14 +131,15 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 			return;
 		
 		// detect these user specific gestures
-		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeLeft);
-		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
-		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
+		manager.DetectGesture(userId, KinectGestures.Gestures.SwipeLeft);
+		manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
+	    manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
         manager.DetectGesture(userId, KinectGestures.Gestures.Psi);
-        manager.DetectGesture(userId, KinectGestures.Gestures.Clap);
+        manager.DetectGesture(userId, KinectGestures.Gestures.SwipeDown);
+        // manager.DetectGesture(userId, KinectGestures.Gestures.Clap);
 
 
-	}
+    }
 
 	/// <summary>
 	/// Invoked when a user gets lost. All tracked gestures for this user are cleared automatically.
@@ -226,6 +239,8 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 			swipeRight = true;
 		else if(gesture == KinectGestures.Gestures.SwipeUp)
 			swipeUp = true;
+        else if (gesture == KinectGestures.Gestures.SwipeDown)
+            swipeDown = true;
         else if (gesture == KinectGestures.Gestures.Psi)
             psi = true;
         else if (gesture == KinectGestures.Gestures.Clap)

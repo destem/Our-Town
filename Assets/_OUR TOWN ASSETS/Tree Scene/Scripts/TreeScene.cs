@@ -102,7 +102,7 @@ public class TreeScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
-        while (!next)// && !gesture.IsClap())
+        while (!next && !gesture.IsSwipeRight())
         {
             Blit();
             yield return null;
@@ -117,7 +117,7 @@ public class TreeScene : MonoBehaviour {
         }
         
 
-        while (!next)// && !gesture.IsPsi())
+        while (!next  && !gesture.IsSwipeLeft())
         {
             Blit();
             yield return null;
@@ -137,7 +137,7 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskThree(.335f, .15f);
         yield return null;   
-        while (!next)
+        while (!next && !gesture.IsPsi())
         {
             Blit();
             yield return null;
