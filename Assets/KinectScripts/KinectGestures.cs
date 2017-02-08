@@ -78,13 +78,10 @@ public class KinectGestures : MonoBehaviour
 		Tpose,
 		Stop,
 		Wave,
-//		Click,
 		SwipeLeft,
 		SwipeRight,
 		SwipeUp,
 		SwipeDown,
-//		RightHandCursor,
-//		LeftHandCursor,
 		ZoomIn,
 		ZoomOut,
 		Wheel,
@@ -323,16 +320,20 @@ public class KinectGestures : MonoBehaviour
 		if(gestureData.complete)
 			return;
 
+        // whichever shoulder is higher
 		float bandTopY = jointsPos[rightShoulderIndex].y > jointsPos[leftShoulderIndex].y ? jointsPos[rightShoulderIndex].y : jointsPos[leftShoulderIndex].y;
+        //whichever hip is lower
 		float bandBotY = jointsPos[rightHipIndex].y < jointsPos[leftHipIndex].y ? jointsPos[rightHipIndex].y : jointsPos[leftHipIndex].y;
 
+        //halfway between shoulders and hips
 		float bandCenter = (bandTopY + bandBotY) / 2f;
+        //distance from shoulders to hips
 		float bandSize = (bandTopY - bandBotY);
 
-		float gestureTop = bandCenter + bandSize * 1.2f / 2f;
-		float gestureBottom = bandCenter - bandSize * 1.3f / 4f;
-		float gestureRight = jointsPos[rightHipIndex].x;
-		float gestureLeft = jointsPos[leftHipIndex].x;
+		float gestureTop = bandCenter + bandSize * 1.2f / 2f; //WAT - 5.2 if hips at 3 and shoulders at 5
+		float gestureBottom = bandCenter - bandSize * 1.3f / 4f; // 3.35 what is this
+		float gestureRight = jointsPos[rightShoulderIndex].x;
+		float gestureLeft = jointsPos[leftShoulderIndex].x;
 		
 		switch(gestureData.gesture)
 		{
@@ -587,100 +588,6 @@ public class KinectGestures : MonoBehaviour
 				}
 				break;
 
-//			// check for Click
-//			case Gestures.Click:
-//				switch(gestureData.state)
-//				{
-//					case 0:  // gesture detection - phase 1
-//						if(jointsTracked[rightHandIndex] && jointsTracked[rightElbowIndex] &&
-//					       (jointsPos[rightHandIndex].y - jointsPos[rightElbowIndex].y) > -0.1f)
-//						{
-//							SetGestureJoint(ref gestureData, timestamp, rightHandIndex, jointsPos[rightHandIndex]);
-//							gestureData.progress = 0.3f;
-//
-//							// set screen position at the start, because this is the most accurate click position
-//							SetScreenPos(userId, ref gestureData, ref jointsPos, ref jointsTracked);
-//						}
-//						else if(jointsTracked[leftHandIndex] && jointsTracked[leftElbowIndex] &&
-//					            (jointsPos[leftHandIndex].y - jointsPos[leftElbowIndex].y) > -0.1f)
-//						{
-//							SetGestureJoint(ref gestureData, timestamp, leftHandIndex, jointsPos[leftHandIndex]);
-//							gestureData.progress = 0.3f;
-//
-//							// set screen position at the start, because this is the most accurate click position
-//							SetScreenPos(userId, ref gestureData, ref jointsPos, ref jointsTracked);
-//						}
-//						break;
-//				
-//					case 1:  // gesture - phase 2
-////						if((timestamp - gestureData.timestamp) < 1.0f)
-////						{
-////							bool isInPose = gestureData.joint == rightHandIndex ?
-////								jointsTracked[rightHandIndex] && jointsTracked[rightElbowIndex] &&
-////								//(jointsPos[rightHandIndex].y - jointsPos[rightElbowIndex].y) > -0.1f && 
-////								Mathf.Abs(jointsPos[rightHandIndex].x - gestureData.jointPos.x) < 0.08f &&
-////								(jointsPos[rightHandIndex].z - gestureData.jointPos.z) < -0.05f :
-////								jointsTracked[leftHandIndex] && jointsTracked[leftElbowIndex] &&
-////								//(jointsPos[leftHandIndex].y - jointsPos[leftElbowIndex].y) > -0.1f &&
-////								Mathf.Abs(jointsPos[leftHandIndex].x - gestureData.jointPos.x) < 0.08f &&
-////								(jointsPos[leftHandIndex].z - gestureData.jointPos.z) < -0.05f;
-////				
-////							if(isInPose)
-////							{
-////								gestureData.timestamp = timestamp;
-////								gestureData.jointPos = jointsPos[gestureData.joint];
-////								gestureData.state++;
-////								gestureData.progress = 0.7f;
-////							}
-////							else
-////							{
-////								// check for stay-in-place
-////								Vector3 distVector = jointsPos[gestureData.joint] - gestureData.jointPos;
-////								isInPose = distVector.magnitude < 0.05f;
-////
-////								Vector3 jointPos = jointsPos[gestureData.joint];
-////								CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, Constants.ClickStayDuration);
-////							}
-////						}
-////						else
-//						{
-//							// check for stay-in-place
-//							Vector3 distVector = jointsPos[gestureData.joint] - gestureData.jointPos;
-//							bool isInPose = distVector.magnitude < 0.05f;
-//
-//							Vector3 jointPos = jointsPos[gestureData.joint];
-//							CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, KinectInterop.Constants.ClickStayDuration);
-////							SetGestureCancelled(gestureData);
-//						}
-//						break;
-//									
-////					case 2:  // gesture phase 3 = complete
-////						if((timestamp - gestureData.timestamp) < 1.0f)
-////						{
-////							bool isInPose = gestureData.joint == rightHandIndex ?
-////								jointsTracked[rightHandIndex] && jointsTracked[rightElbowIndex] &&
-////								//(jointsPos[rightHandIndex].y - jointsPos[rightElbowIndex].y) > -0.1f && 
-////								Mathf.Abs(jointsPos[rightHandIndex].x - gestureData.jointPos.x) < 0.08f &&
-////								(jointsPos[rightHandIndex].z - gestureData.jointPos.z) > 0.05f :
-////								jointsTracked[leftHandIndex] && jointsTracked[leftElbowIndex] &&
-////								//(jointsPos[leftHandIndex].y - jointsPos[leftElbowIndex].y) > -0.1f &&
-////								Mathf.Abs(jointsPos[leftHandIndex].x - gestureData.jointPos.x) < 0.08f &&
-////								(jointsPos[leftHandIndex].z - gestureData.jointPos.z) > 0.05f;
-////
-////							if(isInPose)
-////							{
-////								Vector3 jointPos = jointsPos[gestureData.joint];
-////								CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, 0f);
-////							}
-////						}
-////						else
-////						{
-////							// cancel the gesture
-////							SetGestureCancelled(ref gestureData);
-////						}
-////						break;
-//				}
-//				break;
 
 			// check for SwipeLeft
 			case Gestures.SwipeLeft:
@@ -688,8 +595,8 @@ public class KinectGestures : MonoBehaviour
 				{
 					case 0:  // gesture detection - phase 1
 						if(jointsTracked[rightHandIndex] && jointsTracked[hipCenterIndex] && jointsTracked[shoulderCenterIndex] && jointsTracked[leftHipIndex] && jointsTracked[rightHipIndex] &&
-						   jointsPos[rightHandIndex].y >= gestureBottom && jointsPos[rightHandIndex].y <= gestureTop &&
-				   			jointsPos[rightHandIndex].x >= gestureRight /**&& jointsPos[rightHandIndex].x > gestureLeft*/)
+						   jointsPos[rightHandIndex].y >= gestureBottom && jointsPos[rightHandIndex].y <= gestureTop && // below 5.2ft (assuming hips at 3 and shoulders at 5)
+				   			jointsPos[rightHandIndex].x >= gestureRight )
 						{
 							SetGestureJoint(ref gestureData, timestamp, rightHandIndex, jointsPos[rightHandIndex]);
 							gestureData.progress = 0.1f;
@@ -731,7 +638,7 @@ public class KinectGestures : MonoBehaviour
 					case 0:  // gesture detection - phase 1
 						if(jointsTracked[leftHandIndex] && jointsTracked[hipCenterIndex] && jointsTracked[shoulderCenterIndex] && jointsTracked[leftHipIndex] && jointsTracked[rightHipIndex] &&
 						   jointsPos[leftHandIndex].y >= gestureBottom && jointsPos[leftHandIndex].y <= gestureTop &&
-				   			jointsPos[leftHandIndex].x <= gestureLeft /**&& jointsPos[leftHandIndex].x < gestureRight*/)
+				   			jointsPos[leftHandIndex].x <= gestureLeft)
 						{
 							SetGestureJoint(ref gestureData, timestamp, leftHandIndex, jointsPos[leftHandIndex]);
 							gestureData.progress = 0.1f;
