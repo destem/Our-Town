@@ -117,6 +117,61 @@ public class TownScene : MonoBehaviour {
         SetMaskOne(.526f, .565f);
         yield return new WaitForSeconds(2.0f);      
         SetMaskTwo(.524f, .557f);
+        while (!next)// && !gesture.IsClap())
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        StartCoroutine(HouseOutlines());
+    }
+
+    IEnumerator HouseOutlines()
+    {
+        float outlineDelay = 2f;
+        //outlines are all on mask one. starting in lower-right and working left
+        /*
+
+         */
+        print("starting house outlines");
+        SetMaskOne(.933f, .009f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.931f, .445f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.888f, .44f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.869f, .009f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.859f, .604f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.848f, .15f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.823f, .59f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.785f, .7f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.74f, .005f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.725f, .452f);
+        yield return new WaitForSeconds(outlineDelay);
+        SetMaskOne(.69f, .005f);
+        yield return new WaitForSeconds(outlineDelay);
+    }
+
+    IEnumerator Roofs()
+    {
+        float roofDelay = 1f;
+        yield return null;
+    }
+
+    IEnumerator Windows()
+    {
+        yield return null;
+    }
+
+    IEnumerator HouseDetails()
+    {
+        yield return null;
     }
 
     public void SetMaskOne(float u, float v)
