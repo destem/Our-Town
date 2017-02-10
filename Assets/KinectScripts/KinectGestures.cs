@@ -157,6 +157,9 @@ public class KinectGestures : MonoBehaviour
 	protected int leftAnkleIndex;
 	protected int rightAnkleIndex;
 
+    protected int headIndex;
+    protected int neckIndex;
+
 
 	/// <summary>
 	/// Gets the list of gesture joint indexes.
@@ -164,7 +167,7 @@ public class KinectGestures : MonoBehaviour
 	/// <returns>The needed joint indexes.</returns>
 	/// <param name="manager">The KinectManager instance</param>
 	public virtual int[] GetNeededJointIndexes(KinectManager manager)
-	{
+	{ 
 		leftHandIndex = manager.GetJointIndex(KinectInterop.JointType.HandLeft);
 		rightHandIndex = manager.GetJointIndex(KinectInterop.JointType.HandRight);
 		
@@ -185,11 +188,14 @@ public class KinectGestures : MonoBehaviour
 		
 		leftAnkleIndex = manager.GetJointIndex(KinectInterop.JointType.AnkleLeft);
 		rightAnkleIndex = manager.GetJointIndex(KinectInterop.JointType.AnkleRight);
+
+        headIndex = manager.GetJointIndex(KinectInterop.JointType.Head);
+        neckIndex = manager.GetJointIndex(KinectInterop.JointType.Neck);
 		
 		int[] neededJointIndexes = {
 			leftHandIndex, rightHandIndex, leftElbowIndex, rightElbowIndex, leftShoulderIndex, rightShoulderIndex,
 			hipCenterIndex, shoulderCenterIndex, leftHipIndex, rightHipIndex, leftKneeIndex, rightKneeIndex, 
-			leftAnkleIndex, rightAnkleIndex
+			leftAnkleIndex, rightAnkleIndex, headIndex, neckIndex
 		};
 
 		return neededJointIndexes;
