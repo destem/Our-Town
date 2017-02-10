@@ -99,7 +99,22 @@ public class KinectGestures : MonoBehaviour
 		KickRight,
 		Run,
 
-		Clap = 101,
+		Clap,
+        Here,
+        PointSidetoSide,
+        BrushHair,
+        SwirlyArms,
+        HandSweep,
+        Behold,
+        Clench,
+        MicDrop,
+        Sweep,
+        YogaTree,
+        StepAndSweep,
+        HeadTilt,
+        ForearmWave,
+        ForearmPivot,
+
 		UserGesture2 = 102,
 		UserGesture3 = 103,
 		UserGesture4 = 104,
@@ -340,8 +355,11 @@ public class KinectGestures : MonoBehaviour
 		float gestureBottom = bandCenter - bandSize * 1.3f / 4f; // 3.35 what is this
 		float gestureRight = jointsPos[rightShoulderIndex].x;
 		float gestureLeft = jointsPos[leftShoulderIndex].x;
-		
-		switch(gestureData.gesture)
+
+        KinectInterop.HandState leftHandState = KinectManager.Instance.GetLeftHandState(userId);
+        KinectInterop.HandState rightHandState = KinectManager.Instance.GetRightHandState(userId);
+
+        switch (gestureData.gesture)
 		{
 			// check for RaiseRightHand
 			case Gestures.RaiseRightHand:

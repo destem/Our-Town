@@ -25,6 +25,31 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
     private bool swipeDown;
     private bool psi;
     private bool clap;
+    private bool here;
+    private bool pointSidetoSide;
+    private bool brushHair;
+    private bool swirlyArms;
+    private bool handSweep;
+    private bool behold;
+    private bool clench;
+    private bool micDrop;
+    private bool sweep;
+    private bool yogaTree;
+    private bool stepAndSweep;
+    private bool headTilt;
+    private bool forearmWave;
+    private bool forearmPivot;
+
+
+    KinectGestures.Gestures currentGesture;
+    KinectManager manager;
+
+    public void SetCurrentGesture(KinectGestures.Gestures g)
+    {
+        manager.DeleteGesture(0, currentGesture);
+        currentGesture = g;
+        manager.DetectGesture(0, g);
+    }
 	
 
 	/// <summary>
@@ -116,6 +141,21 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 
         return false;
     }
+    /*'Here,
+      PointSidetoSide,
+      BrushHair,
+      SwirlyArms,
+      HandSweep,
+      Behold,
+      Clench,
+      MicDrop,
+      Sweep,
+      YogaTree,
+      StepAndSweep,
+      HeadTilt,
+      ForearmWave,
+      ForearmPivot,
+       */
 
 
     /// <summary>
@@ -126,16 +166,16 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
     public void UserDetected(long userId, int userIndex)
 	{
 		// the gestures are allowed for the primary user only
-		KinectManager manager = KinectManager.Instance;
+		//KinectManager manager = KinectManager.Instance;
 		if(!manager || (userIndex != playerIndex))
 			return;
 		
 		// detect these user specific gestures
-		manager.DetectGesture(userId, KinectGestures.Gestures.SwipeLeft);
-		manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
-	    manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
-        manager.DetectGesture(userId, KinectGestures.Gestures.Psi);
-        manager.DetectGesture(userId, KinectGestures.Gestures.SwipeDown);
+		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeLeft);
+		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
+	 //   manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
+  //      manager.DetectGesture(userId, KinectGestures.Gestures.Psi);
+  //      manager.DetectGesture(userId, KinectGestures.Gestures.SwipeDown);
         // manager.DetectGesture(userId, KinectGestures.Gestures.Clap);
 
 
@@ -245,6 +285,35 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
             psi = true;
         else if (gesture == KinectGestures.Gestures.Clap)
             clap = true;
+        else if (gesture == KinectGestures.Gestures.Here)
+            here = true;
+        else if (gesture == KinectGestures.Gestures.PointSidetoSide)
+            pointSidetoSide = true;
+        else if (gesture == KinectGestures.Gestures.BrushHair)
+            brushHair = true;
+        else if (gesture == KinectGestures.Gestures.SwirlyArms)
+            swirlyArms = true;
+        else if (gesture == KinectGestures.Gestures.Behold)
+            behold = true;
+        else if (gesture == KinectGestures.Gestures.Clench)
+            clench = true;
+        else if (gesture == KinectGestures.Gestures.MicDrop)
+            micDrop = true;
+        else if (gesture == KinectGestures.Gestures.Sweep)
+            sweep = true;
+        else if (gesture == KinectGestures.Gestures.YogaTree)
+            yogaTree = true;
+        else if (gesture == KinectGestures.Gestures.StepAndSweep)
+            stepAndSweep = true;
+        else if (gesture == KinectGestures.Gestures.HeadTilt)
+            headTilt = true;
+        else if (gesture == KinectGestures.Gestures.HandSweep)
+            handSweep = true;
+        else if (gesture == KinectGestures.Gestures.ForearmWave)
+            forearmWave = true;
+        else if (gesture == KinectGestures.Gestures.ForearmPivot)
+            forearmPivot = true;
+      
 
         return true;
 	}
@@ -282,6 +351,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 	void Awake()
 	{
 		instance = this;
+        manager = KinectManager.Instance;
 	}
 
 	void Update()

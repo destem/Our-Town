@@ -1,17 +1,7 @@
-** Color tree map for different speeds
-
-** Update tree growth shader to accommodate different speeds (what's with the slow startup?)
-
---Implement coroutine to set specific UV for a short time and set back. Continuing to check boolean at top of update()
-
-** Start master FSM to go through the scene
-
-** Implement clap gesture
-
-Start final star image. Write to texture?
-
-** Form moon drawing from scans
-
-stitch final two drawings
-
 separate town scene into four masks
+
+implement new gestures
+
+small app to test gestures
+
+small script to collect UV coords from masks
