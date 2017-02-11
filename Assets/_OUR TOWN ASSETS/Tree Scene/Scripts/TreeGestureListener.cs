@@ -141,21 +141,160 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 
         return false;
     }
-    /*'Here,
-      PointSidetoSide,
-      BrushHair,
-      SwirlyArms,
-      HandSweep,
-      Behold,
-      Clench,
-      MicDrop,
-      Sweep,
-      YogaTree,
-      StepAndSweep,
-      HeadTilt,
-      ForearmWave,
-      ForearmPivot,
-       */
+
+    public bool IsHere()
+    {
+        if (here)
+        {
+            here = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsPointSidetoSide()
+    {
+        if (pointSidetoSide)
+        {
+            pointSidetoSide = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsBrushHair()
+    {
+        if (brushHair)
+        {
+            brushHair = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsSwirlyArms()
+    {
+        if (swirlyArms)
+        {
+            swirlyArms = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsHandSweep()
+    {
+        if (handSweep)
+        {
+            handSweep = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsBehold()
+    {
+        if (behold)
+        {
+            behold = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsClench()
+    {
+        if (clench)
+        {
+            clench = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsMicDrop()
+    {
+        if (micDrop)
+        {
+            micDrop = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsSweep()
+    {
+        if (sweep)
+        {
+            sweep = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsYogaTree()
+    {
+        if (yogaTree)
+        {
+            yogaTree = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsStepAndSweep()
+    {
+        if (stepAndSweep)
+        {
+            stepAndSweep = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsHeadTilt()
+    {
+        if (headTilt)
+        {
+            headTilt = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsForearmWave()
+    {
+        if (forearmWave)
+        {
+            forearmWave = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsForearmPivot()
+    {
+        if (forearmPivot)
+        {
+            forearmPivot = false;
+            return true;
+        }
+
+        return false;
+    }
 
 
     /// <summary>
