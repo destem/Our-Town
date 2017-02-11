@@ -9,7 +9,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 	public int playerIndex = 0;
 
 	[Tooltip("GUI-Text to display gesture-listener messages and gesture information.")]
-	public GUIText gestureInfo;
+	 GUIText gestureInfo;
 
 	// singleton instance of the class
 	private static TreeGestureListener instance = null;

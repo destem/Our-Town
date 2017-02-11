@@ -150,7 +150,7 @@ public class GestureTest : MonoBehaviour {
                 gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
                 break;
             case "Point":
-                t.text = "POINT SIDE TO SIDE";
+                t.text = "POINT TO THE RIGHT";
                 gesture.SetCurrentGesture(KinectGestures.Gestures.PointSidetoSide);
                 break;
             case "Brush":
@@ -194,7 +194,7 @@ public class GestureTest : MonoBehaviour {
                 gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
                 break;
             case "FWave":
-                t.text = "WAVE FOREARMS";
+                t.text = "RIGHT BACKSWING";
                 gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
                 break;
             case "FPivot":
