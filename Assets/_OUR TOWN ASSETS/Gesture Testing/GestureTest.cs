@@ -8,16 +8,21 @@ public class GestureTest : MonoBehaviour {
     TreeGestureListener gesture;
     public Text t;
     KinectGestures.Gestures currentGesture;
+    KinectManager manager;
 
     // Use this for initialization
     void Start () {
+        manager = KinectManager.Instance;
         gesture = TreeGestureListener.Instance;
-        //currentGesture = KinectGestures.Gestures.Clap;
+        currentGesture = KinectGestures.Gestures.LeanRight;
+        manager.DetectGesture(0, currentGesture);
         //gesture.SetCurrentGesture(currentGesture);
     }
 	
 	// Update is called once per frame
 	void Update () {
+        currentGesture = gesture.GetCurrentGesture();
+        //print(currentGesture + " " + manager + " " + gesture);
 		if (Input.GetKeyDown(KeyCode.Space))
         {
             StartCoroutine(Success());
@@ -114,7 +119,14 @@ public class GestureTest : MonoBehaviour {
                     StartCoroutine(Success());
                 }
                 break;
-               
+            case KinectGestures.Gestures.LeanRight:
+                //print("testing lean");
+                if (gesture.IsLeanRight())
+                {
+                    StartCoroutine(Success());
+                }
+                break;
+
         }
     }
 
@@ -188,6 +200,10 @@ public class GestureTest : MonoBehaviour {
             case "FPivot":
                 t.text = "FOREARM PIVOT";
                 gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmPivot);
+                break;
+            case "LeanRight":
+                t.text = "LEAN RIGHT";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.LeanRight);
                 break;
         }
 

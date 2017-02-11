@@ -359,6 +359,8 @@ public class KinectGestures : MonoBehaviour
         KinectInterop.HandState leftHandState = KinectManager.Instance.GetLeftHandState(userId);
         KinectInterop.HandState rightHandState = KinectManager.Instance.GetRightHandState(userId);
 
+        //print(userId + ": " + rightHandState);
+
         switch (gestureData.gesture)
 		{
 			// check for RaiseRightHand
@@ -1247,7 +1249,9 @@ public class KinectGestures : MonoBehaviour
 								
 								gestureData.timestamp = timestamp;
 								gestureData.progress = 0.7f;
-							}
+                                Vector3 jointPos = jointsPos[gestureData.joint];
+                                CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, 0f);
+                            }
 						}
 						else
 						{

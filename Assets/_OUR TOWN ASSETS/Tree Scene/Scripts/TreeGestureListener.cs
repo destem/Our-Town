@@ -23,6 +23,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 	private bool swipeRight;
 	private bool swipeUp;
     private bool swipeDown;
+    private bool leanRight;
     private bool psi;
     private bool clap;
     private bool here;
@@ -41,22 +42,27 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
     private bool forearmPivot;
 
 
-    KinectGestures.Gestures currentGesture;
-    KinectManager manager;
+    KinectGestures.Gestures currentGesture = KinectGestures.Gestures.LeanRight;
+    KinectManager manager = KinectManager.Instance;
 
     public void SetCurrentGesture(KinectGestures.Gestures g)
     {
-        manager.DeleteGesture(0, currentGesture);
+        //print(KinectManager.Instance);
+        //print(currentGesture);
+        KinectManager.Instance.DeleteGesture(manager.GetUserIdByIndex(0), currentGesture);
         currentGesture = g;
-        manager.DetectGesture(0, g);
+        KinectManager.Instance.DetectGesture(manager.GetUserIdByIndex(0), g);
     }
-	
 
-	/// <summary>
-	/// Gets the singleton CubeGestureListener instance.
-	/// </summary>
-	/// <value>The CubeGestureListener instance.</value>
-	public static TreeGestureListener Instance
+    public KinectGestures.Gestures GetCurrentGesture()
+    {
+        return KinectManager.Instance.GetGesturesList(manager.GetUserIdByIndex(0))[0];
+    }
+    /// <summary>
+    /// Gets the singleton CubeGestureListener instance.
+    /// </summary>
+    /// <value>The CubeGestureListener instance.</value>
+    public static TreeGestureListener Instance
 	{
 		get
 		{
@@ -295,6 +301,16 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 
         return false;
     }
+    public bool IsLeanRight()
+    {
+        if (leanRight)
+        {
+            leanRight = false;
+            return true;
+        }
+
+        return false;
+    }
 
 
     /// <summary>
@@ -308,9 +324,10 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 		//KinectManager manager = KinectManager.Instance;
 		if(!manager || (userIndex != playerIndex))
 			return;
-		
-		// detect these user specific gestures
-		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeLeft);
+
+        // detect these user specific gestures
+        print("Setting dectected");
+		manager.DetectGesture(userId, currentGesture);
 		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
 	 //   manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
   //      manager.DetectGesture(userId, KinectGestures.Gestures.Psi);
@@ -452,7 +469,8 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
             forearmWave = true;
         else if (gesture == KinectGestures.Gestures.ForearmPivot)
             forearmPivot = true;
-      
+        else if (gesture == KinectGestures.Gestures.LeanRight)
+            leanRight = true;
 
         return true;
 	}
