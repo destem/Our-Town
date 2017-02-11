@@ -141,23 +141,55 @@ public class GestureTest : MonoBehaviour {
                 t.text = "POINT SIDE TO SIDE";
                 gesture.SetCurrentGesture(KinectGestures.Gestures.PointSidetoSide);
                 break;
+            case "Brush":
+                t.text = "BRUSH HAIR";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
+                break;
+            case "Swirl":
+                t.text = "SWIRLY ARMS";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.SwirlyArms);
+                break;
+            case "HandSweep":        
+                t.text = "HAND SWEEP";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.HandSweep);
+                break;
+            case "Behold":
+                t.text = "BEHOLD";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.Behold);
+                break;
+            case "Clench":
+                t.text = "CLENCH";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
+                break;
+            case "MicDrop":
+                t.text = "DROP THE MIC";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.MicDrop);
+                break;
+            case "Sweep":
+                t.text = "FOOT SWEEP";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.Sweep);
+                break;
+            case "YogaTree":
+                t.text = "YOGA TREE";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
+                break;
+            case "StepSweep":
+                t.text = "STEP FORWARD AND SWIPE UP";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.StepAndSweep);
+                break;
+            case "HeadTilt":
+                t.text = "WHO'S A GOOD BOY??";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+                break;
+            case "FWave":
+                t.text = "WAVE FOREARMS";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
+                break;
+            case "FPivot":
+                t.text = "FOREARM PIVOT";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmPivot);
+                break;
         }
 
-        /*
-                Here,
-      PointSidetoSide,
-      BrushHair,
-      SwirlyArms,
-      HandSweep,
-      Behold,
-      Clench,
-      MicDrop,
-      Sweep,
-      YogaTree,
-      StepAndSweep,
-      HeadTilt,
-      ForearmWave,
-      ForearmPivot,
-               */
     }
 }
