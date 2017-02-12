@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 //using Windows.Kinect;
 
-public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListenerInterface
+public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListenerInterface
 {
 	[Tooltip("Index of the player, tracked by this component. 0 means the 1st player, 1 - the 2nd one, 2 - the 3rd one, etc.")]
 	public int playerIndex = 0;
@@ -12,7 +12,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 	 GUIText gestureInfo;
 
 	// singleton instance of the class
-	private static TreeGestureListener instance = null;
+	private static OurTownGestureListener instance = null;
 
 	// internal variables to track if progress message has been displayed
 	private bool progressDisplayed;
@@ -40,6 +40,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
     private bool headTilt;
     private bool forearmWave;
     private bool forearmPivot;
+    private bool currentGestureComplete;
 
 
     KinectGestures.Gestures currentGesture = KinectGestures.Gestures.LeanRight;
@@ -62,7 +63,7 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
     /// Gets the singleton CubeGestureListener instance.
     /// </summary>
     /// <value>The CubeGestureListener instance.</value>
-    public static TreeGestureListener Instance
+    public static OurTownGestureListener Instance
 	{
 		get
 		{
@@ -312,6 +313,16 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
         return false;
     }
 
+    public bool IsCurrentGesture()
+    {
+        if (currentGestureComplete)
+        {
+            currentGestureComplete = false;
+            return true;
+        }
+        return false;
+    }
+
 
     /// <summary>
     /// Invoked when a new user is detected. Here you can start gesture tracking by invoking KinectManager.DetectGesture()-function.
@@ -428,8 +439,10 @@ public class TreeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 			string sGestureText = gesture + " detected";
 			gestureInfo.text = sGestureText;
 		}
-		
-		if(gesture == KinectGestures.Gestures.SwipeLeft)
+
+        currentGestureComplete = true;
+
+        if (gesture == KinectGestures.Gestures.SwipeLeft)
 			swipeLeft = true;
 		else if(gesture == KinectGestures.Gestures.SwipeRight)
 			swipeRight = true;

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GestureTest : MonoBehaviour {
 
-    TreeGestureListener gesture;
+    OurTownGestureListener gesture;
     public Text t;
     KinectGestures.Gestures currentGesture;
     KinectManager manager;
@@ -13,7 +13,7 @@ public class GestureTest : MonoBehaviour {
     // Use this for initialization
     void Start () {
         manager = KinectManager.Instance;
-        gesture = TreeGestureListener.Instance;
+        gesture = OurTownGestureListener.Instance;
         currentGesture = KinectGestures.Gestures.LeanRight;
         manager.DetectGesture(0, currentGesture);
         //gesture.SetCurrentGesture(currentGesture);

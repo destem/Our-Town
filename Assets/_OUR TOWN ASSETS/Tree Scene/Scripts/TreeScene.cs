@@ -22,7 +22,7 @@ public class TreeScene : MonoBehaviour {
     RenderTexture final;
     public Text t;
     float brushSize = 10f;
-    TreeGestureListener gesture;
+    OurTownGestureListener gesture;
     public GameObject screenModel;
     public float slowSpeed = 0f;
     public float mediumSpeed = 0f;
@@ -55,7 +55,7 @@ public class TreeScene : MonoBehaviour {
         growMat.SetTexture("_MaskOneTex", black);
         growMat.SetTexture("_MaskTwoTex", black);
         growMat.SetTexture("_MaskFourTex", black);
-        gesture = TreeGestureListener.Instance;
+        gesture = OurTownGestureListener.Instance;
         chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
         //chapelTex = startMask;
         StartCoroutine(RunScene());

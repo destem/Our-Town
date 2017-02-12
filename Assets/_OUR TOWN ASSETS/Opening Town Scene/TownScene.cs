@@ -21,7 +21,7 @@ public class TownScene : MonoBehaviour {
     RenderTexture final;
     public Text t;
     float brushSize = 10f;
-    TreeGestureListener gesture;
+    OurTownGestureListener gesture;
     public GameObject screenModel;
     public float slowSpeed = 0f;
     public float mediumSpeed = 0f;
@@ -55,7 +55,7 @@ public class TownScene : MonoBehaviour {
         growMat.SetTexture("_MaskTwoTex", black);
         growMat.SetTexture("_MaskThreeTex", black);
         growMat.SetTexture("_MaskFourTex", black);
-        gesture = TreeGestureListener.Instance;
+        gesture = OurTownGestureListener.Instance;
         StartCoroutine(RunScene());
     }
 
