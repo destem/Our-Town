@@ -46,13 +46,14 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
     KinectGestures.Gestures currentGesture = KinectGestures.Gestures.LeanRight;
     KinectManager manager = KinectManager.Instance;
 
-    public void SetCurrentGesture(KinectGestures.Gestures g)
+    public bool SetCurrentGesture(KinectGestures.Gestures g)
     {
         //print(KinectManager.Instance);
         //print(currentGesture);
         KinectManager.Instance.DeleteGesture(manager.GetUserIdByIndex(0), currentGesture);
         currentGesture = g;
         KinectManager.Instance.DetectGesture(manager.GetUserIdByIndex(0), g);
+        return true;
     }
 
     public KinectGestures.Gestures GetCurrentGesture()
