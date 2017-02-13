@@ -59,6 +59,20 @@ public class TownScene : MonoBehaviour {
         StartCoroutine(RunScene());
     }
 
+    void Reset()
+    {
+        StopAllCoroutines();
+        buff = _createTexture(startMask.width, startMask.height);
+        final = _createTexture(startMask.width, startMask.height);
+        Graphics.Blit(startMask, buff, packer);
+        displayMat.SetTexture("_MainTex", buff);
+        growMat.SetTexture("_MaskOneTex", black);
+        growMat.SetTexture("_MaskTwoTex", black);
+        growMat.SetTexture("_MaskThreeTex", black);
+        growMat.SetTexture("_MaskFourTex", black);
+        StartCoroutine(RunScene());
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -69,6 +83,11 @@ public class TownScene : MonoBehaviour {
         if (Input.GetButtonDown("Jump"))
         {
             next = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Reset();
         }
 
     }
