@@ -103,7 +103,7 @@ public class KinectGestures : MonoBehaviour
         Here,
         PointSidetoSide,
         BrushHair,
-        SwirlyArms,
+        TheMoreYouKnow,
         HandSweep,
         Behold,
         Clench,
@@ -1468,15 +1468,15 @@ public class KinectGestures : MonoBehaviour
 				break;
             // check for arm in bicycle "stop" pose, then hand going from open to closed
             case Gestures.Clench:
-                print(Vector3.Angle(jointsPos[rightElbowIndex] - jointsPos[rightShoulderIndex], Vector3.right) + " " + Vector3.Angle(jointsPos[rightHandIndex] - jointsPos[rightElbowIndex], Vector3.up));
+                //print(Vector3.Angle(jointsPos[leftElbowIndex] - jointsPos[leftShoulderIndex], Vector3.right) + " " + Vector3.Angle(jointsPos[leftHandIndex] - jointsPos[leftElbowIndex], Vector3.up));
                 switch (gestureData.state)
                 {
                     case 0:  // gesture detection - phase 1
-                        if (jointsTracked[rightHandIndex] && jointsTracked[rightElbowIndex] && jointsTracked[rightShoulderIndex] &&
-                            rightHandState == KinectInterop.HandState.Open && Vector3.Angle(jointsPos[rightElbowIndex] - jointsPos[rightShoulderIndex], Vector3.right) < 40f &&
-                            Vector3.Angle(jointsPos[rightHandIndex] - jointsPos[rightElbowIndex], Vector3.up) < 30f )
+                        if (jointsTracked[leftHandIndex] && jointsTracked[leftElbowIndex] && jointsTracked[leftShoulderIndex] &&
+                            leftHandState == KinectInterop.HandState.Open && Vector3.Angle(jointsPos[leftElbowIndex] - jointsPos[leftShoulderIndex], Vector3.left) < 40f &&
+                            Vector3.Angle(jointsPos[leftHandIndex] - jointsPos[leftElbowIndex], Vector3.up) < 30f )
                         {
-                            SetGestureJoint(ref gestureData, timestamp, rightHandIndex, jointsPos[rightHandIndex]);
+                            SetGestureJoint(ref gestureData, timestamp, leftHandIndex, jointsPos[leftHandIndex]);
                             gestureData.progress = 0.5f;
                         }
                         break;
@@ -1484,9 +1484,9 @@ public class KinectGestures : MonoBehaviour
                     case 1:  // gesture phase 2 = complete
                         if ((timestamp - gestureData.timestamp) < 2f)
                         {
-                            bool isInPose = jointsTracked[rightHandIndex] && jointsTracked[rightElbowIndex] && jointsTracked[rightShoulderIndex] &&
-                            rightHandState == KinectInterop.HandState.Closed && Vector3.Angle(jointsPos[rightElbowIndex] - jointsPos[rightShoulderIndex], Vector3.right) < 40f &&
-                            Vector3.Angle(jointsPos[rightHandIndex] - jointsPos[rightElbowIndex], Vector3.up) < 30f;
+                            bool isInPose = jointsTracked[leftHandIndex] && jointsTracked[leftElbowIndex] && jointsTracked[leftShoulderIndex] &&
+                            leftHandState == KinectInterop.HandState.Closed && Vector3.Angle(jointsPos[leftElbowIndex] - jointsPos[leftShoulderIndex], Vector3.left) < 40f &&
+                            Vector3.Angle(jointsPos[leftHandIndex] - jointsPos[leftElbowIndex], Vector3.up) < 30f;
 
                             if (isInPose)
                             {
@@ -1504,7 +1504,7 @@ public class KinectGestures : MonoBehaviour
                 break;
 
             case Gestures.HeadTilt:
-                print(Vector3.Angle(jointsPos[headIndex] - jointsPos[neckIndex], Vector3.up));
+                //print(Vector3.Angle(jointsPos[headIndex] - jointsPos[neckIndex], Vector3.up));
                 switch (gestureData.state)
                 {
                     case 0:  // gesture detection - phase 1
@@ -1539,7 +1539,7 @@ public class KinectGestures : MonoBehaviour
                 break;
 
             case Gestures.BrushHair:
-                print((jointsPos[rightHandIndex].y - jointsPos[rightHipIndex].y) + " " + (jointsPos[leftHandIndex].y - jointsPos[headIndex].y));
+                //print((jointsPos[rightHandIndex].y - jointsPos[rightHipIndex].y) + " " + (jointsPos[leftHandIndex].y - jointsPos[headIndex].y));
                 switch (gestureData.state)
                 {
                     case 0:  // gesture detection - phase 1
@@ -1814,7 +1814,7 @@ public class KinectGestures : MonoBehaviour
                 }
                 break;
 
-            case Gestures.SwirlyArms:
+            case Gestures.TheMoreYouKnow:
                 // print(Vector3.Angle(jointsPos[rightElbowIndex] - jointsPos[rightShoulderIndex], Vector3.right) + " " + Vector3.Angle(jointsPos[rightHandIndex] - jointsPos[rightElbowIndex], Vector3.up));
                 switch (gestureData.state)
                 {

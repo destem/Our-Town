@@ -117,7 +117,7 @@ public class TownScene : MonoBehaviour {
     IEnumerator RunScene()
     {
         screenModel.GetComponent<Renderer>().material = growMat;
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && gesture?(!gesture.IsCurrentGesture()):false)
         {
             Blit();
@@ -125,7 +125,7 @@ public class TownScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine(FirstHouses());
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -133,15 +133,12 @@ public class TownScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine(HouseOutlines());
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
-        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
-        {
-            Blit();
-            yield return null;
-        }
+        
         next = false;
+        yield return new WaitForSeconds(2f);
         StartCoroutine(Roofs());
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
+        yield return null;
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -150,6 +147,57 @@ public class TownScene : MonoBehaviour {
         next = false;
         StartCoroutine(Windows());
         //gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
+        yield return new WaitForSeconds(2f);
+        print("here come the detials for 1c");
+        //FIRE OFF DETAILS
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("1d");
+        //FIRE OFF BACKGROUND
+        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        //FIRE OFF WORDS
+        print ("WORDS!");
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        //words only
+        print("TOWN DISAPPEARS!");
+        yield return null;
+        yield return new WaitForSeconds(2f); // time for professor to speak. 130 in rehearsal
+        print("TREES COME IN");
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("POP! GOES THE TOWN");
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("JUST THE HOUSES");
     }
 
     IEnumerator FirstHouses()

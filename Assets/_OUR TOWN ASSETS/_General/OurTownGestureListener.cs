@@ -461,7 +461,7 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
             pointSidetoSide = true;
         else if (gesture == KinectGestures.Gestures.BrushHair)
             brushHair = true;
-        else if (gesture == KinectGestures.Gestures.SwirlyArms)
+        else if (gesture == KinectGestures.Gestures.TheMoreYouKnow)
             swirlyArms = true;
         else if (gesture == KinectGestures.Gestures.Behold)
             behold = true;

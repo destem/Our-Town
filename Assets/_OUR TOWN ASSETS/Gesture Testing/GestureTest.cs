@@ -53,7 +53,7 @@ public class GestureTest : MonoBehaviour {
                     StartCoroutine(Success());
                 }
                 break;
-            case KinectGestures.Gestures.SwirlyArms:
+            case KinectGestures.Gestures.TheMoreYouKnow:
                 if (gesture.IsSwirlyArms())
                 {
                     StartCoroutine(Success());
@@ -158,8 +158,8 @@ public class GestureTest : MonoBehaviour {
                 gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
                 break;
             case "Swirl":
-                t.text = "SWIRLY ARMS";
-                gesture.SetCurrentGesture(KinectGestures.Gestures.SwirlyArms);
+                t.text = "THE MORE YOU KNOW";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
                 break;
             case "HandSweep":        
                 t.text = "HAND SWEEP";
