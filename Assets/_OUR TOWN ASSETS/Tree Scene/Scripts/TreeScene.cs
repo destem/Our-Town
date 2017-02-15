@@ -48,6 +48,7 @@ public class TreeScene : MonoBehaviour {
     void Start()
     {
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
+        screenModel.GetComponent<Renderer>().material = chapelMat;
         buff = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
         Graphics.Blit(startMask, buff, packer);
@@ -145,7 +146,7 @@ public class TreeScene : MonoBehaviour {
         next = false;
         print("first words");
         usingGrowth = true;
-        screenModel.GetComponent<Renderer>().material = growMat;
+        screenModel.GetComponent<Renderer>().material = displayMat;
         growMat.SetTexture("_MaskThreeTex", MaskThreeTex);
         SetMaskThree(.215f, .994f);
         yield return null;

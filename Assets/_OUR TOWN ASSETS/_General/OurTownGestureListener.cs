@@ -50,9 +50,12 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
     {
         //print(KinectManager.Instance);
         //print(currentGesture);
-        KinectManager.Instance.DeleteGesture(manager.GetUserIdByIndex(0), currentGesture);
-        currentGesture = g;
-        KinectManager.Instance.DetectGesture(manager.GetUserIdByIndex(0), g);
+        if (KinectManager.Instance)
+        {
+            KinectManager.Instance.DeleteGesture(manager.GetUserIdByIndex(0), currentGesture);
+            currentGesture = g;
+            KinectManager.Instance.DetectGesture(manager.GetUserIdByIndex(0), g);
+        }
         return true;
     }
 

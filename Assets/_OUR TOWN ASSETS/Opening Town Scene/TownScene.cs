@@ -56,6 +56,7 @@ public class TownScene : MonoBehaviour {
         growMat.SetTexture("_MaskThreeTex", black);
         growMat.SetTexture("_MaskFourTex", black);
         gesture = OurTownGestureListener.Instance;
+        screenModel.GetComponent<Renderer>().material = displayMat;
         StartCoroutine(RunScene());
     }
 
@@ -70,6 +71,7 @@ public class TownScene : MonoBehaviour {
         growMat.SetTexture("_MaskTwoTex", black);
         growMat.SetTexture("_MaskThreeTex", black);
         growMat.SetTexture("_MaskFourTex", black);
+        screenModel.GetComponent<Renderer>().material = displayMat;
         StartCoroutine(RunScene());
     }
 
@@ -117,7 +119,7 @@ public class TownScene : MonoBehaviour {
     IEnumerator RunScene()
     {
         screenModel.GetComponent<Renderer>().material = growMat;
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && gesture?(!gesture.IsCurrentGesture()):false)
         {
             Blit();
@@ -125,7 +127,7 @@ public class TownScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine(FirstHouses());
-        gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -138,19 +140,21 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(2f);
         StartCoroutine(Roofs());
         yield return null;
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
             yield return null;
         }
         next = false;
+        //StartCoroutine(Landscape());
+        yield return null;
         StartCoroutine(Windows());
         //gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
         yield return new WaitForSeconds(2f);
-        print("here come the detials for 1c");
-        //FIRE OFF DETAILS
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
+
+        StartCoroutine(HouseDetails());
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -159,16 +163,16 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("1d");
         //FIRE OFF BACKGROUND
-        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
             yield return null;
         }
         next = false;
-        //FIRE OFF WORDS
+        StartCoroutine(Words());
         print ("WORDS!");
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -181,7 +185,7 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(2f); // time for professor to speak. 130 in rehearsal
         print("TREES COME IN");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
+       // gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -190,7 +194,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("POP! GOES THE TOWN");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -205,6 +209,8 @@ public class TownScene : MonoBehaviour {
         print("first houses");
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
+        growMat.SetTexture("_MaskThreeTex", MaskThreeTex);
+        growMat.SetTexture("_MaskFourTex", MaskFourTex);
         SetMaskOne(.465f, .563f);
         yield return new WaitForSeconds(2.0f);
         SetMaskTwo(.464f, .565f);
@@ -293,11 +299,56 @@ public class TownScene : MonoBehaviour {
         }
     }
 
-    IEnumerator HouseDetails()
+    IEnumerator Landscape()
     {
-        yield return null;
+        float landDelay = 5.07f;
+        float[] coords = { 0.995f, 0.882f, 0.753f, 0.951f, 0.362f, 0.570f, 0.297f, 0.549f, 0.243f, 0.592f, 0.161f, 0.714f, 0.130f, 0.728f };
+        print("starting landscape");
+        for (int i = 0; i < coords.Length; i += 2)
+        {
+            SetMaskThree(coords[i], coords[i + 1]);
+            yield return new WaitForSeconds(landDelay);
+        }
     }
 
+    IEnumerator HouseDetails()
+    {
+        float detailDelay = 1.09f;
+        float[] coords = { 0.930f, 0.459f, 0.928f, 0.237f, 0.860f, 0.573f, 0.823f, 0.474f, 0.841f, 0.154f,
+                           0.837f, 0.602f, 0.813f, 0.610f, 0.788f, 0.093f, 0.777f, 0.732f, 0.749f, 0.301f,
+                           0.756f, 0.078f, 0.696f, 0.326f, 0.657f, 0.480f, 0.614f, 0.581f, 0.623f, 0.309f,
+                           0.587f, 0.283f, 0.512f, 0.387f, 0.536f, 0.674f, 0.476f, 0.674f, 0.439f, 0.294f,
+                           0.418f, 0.355f, 0.399f, 0.463f, 0.414f, 0.398f, 0.343f, 0.225f, 0.300f, 0.014f,
+                           0.343f, 0.667f, 0.325f, 0.341f, 0.283f, 0.014f, 0.278f, 0.176f, 0.253f, 0.595f,
+                           0.249f, 0.459f, 0.245f, 0.104f, 0.210f, 0.258f, 0.183f, 0.563f, 0.196f, 0.541f,
+                           0.210f, 0.344f, 0.152f, 0.746f, 0.156f, 0.656f, 0.139f, 0.753f, 0.128f, 0.352f,
+                           0.114f, 0.416f, 0.125f, 0.531f, 0.094f, 0.071f, 0.079f, 0.394f, 0.078f, 0.344f,
+                           0.085f, 0.237f, 0.030f, 0.445f, 0.026f, 0.301f, 0.034f, 0.294f, 0.036f, 0.258f };
+        print("starting house details");
+        for (int i = 0; i < coords.Length; i += 2)
+        {
+            SetMaskThree(coords[i], coords[i + 1]);
+            yield return new WaitForSeconds(detailDelay);
+        }
+    }
+
+    IEnumerator Words()
+    {
+        float wordDelay = 1.17f;
+        float[] coords = { 0.648f, 0.066f, 0.228f, 0.287f, 0.258f, 0.277f, 0.324f, 0.238f, 0.324f, 0.198f,
+                           0.191f, 0.688f, 0.432f, 0.352f, 0.670f, 0.263f, 0.453f, 0.227f, 0.549f, 0.699f,
+                           0.627f, 0.834f, 0.737f, 0.564f, 0.986f, 0.184f, 0.871f, 0.066f, 0.750f, 0.209f,
+                           0.018f, 0.514f, 0.115f, 0.607f, 0.105f, 0.273f, 0.774f, 0.117f, 0.728f, 0.109f,
+                           0.727f, 0.020f, 0.862f, 0.269f, 0.552f, 0.166f, 0.834f, 0.507f, 0.974f, 0.976f,
+                           0.006f, 0.831f, 0.636f, 0.585f, 0.617f, 0.792f, 0.498f, 0.362f, 0.006f, 0.714f,
+                           0.785f, 0.315f, 0.235f, 0.202f };
+        print("starting words");
+        for (int i = 0; i < coords.Length; i += 2)
+        {
+            SetMaskOne(coords[i], coords[i + 1]);
+            yield return new WaitForSeconds(wordDelay);
+        }
+    }
     public void SetMaskOne(float u, float v)
     {
         growMat.SetVector("_MaskOneCoords", new Vector4(u, v, brushSize, -1f));
