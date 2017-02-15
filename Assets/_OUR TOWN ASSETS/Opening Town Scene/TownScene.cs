@@ -1,4 +1,4 @@
-﻿#define BLIT_TO_SCREEN
+﻿ #define BLIT_TO_SCREEN
 
 using System.Collections;
 using System.Collections.Generic;
@@ -46,6 +46,7 @@ public class TownScene : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        screenModel.GetComponent<Renderer>().material = displayMat;
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         buff = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
@@ -56,7 +57,7 @@ public class TownScene : MonoBehaviour {
         growMat.SetTexture("_MaskThreeTex", black);
         growMat.SetTexture("_MaskFourTex", black);
         gesture = OurTownGestureListener.Instance;
-        screenModel.GetComponent<Renderer>().material = displayMat;
+        
         StartCoroutine(RunScene());
     }
 
@@ -118,16 +119,16 @@ public class TownScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
-        screenModel.GetComponent<Renderer>().material = growMat;
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
-        while (!next && gesture?(!gesture.IsCurrentGesture()):false)
+        //screenModel.GetComponent<Renderer>().material = growMat;
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
         }
         next = false;
         StartCoroutine(FirstHouses());
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -140,21 +141,21 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(2f);
         StartCoroutine(Roofs());
         yield return null;
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
             yield return null;
         }
         next = false;
-        //StartCoroutine(Landscape());
+        StartCoroutine(Landscape());
         yield return null;
         StartCoroutine(Windows());
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
-        yield return new WaitForSeconds(2f);
+
+        yield return new WaitForSeconds(5f);
 
         StartCoroutine(HouseDetails());
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -163,7 +164,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("1d");
         //FIRE OFF BACKGROUND
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -172,7 +173,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         StartCoroutine(Words());
         print ("WORDS!");
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -185,7 +186,7 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(2f); // time for professor to speak. 130 in rehearsal
         print("TREES COME IN");
 
-       // gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -194,7 +195,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("POP! GOES THE TOWN");
 
-        //gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
+        gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();

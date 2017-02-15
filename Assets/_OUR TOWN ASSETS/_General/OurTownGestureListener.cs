@@ -50,18 +50,16 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
     {
         //print(KinectManager.Instance);
         //print(currentGesture);
-        if (KinectManager.Instance)
-        {
-            KinectManager.Instance.DeleteGesture(manager.GetUserIdByIndex(0), currentGesture);
-            currentGesture = g;
-            KinectManager.Instance.DetectGesture(manager.GetUserIdByIndex(0), g);
-        }
+        KinectManager.Instance.DeleteGesture(KinectManager.Instance.GetUserIdByIndex(0), currentGesture);
+        currentGesture = g;
+        KinectManager.Instance.DetectGesture(KinectManager.Instance.GetUserIdByIndex(0), g);
+        
         return true;
     }
 
     public KinectGestures.Gestures GetCurrentGesture()
     {
-        return KinectManager.Instance.GetGesturesList(manager.GetUserIdByIndex(0))[0];
+        return KinectManager.Instance.GetGesturesList(KinectManager.Instance.GetUserIdByIndex(0))[0];
     }
     /// <summary>
     /// Gets the singleton CubeGestureListener instance.
