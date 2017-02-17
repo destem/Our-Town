@@ -75,8 +75,15 @@
 				maskTwoAmount = 1 - step(transVal, 1 - maskTwoFade);
 				maskThreeAmount = 1 - step(transVal, 1 - maskThreeFade);
 				maskFourAmount = 1 - step(transVal, 1 - maskFourFade);
-				
-				col = lerp(paperCol, finalCol, max(max(maskTwoAmount, maskOneAmount), max(maskThreeAmount, maskFourAmount)));
+
+				float finalAmount = max(max(maskTwoAmount, maskOneAmount), max(maskThreeAmount, maskFourAmount));
+				float4 lumcoeff = float4(0.299, 0.587, 0.114, 0.);
+				float luminence = dot(finalCol, lumcoeff);
+				// only lerp to finalCol if it's luminence is low enough (ink)
+				// edge, val. If less than edge, returns 1
+				//finalAmount *= 1-(step(.5, luminence));
+
+				col = lerp(paperCol, finalCol, finalAmount);
 				return col;
 			}
 			ENDCG

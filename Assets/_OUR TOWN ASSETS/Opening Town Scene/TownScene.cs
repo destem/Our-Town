@@ -13,7 +13,7 @@ public class TownScene : MonoBehaviour {
     public Texture2D MaskThreeTex;
     public Texture2D MaskFourTex;
     public Texture2D black;
-    public Texture2D full;
+    //public Texture2D full;
     public Material growMat;
     public Material displayMat;
     public Material packer;
@@ -28,7 +28,6 @@ public class TownScene : MonoBehaviour {
     public float fastSpeed = 0f;
     public int iterations = 1;
     public float growthThreshhold = 1f;
-    public float chapelFadeTime = 2f;
     bool next = false;
     bool usingGrowth = true;
     
@@ -162,8 +161,12 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("1d");
+
         //FIRE OFF BACKGROUND
+        StartCoroutine(BackgroundDetails());
+        yield return new WaitForSeconds(10f);
+        print("full background, no words");
+        SetMaskFour(.99f, .99f);
         gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -219,13 +222,15 @@ public class TownScene : MonoBehaviour {
         SetMaskOne(.526f, .565f);
         yield return new WaitForSeconds(2.0f);
         SetMaskTwo(.524f, .557f);
+        yield return new WaitForSeconds(1.5f);
+        SetMaskOne(0.353f, 0.998f); //sun
     }
 
     IEnumerator HouseOutlines()
     {
         float outlineDelay = 2f;
         //outlines are all on mask one. starting in lower-right and working left
-        float[] coords = { 0.353f, 0.998f, 0.933f, 0.024f, 0.931f, 0.446f, 0.888f, 0.446f, 0.868f, 0.038f,
+        float[] coords = { 0.933f, 0.024f, 0.931f, 0.446f, 0.888f, 0.446f, 0.868f, 0.038f,
                            0.848f, 0.158f, 0.859f, 0.630f, 0.823f, 0.596f, 0.786f, 0.699f, 0.740f, 0.024f,
                            0.709f, 0.473f, 0.765f, 0.226f, 0.668f, 0.013f, 0.724f, 0.020f, 0.657f, 0.473f,
                            0.631f, 0.583f, 0.613f, 0.583f, 0.657f, 0.140f, 0.573f, 0.276f, 0.471f, 0.027f,
@@ -303,11 +308,11 @@ public class TownScene : MonoBehaviour {
     IEnumerator Landscape()
     {
         float landDelay = 5.07f;
-        float[] coords = { 0.995f, 0.882f, 0.753f, 0.951f, 0.362f, 0.570f, 0.297f, 0.549f, 0.243f, 0.592f, 0.161f, 0.714f, 0.130f, 0.728f };
+        float[] coords = { 0.995f, 0.882f, 0.753f, 0.951f, 0.614f, 0.643f, 0.297f, 0.549f, 0.243f, 0.592f, 0.161f, 0.714f, 0.130f, 0.728f };
         print("starting landscape");
         for (int i = 0; i < coords.Length; i += 2)
         {
-            SetMaskThree(coords[i], coords[i + 1]);
+            SetMaskOne(coords[i], coords[i + 1]);
             yield return new WaitForSeconds(landDelay);
         }
     }
@@ -322,14 +327,30 @@ public class TownScene : MonoBehaviour {
                            0.418f, 0.355f, 0.399f, 0.463f, 0.414f, 0.398f, 0.343f, 0.225f, 0.300f, 0.014f,
                            0.343f, 0.667f, 0.325f, 0.341f, 0.283f, 0.014f, 0.278f, 0.176f, 0.253f, 0.595f,
                            0.249f, 0.459f, 0.245f, 0.104f, 0.210f, 0.258f, 0.183f, 0.563f, 0.196f, 0.541f,
-                           0.210f, 0.344f, 0.152f, 0.746f, 0.156f, 0.656f, 0.139f, 0.753f, 0.128f, 0.352f,
-                           0.114f, 0.416f, 0.125f, 0.531f, 0.094f, 0.071f, 0.079f, 0.394f, 0.078f, 0.344f,
+                           0.210f, 0.344f, 0.162f, 0.500f, 0.152f, 0.746f, 0.156f, 0.656f, 0.139f, 0.753f, 0.128f, 0.352f,
+                           0.114f, 0.416f, 0.125f, 0.531f, 0.094f, 0.071f, 0.093f, 0.724f, 0.079f, 0.394f, 0.078f, 0.344f,
                            0.085f, 0.237f, 0.030f, 0.445f, 0.026f, 0.301f, 0.034f, 0.294f, 0.036f, 0.258f };
         print("starting house details");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskThree(coords[i], coords[i + 1]);
             yield return new WaitForSeconds(detailDelay);
+        }
+    }
+
+    IEnumerator BackgroundDetails()
+    {
+        float bgDelay = 2.17f;
+        float[] coords = { 0.962f, 0.021f, 0.978f, 0.014f, 0.956f, 0.297f, 0.901f, 0.275f, 0.872f, 0.150f,
+                           0.774f, 0.394f, 0.789f, 0.466f, 0.703f, 0.671f, 0.599f, 0.068f, 0.607f, 0.158f,
+                           0.570f, 0.613f, 0.464f, 0.132f, 0.468f, 0.039f, 0.502f, 0.413f, 0.427f, 0.391f,
+                           0.349f, 0.373f, 0.286f, 0.330f, 0.291f, 0.064f, 0.173f, 0.341f, 0.136f, 0.344f,
+                           0.103f, 0.121f, 0.052f, 0.498f };
+        print("background elements");
+        for (int i = 0; i < coords.Length; i += 2)
+        {
+            SetMaskThree(coords[i], coords[i + 1]);
+            yield return new WaitForSeconds(bgDelay);
         }
     }
 
