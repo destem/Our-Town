@@ -1,4 +1,4 @@
-﻿#define BLIT_TO_SCREEN
+﻿//#define BLIT_TO_SCREEN
 
 using System.Collections;
 using System.Collections.Generic;

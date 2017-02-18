@@ -1,4 +1,4 @@
-﻿#define BLIT_TO_SCREEN
+﻿//#define BLIT_TO_SCREEN
 
 using System.Collections;
 using System.Collections.Generic;
@@ -236,12 +236,16 @@ public class TownScene : MonoBehaviour {
         growMat.SetTexture("_MaskFourTex", MaskFourTex);
         SetMaskOne(.465f, .563f);
         yield return new WaitForSeconds(2.0f);
+        Blit();
         SetMaskTwo(.464f, .565f);
         yield return new WaitForSeconds(1.5f);
+        Blit();
         SetMaskOne(.526f, .565f);
         yield return new WaitForSeconds(2.0f);
+        Blit();
         SetMaskTwo(.524f, .557f);
         yield return new WaitForSeconds(1.5f);
+        Blit();
         SetMaskOne(0.353f, 0.998f); //sun
     }
 
@@ -430,7 +434,7 @@ public class TownScene : MonoBehaviour {
         if (usingGrowth){
             for (int i = 0; i < iterations; i++)
                 {
-                print("update blitting");
+                //print("update blitting");
                     Graphics.Blit(buff, final, growMat);
                     Graphics.Blit(final, buff, growMat);
                 }
