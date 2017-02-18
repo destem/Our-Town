@@ -13,10 +13,14 @@ public class TownScene : MonoBehaviour {
     public Texture2D MaskThreeTex;
     public Texture2D MaskFourTex;
     public Texture2D black;
-    //public Texture2D full;
+    public Texture2D wordsOnly;
+    public Texture2D housesOnly;
+    public Texture2D paper;
+
     public Material growMat;
     public Material displayMat;
     public Material packer;
+    public Material imageFade;
     RenderTexture buff;
     RenderTexture final;
     public Text t;
@@ -29,7 +33,7 @@ public class TownScene : MonoBehaviour {
     public int iterations = 1;
     public float growthThreshhold = 1f;
     bool next = false;
-    bool usingGrowth = true;
+    bool usingGrowth = false;
     
     RenderTexture _createTexture(int w, int h)
     {
@@ -45,16 +49,9 @@ public class TownScene : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        screenModel.GetComponent<Renderer>().material = displayMat;
+        //screenModel.GetComponent<Renderer>().material = displayMat;
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
-        buff = _createTexture(startMask.width, startMask.height);
-        final = _createTexture(startMask.width, startMask.height);
-        Graphics.Blit(startMask, buff, packer);
-        displayMat.SetTexture("_MainTex", buff);
-        growMat.SetTexture("_MaskOneTex", black);
-        growMat.SetTexture("_MaskTwoTex", black);
-        growMat.SetTexture("_MaskThreeTex", black);
-        growMat.SetTexture("_MaskFourTex", black);
+        Reset();
         gesture = OurTownGestureListener.Instance;
         
         StartCoroutine(RunScene());
@@ -71,14 +68,18 @@ public class TownScene : MonoBehaviour {
         growMat.SetTexture("_MaskTwoTex", black);
         growMat.SetTexture("_MaskThreeTex", black);
         growMat.SetTexture("_MaskFourTex", black);
-        screenModel.GetComponent<Renderer>().material = displayMat;
+        screenModel.GetComponent<Renderer>().material = imageFade;
+        imageFade.SetTexture("_Paper", black);
+        imageFade.SetTexture("_Chapel", paper);
+        imageFade.SetVector("_Value", Vector4.zero);
+        //screenModel.GetComponent<Renderer>().material = displayMat;
         StartCoroutine(RunScene());
     }
 
     // Update is called once per frame
     void Update()
     {
-      
+        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         ResetUVs();
         next = false;
            
@@ -109,7 +110,7 @@ public class TownScene : MonoBehaviour {
         }
         else
         {
-            //Graphics.Blit(buff, dest, chapelMat);
+            Graphics.Blit(buff, dest, imageFade);
         }
 
     }
