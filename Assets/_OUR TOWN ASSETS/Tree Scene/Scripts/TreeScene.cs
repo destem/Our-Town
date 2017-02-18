@@ -123,7 +123,9 @@ public class TreeScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
-        while (!next && !gesture.IsSwipeRight())
+        yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -136,9 +138,9 @@ public class TreeScene : MonoBehaviour {
             chapelMat.SetVector("_Value", new Vector4((Time.time - startTime) / chapelFadeTime, 0f, 0f, 0f));
             yield return null;
         }
-        
-
-        while (!next  && !gesture.IsSwipeLeft())
+        chapelMat.SetVector("_Value", new Vector4(1f, 0f, 0f, 0f));
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next  && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -157,8 +159,9 @@ public class TreeScene : MonoBehaviour {
         SetMaskThree(.58f, .065f);
         yield return null;
         SetMaskThree(.335f, .15f);
-        yield return null;   
-        while (!next && !gesture.IsPsi())
+        yield return null;
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -168,7 +171,8 @@ public class TreeScene : MonoBehaviour {
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
         growMat.SetTexture("_MaskFourTex", MaskFourTex);
-        while (!next)
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -182,7 +186,8 @@ public class TreeScene : MonoBehaviour {
         SetMaskTwo(.553f, .01f);
         yield return null;
         SetMaskTwo(.574f, .01f);
-        while (!next)
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -214,7 +219,8 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.595f, .01f);
         yield return null;
-        while (!next)
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -237,7 +243,8 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.594f, .462f);
         yield return null;
-        while (!next)
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -293,7 +300,8 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.748f, .005f);
         yield return null;
-        while (!next)
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -306,7 +314,8 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.594f, .371f);
         yield return null;
-        while (!next)
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;

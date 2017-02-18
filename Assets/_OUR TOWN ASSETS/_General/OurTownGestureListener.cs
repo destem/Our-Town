@@ -43,14 +43,18 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
     private bool currentGestureComplete;
 
 
-    KinectGestures.Gestures currentGesture = KinectGestures.Gestures.LeanRight;
+    KinectGestures.Gestures currentGesture = KinectGestures.Gestures.LeanRight; //should never actually get used
     KinectManager manager = KinectManager.Instance;
 
     public bool SetCurrentGesture(KinectGestures.Gestures g)
     {
         //print(KinectManager.Instance);
         //print(currentGesture);
-        KinectManager.Instance.DeleteGesture(KinectManager.Instance.GetUserIdByIndex(0), currentGesture);
+        //if (KinectManager.Instance.GetGesturesCount(KinectManager.Instance.GetUserIdByIndex(0)) > 0)
+        //{
+        //    KinectManager.Instance.DeleteGesture(KinectManager.Instance.GetUserIdByIndex(0), currentGesture);
+        //}
+        KinectManager.Instance.ClearGestures(KinectManager.Instance.GetUserIdByIndex(0));
         currentGesture = g;
         KinectManager.Instance.DetectGesture(KinectManager.Instance.GetUserIdByIndex(0), g);
         
@@ -340,7 +344,8 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
 
         // detect these user specific gestures
         print("Setting dectected");
-		manager.DetectGesture(userId, currentGesture);
+        SetCurrentGesture(currentGesture);
+		//manager.DetectGesture(userId, currentGesture);
 		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
 	 //   manager.DetectGesture(userId, KinectGestures.Gestures.SwipeUp);
   //      manager.DetectGesture(userId, KinectGestures.Gestures.Psi);

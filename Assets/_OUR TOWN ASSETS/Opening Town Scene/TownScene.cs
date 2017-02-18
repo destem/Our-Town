@@ -1,4 +1,4 @@
-﻿ #define BLIT_TO_SCREEN
+﻿#define BLIT_TO_SCREEN
 
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ public class TownScene : MonoBehaviour {
     public Texture2D wordsOnly;
     public Texture2D housesOnly;
     public Texture2D paper;
+    public Texture2D full;
 
     public Material growMat;
     public Material displayMat;
@@ -54,7 +55,6 @@ public class TownScene : MonoBehaviour {
         Reset();
         gesture = OurTownGestureListener.Instance;
         
-        StartCoroutine(RunScene());
     }
 
     void Reset()
@@ -80,7 +80,7 @@ public class TownScene : MonoBehaviour {
     void Update()
     {
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
-        ResetUVs();
+        //ResetUVs();
         next = false;
            
         if (Input.GetButtonDown("Jump"))
@@ -107,6 +107,7 @@ public class TownScene : MonoBehaviour {
             }
             Graphics.Blit(buff, dest, displayMat);
             //Graphics.Blit(buff, dest);
+            ResetUVs();
         }
         else
         {
@@ -119,7 +120,7 @@ public class TownScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
-        //screenModel.GetComponent<Renderer>().material = growMat;
+        yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -127,6 +128,18 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
+
+        float startTime = Time.time;
+        float fadeDuration = 0.5f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            imageFade.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        imageFade.SetVector("_Value", Vector4.one);
+        screenModel.GetComponent<Renderer>().material = displayMat;
+        usingGrowth = true;
+        yield return new WaitForSeconds(1f);
         StartCoroutine(FirstHouses());
         gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
@@ -165,7 +178,7 @@ public class TownScene : MonoBehaviour {
 
         //FIRE OFF BACKGROUND
         StartCoroutine(BackgroundDetails());
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(1f);
         print("full background, no words");
         SetMaskFour(.99f, .99f);
         gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
@@ -176,7 +189,7 @@ public class TownScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine(Words());
-        print ("WORDS!");
+        
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -184,11 +197,15 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        //words only
-        print("TOWN DISAPPEARS!");
-        yield return null;
+        usingGrowth = false;
+        screenModel.GetComponent<Renderer>().material = imageFade;
+        imageFade.SetTexture("_Chapel", wordsOnly);
+        imageFade.SetVector("_Value", Vector4.one);
+
+        print("Words only");
+       // yield return null;
         yield return new WaitForSeconds(2f); // time for professor to speak. 130 in rehearsal
-        print("TREES COME IN");
+        //print("TREES COME IN");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
@@ -197,8 +214,8 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("POP! GOES THE TOWN");
-
+        print("Town comes back");
+        imageFade.SetTexture("_Chapel", full);
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -207,6 +224,7 @@ public class TownScene : MonoBehaviour {
         }
         next = false;
         print("JUST THE HOUSES");
+        imageFade.SetTexture("_Chapel", housesOnly);
     }
 
     IEnumerator FirstHouses()
@@ -412,9 +430,11 @@ public class TownScene : MonoBehaviour {
         if (usingGrowth){
             for (int i = 0; i < iterations; i++)
                 {
+                print("update blitting");
                     Graphics.Blit(buff, final, growMat);
                     Graphics.Blit(final, buff, growMat);
                 }
+            ResetUVs();
         }
 #endif
         return;
