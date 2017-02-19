@@ -51,10 +51,10 @@ public class TownScene : MonoBehaviour {
     void Start()
     {
         //screenModel.GetComponent<Renderer>().material = displayMat;
-        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
-        Reset();
+        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));      
         gesture = OurTownGestureListener.Instance;
-        
+        Reset();
+
     }
 
     void Reset()

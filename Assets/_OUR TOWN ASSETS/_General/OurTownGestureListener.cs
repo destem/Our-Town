@@ -45,6 +45,12 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
 
     KinectGestures.Gestures currentGesture = KinectGestures.Gestures.LeanRight; //should never actually get used
     KinectManager manager = KinectManager.Instance;
+    long currentID;
+
+    public long getCurrentID()
+    {
+        return currentID;
+    }
 
     public bool SetCurrentGesture(KinectGestures.Gestures g)
     {
@@ -54,10 +60,15 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
         //{
         //    KinectManager.Instance.DeleteGesture(KinectManager.Instance.GetUserIdByIndex(0), currentGesture);
         //}
-        KinectManager.Instance.ClearGestures(KinectManager.Instance.GetUserIdByIndex(0));
+
+        //KinectManager.Instance.ClearGestures(KinectManager.Instance.GetUserIdByIndex(0));
+        //currentGesture = g;
+        //KinectManager.Instance.DetectGesture(KinectManager.Instance.GetUserIdByIndex(0), g);
+
+        KinectManager.Instance.ClearGestures(currentID);
         currentGesture = g;
-        KinectManager.Instance.DetectGesture(KinectManager.Instance.GetUserIdByIndex(0), g);
-        
+        KinectManager.Instance.DetectGesture(currentID, g);
+
         return true;
     }
 
@@ -339,11 +350,13 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
 	{
 		// the gestures are allowed for the primary user only
 		//KinectManager manager = KinectManager.Instance;
-		if(!manager || (userIndex != playerIndex))
-			return;
+		//if(!manager || (userIndex != playerIndex))
+		//	return;
 
         // detect these user specific gestures
         print("Setting dectected");
+
+        currentID = userId;
         SetCurrentGesture(currentGesture);
 		//manager.DetectGesture(userId, currentGesture);
 		//manager.DetectGesture(userId, KinectGestures.Gestures.SwipeRight);
