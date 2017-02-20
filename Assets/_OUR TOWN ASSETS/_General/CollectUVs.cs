@@ -26,7 +26,7 @@ public class CollectUVs : MonoBehaviour
             coords.Add(mousePos.x / Screen.width);
             coords.Add(mousePos.y / Screen.height);
             //theString += string.Format("{0:0.000}, {1:0.000}", mousePos.x / Screen.width, mousePos.y / Screen.height);
-            EditorGUIUtility.systemCopyBuffer = "{" + string.Join(", ", coords.ConvertAll(i => string.Format("{0:0.000}f", i)).ToArray()) + "}";
+            EditorGUIUtility.systemCopyBuffer = "float[] coords = {" + string.Join(", ", coords.ConvertAll(i => string.Format("{0:0.000}f", i)).ToArray()) + "};";
 
         }
     }
