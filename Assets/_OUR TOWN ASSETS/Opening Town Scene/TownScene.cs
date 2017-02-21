@@ -1,4 +1,4 @@
-﻿//#define BLIT_TO_SCREEN
+﻿#define BLIT_TO_SCREEN
 
 using System.Collections;
 using System.Collections.Generic;
@@ -141,8 +141,8 @@ public class TownScene : MonoBehaviour {
         usingGrowth = true;
         yield return new WaitForSeconds(1f);
         StartCoroutine(FirstHouses());
-        gesture.SetCurrentGesture(KinectGestures.Gestures.BrushHair);
-        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
+        while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
             yield return null;
@@ -225,6 +225,16 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("JUST THE HOUSES");
         imageFade.SetTexture("_Chapel", housesOnly);
+        yield return null;
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow); //wipe
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("Wipe");
+        //TODO: Actually implement the wipe
     }
 
     IEnumerator FirstHouses()

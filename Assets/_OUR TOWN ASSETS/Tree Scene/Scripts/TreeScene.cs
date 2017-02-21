@@ -1,4 +1,4 @@
-﻿//#define BLIT_TO_SCREEN
+﻿#define BLIT_TO_SCREEN
 
 using System.Collections;
 using System.Collections.Generic;
@@ -139,7 +139,7 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         chapelMat.SetVector("_Value", new Vector4(1f, 0f, 0f, 0f));
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Sweep);
         while (!next  && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -160,7 +160,7 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskThree(.335f, .15f);
         yield return null;
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Psi);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -171,7 +171,7 @@ public class TreeScene : MonoBehaviour {
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
         growMat.SetTexture("_MaskFourTex", MaskFourTex);
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -186,7 +186,7 @@ public class TreeScene : MonoBehaviour {
         SetMaskTwo(.553f, .01f);
         yield return null;
         SetMaskTwo(.574f, .01f);
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.LeanRight);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -219,7 +219,7 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.595f, .01f);
         yield return null;
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.PointForward);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -243,7 +243,7 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.594f, .462f);
         yield return null;
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -300,7 +300,7 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.748f, .005f);
         yield return null;
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -332,6 +332,15 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.956f, .97f);
         yield return null;
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("Fade to black");
     }
 
     public void SetMaskOne(float u, float v)

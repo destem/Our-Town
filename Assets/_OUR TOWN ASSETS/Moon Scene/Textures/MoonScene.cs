@@ -119,7 +119,7 @@ public class MoonScene : MonoBehaviour {
     IEnumerator RunScene()
     {
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -131,7 +131,7 @@ public class MoonScene : MonoBehaviour {
         growMat.SetTexture("_MaskThreeTex", MaskThreeTex);
         StartCoroutine(HouseSilhouettes());
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -140,7 +140,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         StartCoroutine(SmallMoonSky());
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -149,16 +149,11 @@ public class MoonScene : MonoBehaviour {
         next = false;
         StartCoroutine(OuterDetails());
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            Blit();
-            yield return null;
-        }
-        next = false;
+        yield return new WaitForSeconds(5f);
+
         StartCoroutine(Words());
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.LeanLeft);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -167,7 +162,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         StartCoroutine("InnerDetails");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.StepAndSweep);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -194,7 +189,7 @@ public class MoonScene : MonoBehaviour {
         SetMaskOne(0.5f, .98f);
         yield return null;
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -203,6 +198,23 @@ public class MoonScene : MonoBehaviour {
         next = false;
         StartCoroutine(Blackout());
 
+        gesture.SetCurrentGesture(KinectGestures.Gestures.LeanLeft);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("Last five windows");
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            Blit();
+            yield return null;
+        }
+        next = false;
+        print("Wipeout");
     }
 
     IEnumerator HouseSilhouettes()
