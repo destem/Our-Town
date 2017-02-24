@@ -48,16 +48,23 @@
 			sampler2D _Rain;
 			sampler2D _Paper;
 
+			float map(float s, float a1, float a2, float b1, float b2)
+			{
+				return b1 + (s - a1)*(b2 - b1) / (a2 - a1);
+			}
+
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 rain = tex2D(_Rain, i.uv);
+				
 				fixed4 paper = tex2D(_Paper, i.uv);
-				float noise1y = i.uv.y - _Time.y * .2;
-				float noise1 = tex2D(_Noise1, float2(i.uv.x, noise1y)).r;
-				float noise2y = i.uv.y - _Time.y * .1;
-				float noise2 = tex2D(_Noise2, float2(i.uv.x, noise2y)).r;
+				//float noise1y = i.uv.y - _Time.y * .2;
+				float noise1 = tex2D(_Noise1, i.uv).r;
+				fixed4 rain = tex2D(_Rain, float2(i.uv.x, (i.uv.y - _Time.y * map(noise1, 0., 1., .1, .5))));
+				//float noise2y = i.uv.y - _Time.y * .1;
+				//float noise2 = tex2D(_Noise2, float2(i.uv.x, noise2y)).r;
 
-				return lerp(paper, rain, noise1*noise2);
+				//return lerp(paper, rain, noise1*noise2);
+				return rain;
 			}
 			ENDCG
 		}
