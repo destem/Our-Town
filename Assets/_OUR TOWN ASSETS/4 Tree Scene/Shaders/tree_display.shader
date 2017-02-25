@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_SecondTex("Other buffer to combine", 2D) = "white" {}
 		_BGTex("Background Paper", 2D) = "white" {}
 		_FinalTex("Final Image", 2D) = "white" {}
 		_TransTex("Transition Texture", 2D) = "white" {}
@@ -40,12 +41,13 @@
 				return o;
 			}
 
-			half2 unpack(float packed) {
-				uint packedAsUint = asuint(packed); 
-				return half2((packedAsUint & 0xffff), (packedAsUint >> 16)) / 65535.0h;
-			}
+			//half2 unpack(float packed) {
+			//	uint packedAsUint = asuint(packed); 
+			//	return half2((packedAsUint & 0xffff), (packedAsUint >> 16)) / 65535.0h;
+			//}
 			
 			sampler2D _MainTex;
+			sampler2D _SecondTex;
 			sampler2D _BGTex;
 			sampler2D _FinalTex;
 			sampler2D _TransTex;
@@ -53,15 +55,16 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float4 source = tex2D(_MainTex, i.uv);
-				float maskOneAmount = unpack(source.r).x;
-				float maskTwoAmount = unpack(source.g).x;
-				float maskThreeAmount = unpack(source.b).x;
-				float maskFourAmount = unpack(source.a).x;
+				float4 second = tex2D(_SecondTex, i.uv);
+				float maskOneAmount = source.r;
+				float maskTwoAmount = source.b;
+				float maskThreeAmount = second.r;
+				float maskFourAmount = second.b;
 
-				float maskOneFade = unpack(source.r).y;
-				float maskTwoFade = unpack(source.g).y;
-				float maskThreeFade = unpack(source.b).y;
-				float maskFourFade = unpack(source.a).y;
+				float maskOneFade = source.g;
+				float maskTwoFade = source.a;
+				float maskThreeFade = second.g;
+				float maskFourFade = second.a;
 
 				fixed4 paperCol = tex2D(_BGTex, i.uv);
 				fixed4 finalCol = tex2D(_FinalTex, i.uv);
