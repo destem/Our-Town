@@ -1,10 +1,8 @@
 star blitting
 
-implement Fig's scene (ocean)
+implement Fig's scene (ocean) * waiting for mask connections
 
 Implement rain scene
-
-throw in misty drawing, even if it doesn't grow
 
 Microphone
 

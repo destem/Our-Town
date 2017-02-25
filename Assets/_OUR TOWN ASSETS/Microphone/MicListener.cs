@@ -38,8 +38,9 @@ public class MicListener : MonoBehaviour {
 		if (micExists) {
 			loudness = GetAveragedVolume () * sensitivity;
 			if (micText) {
-				micText.text = "Loudness: " + loudness;
-			}
+				micText.text = "Loudness: " + string.Format("{0:0.000}", loudness);
+
+            }
 		}
 	}
 
