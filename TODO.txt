@@ -1,7 +1,13 @@
-separate town scene into four masks
+star blitting
 
-implement new gestures
+implement Fig's scene (ocean)
 
-small app to test gestures
+Implement rain scene
 
-small script to collect UV coords from masks
+throw in misty drawing, even if it doesn't grow
+
+Microphone
+
+PAINTING
+
+Master control script. Enum, type number for image/scene/reset
