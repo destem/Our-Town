@@ -4,8 +4,8 @@ implement Fig's scene (ocean) * waiting for mask connections
 
 Implement rain scene
 
-Microphone
+Microphone - have loudness as input, need to do positional warp
 
-PAINTING
+PAINTING - have endpoint. Need PS perspective warp
 
 Master control script. Enum, type number for image/scene/reset

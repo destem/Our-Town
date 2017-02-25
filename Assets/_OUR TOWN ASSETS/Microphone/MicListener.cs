@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MicListener : MonoBehaviour {
 	
 	public float sensitivity = 100;
-	public float loudness = 0;
+	static public float loudness = 0;
 	AudioSource sound;
 	bool micExists = false;
 	string micName;
@@ -31,7 +31,7 @@ public class MicListener : MonoBehaviour {
 			sound.Play(); // Play the audio source so that we can check its volume
 			print ("Recording");
 		}
-		micText = GameObject.Find ("MicText").GetComponent<Text> ();
+		//micText = GameObject.Find ("MicText").GetComponent<Text> ();
 	}
 
 	void Update(){
