@@ -63,6 +63,7 @@ public class TownScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        usingGrowth = false;
         growMat2 = new Material(growMat);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));

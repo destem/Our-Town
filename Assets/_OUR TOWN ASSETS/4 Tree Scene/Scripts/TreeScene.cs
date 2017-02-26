@@ -140,22 +140,24 @@ public class TreeScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
-        yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            Blit();
-            yield return null;
-        }
-        next = false;
-        print("starting chapel");
-        float startTime = Time.time;
-        while (Time.time - startTime < chapelFadeTime)
-        {
-            chapelMat.SetVector("_Value", new Vector4((Time.time - startTime) / chapelFadeTime, 0f, 0f, 0f));
-            yield return null;
-        }
+        //yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        //while (!next && !gesture.IsCurrentGesture())
+        //{
+        //    Blit();
+        //    yield return null;
+        //}
+        //next = false;
+        //print("starting chapel");
+        //float startTime = Time.time;
+        //while (Time.time - startTime < chapelFadeTime)
+        //{
+        //    chapelMat.SetVector("_Value", new Vector4((Time.time - startTime) / chapelFadeTime, 0f, 0f, 0f));
+        //    yield return null;
+        //}
         chapelMat.SetVector("_Value", new Vector4(1f, 0f, 0f, 0f));
+        yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
+
         gesture.SetCurrentGesture(KinectGestures.Gestures.Sweep);
         while (!next  && !gesture.IsCurrentGesture())
         {
