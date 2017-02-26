@@ -19,7 +19,6 @@ public class MicListener : MonoBehaviour {
 
 	void Start() {
 		if (Microphone.devices.Length > 0){
-			//TODO: search for (create?) mixer, search for (create?) new group, set group vol to -80dB
 
 			micExists = true;
 			micName = Microphone.devices[0];
@@ -37,10 +36,10 @@ public class MicListener : MonoBehaviour {
 	void Update(){
 		if (micExists) {
 			loudness = GetAveragedVolume () * sensitivity;
-			if (micText) {
-				micText.text = "Loudness: " + string.Format("{0:0.000}", loudness);
+			//if (micText) {
+			//	micText.text = "Loudness: " + string.Format("{0:0.000}", loudness);
 
-            }
+   //         }
 		}
 	}
 

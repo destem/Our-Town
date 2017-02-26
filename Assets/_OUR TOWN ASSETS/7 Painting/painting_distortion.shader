@@ -102,9 +102,29 @@
 				return 130.0 * dot(m, g);
 			}
 
+			int NB_OCTAVES = 6;
+			float LACUNARITY = 2.0;
+			float GAIN = 0.5;
+
+			float fbm(float2 p) {
+				float total = 0.0,
+					frequency = 1.0,
+					amplitude = 1.0;
+
+				for (int i = 0; i < NB_OCTAVES; i++) {
+					total += snoise(p * frequency) * amplitude;
+					frequency *= LACUNARITY;
+					amplitude *= GAIN;
+				}
+				return total;
+			}
+
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 col = tex2D(_MainTex, float2(i.uv.x + snoise(float2(_Time.y, i.uv.y))*.1, i.uv.y + snoise(float2(i.uv.x, _Time.y))*.1));
+				float2 offset = float2(snoise(float2(_Time.y / 10, i.uv.y)*10.)*.1, snoise(float2(i.uv.x, _Time.y / 10) * 10)* .1) * _Loudness;
+				fixed4 col = tex2D(_MainTex, i.uv + offset);
+				float derp = fbm(i.uv * 100);
+				//col = fixed4(derp, derp, derp, 1.);
 				return col;
 			}
 			ENDCG

@@ -22,8 +22,11 @@ public class TownScene : MonoBehaviour {
     public Material displayMat;
     public Material packer;
     public Material imageFade;
+    Material growMat2;
     RenderTexture buff;
+    RenderTexture buff2;
     RenderTexture final;
+    RenderTexture final2;
     public Text t;
     float brushSize = 10f;
     OurTownGestureListener gesture;
@@ -51,7 +54,7 @@ public class TownScene : MonoBehaviour {
     void Start()
     {
         //screenModel.GetComponent<Renderer>().material = displayMat;
-        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));      
+        //growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));      
         gesture = OurTownGestureListener.Instance;
         Reset();
 
@@ -60,14 +63,21 @@ public class TownScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        growMat2 = new Material(growMat);
+        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
+        growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
+
         buff = _createTexture(startMask.width, startMask.height);
+        buff2 = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
-        Graphics.Blit(startMask, buff, packer);
+        final2 = _createTexture(startMask.width, startMask.height);
         displayMat.SetTexture("_MainTex", buff);
+        displayMat.SetTexture("_SecondTex", buff2);
+
         growMat.SetTexture("_MaskOneTex", black);
         growMat.SetTexture("_MaskTwoTex", black);
-        growMat.SetTexture("_MaskThreeTex", black);
-        growMat.SetTexture("_MaskFourTex", black);
+        growMat2.SetTexture("_MaskOneTex", black);
+        growMat2.SetTexture("_MaskTwoTex", black);
         screenModel.GetComponent<Renderer>().material = imageFade;
         imageFade.SetTexture("_Paper", black);
         imageFade.SetTexture("_Chapel", paper);
@@ -104,6 +114,8 @@ public class TownScene : MonoBehaviour {
             {
                 Graphics.Blit(buff, final, growMat);
                 Graphics.Blit(final, buff, growMat);
+                Graphics.Blit(buff2, final2, growMat2);
+                Graphics.Blit(final2, buff2, growMat2);
             }
             Graphics.Blit(buff, dest, displayMat);
             //Graphics.Blit(buff, dest);
@@ -242,8 +254,8 @@ public class TownScene : MonoBehaviour {
         print("first houses");
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
-        growMat.SetTexture("_MaskThreeTex", MaskThreeTex);
-        growMat.SetTexture("_MaskFourTex", MaskFourTex);
+        growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
+        growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
         SetMaskOne(.465f, .563f);
         yield return new WaitForSeconds(2.0f);
         Blit();
@@ -416,20 +428,20 @@ public class TownScene : MonoBehaviour {
 
     public void SetMaskThree(float u, float v)
     {
-        growMat.SetVector("_MaskThreeCoords", new Vector4(u, v, brushSize, -1f));
+        growMat2.SetVector("_MaskOneCoords", new Vector4(u, v, brushSize, -1f));
     }
 
     public void SetMaskFour(float u, float v)
     {
-        growMat.SetVector("_MaskFourCoords", new Vector4(u, v, brushSize, -1f));
+        growMat2.SetVector("_MaskTwoCoords", new Vector4(u, v, brushSize, -1f));
     }
 
     public void ResetUVs()
     {
         growMat.SetVector("_MaskOneCoords", new Vector4(-1, -1, -1, -1));
         growMat.SetVector("_MaskTwoCoords", new Vector4(-1, -1, -1, -1));
-        growMat.SetVector("_MaskThreeCoords", new Vector4(-1, -1, -1, -1));
-        growMat.SetVector("_MaskFourCoords", new Vector4(-1, -1, -1, -1));
+        growMat2.SetVector("_MaskOneCoords", new Vector4(-1, -1, -1, -1));
+        growMat2.SetVector("_MaskTwoCoords", new Vector4(-1, -1, -1, -1));
     }
 
     IEnumerator EnableScreenCollision()

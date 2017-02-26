@@ -57,8 +57,8 @@ public class TreeScene : MonoBehaviour {
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height); 
         final = _createTexture(startMask.width, startMask.height);
-        final2 = _createTexture(startMask.width, startMask.height); 
-        //Graphics.Blit(startMask, buff, packer);
+        final2 = _createTexture(startMask.width, startMask.height);
+
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
         growMat.SetTexture("_MaskOneTex", black);
