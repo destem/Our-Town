@@ -121,7 +121,12 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float2 offset = float2(snoise(float2(_Time.y / 10, i.uv.y)*10.)*.1, snoise(float2(i.uv.x, _Time.y / 10) * 10)* .1) * _Loudness;
+				float smallxOffset = snoise(float2(_Time.y*15.0, i.uv.y*80.0))*0.005;
+				float largexOffset = snoise(float2(_Time.y*.5,i.uv.y*25.0))*0.01;
+				float smallyOffset = snoise(float2(_Time.y*15.0, i.uv.x*80.0))*0.005;
+				float largeyOffset = snoise(float2(_Time.y*1.5, i.uv.x*20.0))*0.01;
+				//float2 offset = float2(snoise(float2(_Time.y / 10, i.uv.y)*10.)*.1, snoise(float2(i.uv.x, _Time.y / 10) * 10)* .1) * _Loudness;
+				float2 offset = float2(smallxOffset + largexOffset, smallyOffset + largeyOffset)* _Loudness;
 				fixed4 col = tex2D(_MainTex, i.uv + offset);
 				float derp = fbm(i.uv * 100);
 				//col = fixed4(derp, derp, derp, 1.);
