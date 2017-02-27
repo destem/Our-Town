@@ -111,6 +111,11 @@ public class RainScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
+        growMat.SetTexture("_MaskOneTex", MaskOneTex);
+        growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
+        growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
+        growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
+
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
         gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
         while (!next && !gesture.IsCurrentGesture())
@@ -189,36 +194,41 @@ public class RainScene : MonoBehaviour {
 
     IEnumerator FirstRain()
     {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
+        float wordDelay = 2f;
+        float[] coords = { 0.443f, 0.263f, 0.258f, 0.042f, 0.261f, 0.510f, 0.348f, 0.751f, 0.343f, 0.617f,
+                           0.261f, 0.991f, 0.933f, 0.255f };
         print("first rain and words");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
-            yield return null;
+            yield return new WaitForSeconds(wordDelay);
         }
 
     }
 
     IEnumerator SecondRain()
     {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
+        float wordDelay = 2f;
+        float[] coords = { 0.656f, 0.035f, 0.192f, 0.907f, 0.063f, 0.761f, 0.732f, 0.923f, 0.711f, 0.967f };
         print("second rain and words");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
-            yield return null;
+            yield return new WaitForSeconds(wordDelay);
         }
 
     }
 
     IEnumerator LastRain()
     {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
+        float wordDelay = 2f;
+        float[] coords = { 0.292f, 0.084f, 0.148f, 0.092f, 0.056f, 0.343f, 0.860f, 0.981f, 0.579f, 0.788f,
+                           0.500f, 0.020f, 0.516f, 0.038f };
         print("final rain and words");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
-            yield return null;
+            yield return new WaitForSeconds(wordDelay);
         }
 
     }
