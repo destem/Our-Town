@@ -1,11 +1,12 @@
-star blitting
+wipe at end of some scenes
 
 implement Fig's scene (ocean) * waiting for mask connections
 
-Implement rain scene
+finish rain scene
 
-Microphone - have loudness as input, need to do positional warp
+find out what's up with MicListener
+
+Implement turnaround gesture
 
 PAINTING - have endpoint. Need PS perspective warp
 
-Master control script. Enum, type number for image/scene/reset
