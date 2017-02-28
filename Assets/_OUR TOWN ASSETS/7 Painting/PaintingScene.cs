@@ -20,7 +20,7 @@ public class PaintingScene : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //print(MicListener.loudness);
-        //paintingMat.SetFloat("_Loudness", MicListener.loudness);
+        paintingMat.SetFloat("_Loudness", MicListener.loudness);
         paintingMat.SetFloat("_Edge", micThreshold);
 	}
 
