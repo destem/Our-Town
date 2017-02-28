@@ -75,7 +75,7 @@ public class OurTownManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             DisableAll();
-            GotoPainting();
+            GotoStar();
         }
     }
 

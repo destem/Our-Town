@@ -4,6 +4,7 @@
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_Loudness ("Loudness value from microphone", float) = 0
+		_Edge ("Mic threshold", float) = 0.5
 	}
 	SubShader
 	{
@@ -40,6 +41,7 @@
 			
 			sampler2D _MainTex;
 			float _Loudness;
+			float _Edge;
 
 			float3 mod289(float3 x) {
 				return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -126,7 +128,7 @@
 				float smallyOffset = snoise(float2(_Time.y*15.0, i.uv.x*80.0))*0.005;
 				float largeyOffset = snoise(float2(_Time.y*1.5, i.uv.x*20.0))*0.01;
 				//float2 offset = float2(snoise(float2(_Time.y / 10, i.uv.y)*10.)*.1, snoise(float2(i.uv.x, _Time.y / 10) * 10)* .1) * _Loudness;
-				float2 offset = float2(smallxOffset + largexOffset, smallyOffset + largeyOffset)* _Loudness;
+				float2 offset = float2(smallxOffset + largexOffset, smallyOffset + largeyOffset)* clamp(_Loudness - _Edge, 0, 100) * step(_Edge, _Loudness);
 				fixed4 col = tex2D(_MainTex, i.uv + offset);
 				float derp = fbm(i.uv * 100);
 				//col = fixed4(derp, derp, derp, 1.);

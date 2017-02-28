@@ -1486,7 +1486,7 @@ public class KinectGestures : MonoBehaviour
                         break;
 
                     case 1:  // gesture phase 2 = complete
-                        if ((timestamp - gestureData.timestamp) < 2f)
+                        if ((timestamp - gestureData.timestamp) < 10f)
                         {
                             bool isInPose = jointsTracked[leftHandIndex] && jointsTracked[leftElbowIndex] && jointsTracked[leftShoulderIndex] &&
                             leftHandState == KinectInterop.HandState.Closed && Vector3.Angle(jointsPos[leftElbowIndex] - jointsPos[leftShoulderIndex], Vector3.left) < 40f &&

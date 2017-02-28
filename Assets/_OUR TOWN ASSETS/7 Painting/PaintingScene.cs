@@ -5,6 +5,7 @@ using UnityEngine;
 public class PaintingScene : MonoBehaviour {
 
     public Material paintingMat;
+    public float micThreshold;
 
 	// Use this for initialization
 	void Start () {
@@ -14,7 +15,8 @@ public class PaintingScene : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //print(MicListener.loudness);
-        paintingMat.SetFloat("_Loudness", MicListener.loudness);
+        //paintingMat.SetFloat("_Loudness", MicListener.loudness);
+        paintingMat.SetFloat("_Edge", micThreshold);
 	}
 
     void OnRenderImage(RenderTexture source, RenderTexture dest)
