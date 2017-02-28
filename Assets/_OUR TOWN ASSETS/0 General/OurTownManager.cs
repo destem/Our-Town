@@ -101,49 +101,41 @@ public class OurTownManager : MonoBehaviour {
 
     public static void GotoTown()
     {
-        DisableAll();
         townScene.enabled = true;
     }
 
     public static void GotoMoon()
     {
-        DisableAll();
         moonScene.enabled = true;
     }
 
     public static void GotoRain()
     {
-        DisableAll();
         rainScene.enabled = true;
     }
 
     public static void GotoTree()
     {
-        DisableAll();
         treeScene.enabled = true;
     }
 
     public static void GotoMist()
     {
-        DisableAll();
         mistScene.enabled = true;
     }
 
     public static void GotoOcean()
     {
-        DisableAll();
         oceanScene.enabled = true;
     }
 
     public static void GotoPainting()
     {
-        DisableAll();
         paintingScene.enabled = true;
     }
 
     public static void GotoStar()
     {
-        DisableAll();
         starScene.enabled = true;
     }
 

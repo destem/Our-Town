@@ -411,4 +411,9 @@ public class TreeScene : MonoBehaviour {
 #endif
         return;
     }
+
+    void OnDisable()
+    {
+        Reset();
     }
+}

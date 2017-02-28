@@ -466,4 +466,9 @@ public class TownScene : MonoBehaviour {
 #endif
         return;
     }
+
+    void OnDisable()
+    {
+        Reset();
     }
+}

@@ -11,6 +11,11 @@ public class PaintingScene : MonoBehaviour {
 	void Start () {
 		
 	}
+
+    void Reset()
+    {
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -22,5 +27,10 @@ public class PaintingScene : MonoBehaviour {
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
         Graphics.Blit(paintingMat.mainTexture, dest, paintingMat);
+    }
+
+    void OnDisable()
+    {
+        Reset();
     }
 }

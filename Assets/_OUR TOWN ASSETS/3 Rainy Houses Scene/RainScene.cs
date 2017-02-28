@@ -310,4 +310,9 @@ public class RainScene : MonoBehaviour {
         growMat2.SetVector("_MaskOneCoords", new Vector4(-1, -1, -1, -1));
         growMat2.SetVector("_MaskTwoCoords", new Vector4(-1, -1, -1, -1));
     }
+
+    void OnDisable()
+    {
+        Reset();
+    }
 }

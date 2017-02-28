@@ -82,7 +82,7 @@ public class MoonScene : MonoBehaviour {
         growMat2.SetTexture("_MaskTwoTex", black);
         displayMat.SetTexture("_FinalTex", firstTargetTex);
         displayMat.SetTexture("_BGTex", paper);
-        screenModel.GetComponent<Renderer>().material = displayMat;
+        //screenModel.GetComponent<Renderer>().material = displayMat;
         StartCoroutine(RunScene());
     }
 
@@ -390,5 +390,10 @@ public class MoonScene : MonoBehaviour {
         }
 #endif
         return;
+    }
+
+    void OnDisable()
+    {
+        Reset();
     }
 }

@@ -88,8 +88,6 @@ public class StarScene : MonoBehaviour
 
         gesture = OurTownGestureListener.Instance;
         StartCoroutine(RunScene());
-
-        //StartCoroutine("MakeStars");
     }
 
     void Reset()
@@ -97,7 +95,9 @@ public class StarScene : MonoBehaviour
         StopAllCoroutines();
         usingGrowth = true;
         buff = _createTexture(startMask.width, startMask.height);
+        buff2 = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
+        final2 = _createTexture(startMask.width, startMask.height);
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
         growMat.SetTexture("_MaskOneTex", maskOneTex);
@@ -250,6 +250,11 @@ public class StarScene : MonoBehaviour
 
         dynamicBackground.SetPixels32(x, y, 32, 32, blendedBlock);
 
+    }
+
+    void OnDisable()
+    {
+        Reset();
     }
 }
 

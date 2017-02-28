@@ -21,12 +21,12 @@ public class MicListener : MonoBehaviour {
 		if (Microphone.devices.Length > 0){
 
 			micExists = true;
-			micName = Microphone.devices[0];
+			//micName = Microphone.devices[0];
 			print ("we have a mic and its name is " + micName);
 			sound = GetComponent<AudioSource> ();
-			sound.clip = Microphone.Start(micName, true, 10, 44100); // theoretically should loop over itself, so we don't need to flush RAM
+			sound.clip = Microphone.Start(null, true, 10, 44100); // theoretically should loop over itself, so we don't need to flush RAM
 			sound.loop = true; // Set the AudioClip to loop
-			while (!(Microphone.GetPosition(micName) > 0)){} // Wait until recording starts
+			while (!(Microphone.GetPosition(null) > 0)){} // Wait until recording starts
 			sound.Play(); // Play the audio source so that we can check its volume
 			print ("Recording");
 		}
