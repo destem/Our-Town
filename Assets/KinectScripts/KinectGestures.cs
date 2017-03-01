@@ -116,6 +116,8 @@ public class KinectGestures : MonoBehaviour
         ForearmPivot,
         Shrug,
         PointForward,
+        No,
+        TurnAround,
 
 		UserGesture2 = 102,
 		UserGesture3 = 103,
@@ -1905,6 +1907,74 @@ public class KinectGestures : MonoBehaviour
                             bool isInPose = jointsTracked[rightHandIndex] && jointsTracked[rightShoulderIndex] &&
                             jointsPos[rightHandIndex].y - jointsPos[rightShoulderIndex].y < .2f && jointsPos[rightHandIndex].y - jointsPos[rightShoulderIndex].y > -.2f
                             && jointsPos[rightShoulderIndex].z - jointsPos[rightHandIndex].z > .2f;
+
+                            if (isInPose)
+                            {
+                                Vector3 jointPos = jointsPos[gestureData.joint];
+                                CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, 0f);
+                            }
+                        }
+                        else
+                        {
+                            // cancel the gesture
+                            SetGestureCancelled(ref gestureData);
+                        }
+                        break;
+                }
+                break;
+
+            case Gestures.No:
+                switch (gestureData.state)
+                {
+                    case 0:  // gesture detection - phase 1
+                        if (jointsTracked[rightHandIndex] && jointsTracked[rightElbowIndex] &&
+                            jointsPos[rightHandIndex].x - jointsPos[rightElbowIndex].x < -.2f &&
+                            jointsPos[rightHandIndex].y - jointsPos[rightElbowIndex].y < .2f)
+                        {
+                            SetGestureJoint(ref gestureData, timestamp, rightElbowIndex, jointsPos[rightElbowIndex]);
+                            gestureData.progress = 0.5f;
+                        }
+                        break;
+
+                    case 1:  // gesture phase 2 = complete
+                        if ((timestamp - gestureData.timestamp) < 1.5f)
+                        {
+                            bool isInPose = jointsTracked[rightHandIndex] && jointsTracked[rightShoulderIndex] &&
+                            jointsPos[rightHandIndex].y - jointsPos[rightShoulderIndex].y < .2f && jointsPos[rightHandIndex].y - jointsPos[rightShoulderIndex].y > -.2f
+                            && jointsPos[rightShoulderIndex].z - jointsPos[rightHandIndex].z > .2f;
+
+                            if (isInPose)
+                            {
+                                Vector3 jointPos = jointsPos[gestureData.joint];
+                                CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, 0f);
+                            }
+                        }
+                        else
+                        {
+                            // cancel the gesture
+                            SetGestureCancelled(ref gestureData);
+                        }
+                        break;
+                }
+                break;
+
+            case Gestures.TurnAround:
+                switch (gestureData.state)
+                {
+                    case 0:  // gesture detection - phase 1
+                        if (jointsTracked[rightShoulderIndex] && jointsTracked[leftShoulderIndex] &&
+                             jointsPos[rightShoulderIndex].x - jointsPos[leftShoulderIndex].x < -.1f)
+                        {
+                            SetGestureJoint(ref gestureData, timestamp, rightShoulderIndex, jointsPos[rightShoulderIndex]);
+                            gestureData.progress = 0.5f;
+                        }
+                        break;
+
+                    case 1:  // gesture phase 2 = complete
+                        if ((timestamp - gestureData.timestamp) < 1f)
+                        {
+                            bool isInPose = jointsTracked[rightShoulderIndex] && jointsTracked[leftShoulderIndex] &&
+                             jointsPos[rightShoulderIndex].x - jointsPos[leftShoulderIndex].x > .1f;
 
                             if (isInPose)
                             {

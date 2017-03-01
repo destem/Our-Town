@@ -13,7 +13,7 @@ public class StarScene : MonoBehaviour
     public Texture2D maskTwoTex;
     public Material displayMat;
     public Material growMat;
-    public GameObject screenModel;
+    //public GameObject screenModel;
     public Texture2D black;
     public float slowSpeed = 0.05f;
     public float mediumSpeed = 0.5f;

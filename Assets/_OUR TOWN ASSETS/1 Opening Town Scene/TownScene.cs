@@ -30,7 +30,7 @@ public class TownScene : MonoBehaviour {
     public Text t;
     float brushSize = 10f;
     OurTownGestureListener gesture;
-    public GameObject screenModel;
+    //public GameObject screenModel;
     public float slowSpeed = 0f;
     public float mediumSpeed = 0f;
     public float fastSpeed = 0f;
@@ -79,7 +79,7 @@ public class TownScene : MonoBehaviour {
         growMat.SetTexture("_MaskTwoTex", black);
         growMat2.SetTexture("_MaskOneTex", black);
         growMat2.SetTexture("_MaskTwoTex", black);
-        screenModel.GetComponent<Renderer>().material = imageFade;
+        //screenModel.GetComponent<Renderer>().material = imageFade;
         imageFade.SetTexture("_Paper", black);
         imageFade.SetTexture("_Chapel", paper);
         imageFade.SetVector("_Value", Vector4.zero);
@@ -150,7 +150,7 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         imageFade.SetVector("_Value", Vector4.one);
-        screenModel.GetComponent<Renderer>().material = displayMat;
+       // screenModel.GetComponent<Renderer>().material = displayMat;
         usingGrowth = true;
         yield return new WaitForSeconds(1f);
         StartCoroutine(FirstHouses());
@@ -211,7 +211,7 @@ public class TownScene : MonoBehaviour {
         }
         next = false;
         usingGrowth = false;
-        screenModel.GetComponent<Renderer>().material = imageFade;
+        //screenModel.GetComponent<Renderer>().material = imageFade;
         imageFade.SetTexture("_Chapel", wordsOnly);
         imageFade.SetVector("_Value", Vector4.one);
 
@@ -448,7 +448,7 @@ public class TownScene : MonoBehaviour {
     IEnumerator EnableScreenCollision()
     {
         yield return new WaitForSeconds(5f);
-        screenModel.GetComponent<MeshCollider>().enabled = true;
+        //screenModel.GetComponent<MeshCollider>().enabled = true;
     }
 
     void Blit()

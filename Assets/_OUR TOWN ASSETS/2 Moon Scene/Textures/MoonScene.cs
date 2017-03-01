@@ -31,7 +31,7 @@ public class MoonScene : MonoBehaviour {
 
     float brushSize = 10f;
     OurTownGestureListener gesture;
-    public GameObject screenModel;
+    //public GameObject screenModel;
     public float slowSpeed = 0f;
     public float mediumSpeed = 0f;
     public float fastSpeed = 0f;

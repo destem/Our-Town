@@ -26,7 +26,7 @@ public class TreeScene : MonoBehaviour {
     public Text t;
     float brushSize = 10f;
     OurTownGestureListener gesture;
-    public GameObject screenModel;
+    //public GameObject screenModel;
     public float slowSpeed = 0f;
     public float mediumSpeed = 0f;
     public float fastSpeed = 0f;
@@ -53,7 +53,7 @@ public class TreeScene : MonoBehaviour {
         growMat2 = new Material(growMat);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
-        screenModel.GetComponent<Renderer>().material = chapelMat;
+        //screenModel.GetComponent<Renderer>().material = chapelMat;
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height); 
         final = _createTexture(startMask.width, startMask.height);
@@ -75,7 +75,7 @@ public class TreeScene : MonoBehaviour {
     {
         StopAllCoroutines();
         usingGrowth = false;
-        screenModel.GetComponent<Renderer>().material = chapelMat;
+        //screenModel.GetComponent<Renderer>().material = chapelMat;
         chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height);
@@ -167,7 +167,7 @@ public class TreeScene : MonoBehaviour {
         next = false;
         print("first words");
         usingGrowth = true;
-        screenModel.GetComponent<Renderer>().material = displayMat;
+        //screenModel.GetComponent<Renderer>().material = displayMat;
         growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
         SetMaskThree(.215f, .994f);
         yield return null;
@@ -395,7 +395,7 @@ public class TreeScene : MonoBehaviour {
     IEnumerator EnableScreenCollision()
     {
         yield return new WaitForSeconds(5f);
-        screenModel.GetComponent<MeshCollider>().enabled = true;
+        //screenModel.GetComponent<MeshCollider>().enabled = true;
     }
 
     void Blit()

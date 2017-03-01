@@ -37,6 +37,9 @@
 				v2f o;
 				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
 				o.uv = v.uv;
+//#if UNITY_UV_STARTS_AT_TOP				
+//				o.uv.y = 1 - v.uv.y;
+//#endif
 				return o;
 			}
 			
@@ -48,8 +51,9 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				//fixed4 mask = tex2D(_MainTex, i.uv);
-				fixed4 col = tex2D(_Chapel, i.uv);
-				fixed4 paper = tex2D(_Paper, i.uv);
+				float2 offset = float2(_Value.y, 0.);
+				fixed4 col = tex2D(_Chapel, i.uv + offset);
+				fixed4 paper = tex2D(_Paper, i.uv + offset);
 				
 				return lerp(paper, col, _Value.x);
 			}

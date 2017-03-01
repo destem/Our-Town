@@ -14,9 +14,13 @@ public class OceanScene : MonoBehaviour
 
     public Texture2D paper;
     public Texture2D full;
+    public Texture2D hurtFeelings;
+    public Texture2D umbrellasOnly;
+
 
     public Material growMat;
     public Material displayMat;
+    public Material fadeMat;
 
     Material growMat2;
     RenderTexture buff;
@@ -33,6 +37,9 @@ public class OceanScene : MonoBehaviour
     public float growthThreshhold = 1f;
     bool next = false;
     bool usingGrowth = true;
+    float uvOffset = 0f;
+    float imageLerp = 0f;
+    bool rotate = false;
 
     RenderTexture _createTexture(int w, int h)
     {
@@ -54,6 +61,10 @@ public class OceanScene : MonoBehaviour
     void Reset()
     {
         StopAllCoroutines();
+        usingGrowth = true;
+        uvOffset = 0f;
+        imageLerp = 0;
+        rotate = false;
         growMat2 = new Material(growMat);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
@@ -69,6 +80,10 @@ public class OceanScene : MonoBehaviour
         growMat.SetTexture("_MaskTwoTex", black);
         growMat2.SetTexture("_MaskOneTex", black);
         growMat2.SetTexture("_MaskTwoTex", black);
+
+        fadeMat.SetTexture("_Chapel", umbrellasOnly);
+        fadeMat.SetTexture("_Paper", full);
+
         StartCoroutine(RunScene());
     }
 
@@ -86,6 +101,11 @@ public class OceanScene : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             Reset();
+        }
+
+        if (rotate)
+        {
+            uvOffset += 0.001f * Time.deltaTime;
         }
     }
 
@@ -106,7 +126,8 @@ public class OceanScene : MonoBehaviour
         }
         else
         {
-
+            fadeMat.SetVector("_Value", new Vector4(imageLerp, uvOffset, 0f, 0f));
+            Graphics.Blit(source, dest, fadeMat);
         }
 
     }
@@ -114,12 +135,143 @@ public class OceanScene : MonoBehaviour
     IEnumerator RunScene()
     {
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
+        growMat.SetTexture("_MaskOneTex", MaskOneTex);
+        growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
+        growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
+        growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.PointForward);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        StartCoroutine("Horizon");
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.MicDrop);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        StartCoroutine("Umbrellas");
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TurnAround);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        StartCoroutine("WeatherandWords");
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        //start rotating picture
+        print("starting rotation");
+        usingGrowth = false;
+        rotate = true;
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.LeanLeft);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        print("Fade to umbrellas and words");
+        float startTime = Time.time;
+        float fadeTime = 10f;
+        while (Time.time - startTime < fadeTime)
+        {
+            imageLerp = (Time.time - startTime) / fadeTime;
+            yield return null;
+        }
+
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         next = false;
+        imageLerp = 0;
+        fadeMat.SetTexture("_Chapel", hurtFeelings);
+        fadeMat.SetTexture("_Paper", umbrellasOnly);
+        yield return null;
+        print("fade to last words");
+        startTime = Time.time;
+        fadeTime = 10f;
+        while (Time.time - startTime < fadeTime)
+        {
+            imageLerp = (Time.time - startTime) / fadeTime;
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f);
+        OurTownManager.GotoPainting();
+    }
+
+    IEnumerator Horizon()
+    {
+        print("Horizon, sun, first umbrella");
+        SetMaskOne(0.01f, 0.508f);
+        yield return new WaitForSeconds(5f);
+        SetMaskOne(.236f, .93f);
+        yield return new WaitForSeconds(5f);
+        SetMaskTwo(.973f, .122f);
+    }
+
+    IEnumerator Umbrellas()
+    {
+        print("Umbrellas");
+        float umbrellaDelay = 2f;
+        float[] coords = { 0.512f, 0.387f, 0.140f, 0.462f, 0.251f, 0.163f, 0.293f, 0.249f, 0.760f, 0.071f,
+                           0.813f, 0.562f };
+        for (int i = 0; i < coords.Length; i += 2)
+        {
+            SetMaskTwo(coords[i], coords[i + 1]);
+            yield return new WaitForSeconds(umbrellaDelay);
+        }
+    }
+
+    IEnumerator WeatherandWords()
+    {
+        print("Weather and words");
+        //3a sky
+        SetMaskTwo(.257f, .853f);
+        yield return null;
+        SetMaskTwo(.192f, .987f);
+        yield return new WaitForSeconds(3f);
+        //3b water
+        SetMaskFour(.248f, .59f);
+        yield return new WaitForSeconds(3f);
+        //3c storm
+        SetMaskThree(.96f, .974f);
+        yield return new WaitForSeconds(3f);
+        //3d left rain
+        SetMaskThree(.05f, .96f);
+        //3e slanted rain
+        SetMaskFour(.75f, .98f);
+        yield return new WaitForSeconds(3f);
+        //3f snow
+        SetMaskThree(.46f, .986f);
+        yield return new WaitForSeconds(3f);
+        float[] coords = { 0.615f, 0.223f, 0.020f, 0.543f, 0.185f, 0.514f, 0.664f, 0.941f, 0.934f, 0.593f, 0.969f,
+                           0.433f, 0.144f, 0.273f, 0.400f, 0.970f, 0.189f, 0.141f };
+        for (int i = 0; i < coords.Length; i += 2)
+        {
+            SetMaskTwo(coords[i], coords[i + 1]);
+            yield return null;
+        }
+        yield return new WaitForSeconds(5f);
+        float[] coords2 = { 0.306f, 0.155f, 0.975f, 0.068f, 0.615f, 0.128f, 0.185f, 0.436f, 0.076f, 0.203f, 0.081f,
+                            0.962f, 0.791f, 0.988f, 0.319f, 0.348f, 0.576f, 0.614f};
+        for (int i = 0; i < coords2.Length; i += 2)
+        {
+            SetMaskTwo(coords2[i], coords2[i + 1]);
+            yield return null;
+        }
     }
 
     public void SetMaskOne(float u, float v)
