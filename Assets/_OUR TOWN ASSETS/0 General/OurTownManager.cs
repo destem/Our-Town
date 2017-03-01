@@ -17,6 +17,7 @@ public class OurTownManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //Cursor.visible = false;
         townScene = GetComponent<TownScene>();
         moonScene = GetComponent<MoonScene>();
         rainScene = GetComponent<RainScene>();
