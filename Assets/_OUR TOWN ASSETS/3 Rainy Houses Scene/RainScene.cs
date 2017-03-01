@@ -239,7 +239,7 @@ public class RainScene : MonoBehaviour {
         print("bring in the houses");
         for (int i = 0; i < coords.Length; i += 2)
         {
-            SetMaskOne(coords[i], coords[i + 1]);
+            SetMaskThree(coords[i], coords[i + 1]);
             yield return null;
         }
 
@@ -251,7 +251,7 @@ public class RainScene : MonoBehaviour {
         print("wipe non-church side of screen");
         for (int i = 0; i < coords.Length; i += 2)
         {
-            SetMaskOne(coords[i], coords[i + 1]);
+            SetMaskTwo(coords[i], coords[i + 1]);
             yield return null;
         }
 
