@@ -1,12 +1,17 @@
-wipe at end of some scenes
+Expand star blitting events
 
-implement Fig's scene (ocean) * waiting for mask connections
+fix levels on multiplied rain background
 
-finish rain scene
+more rain drops in stage 1 and 2, more entry points in stage 3
 
-find out what's up with MicListener
+implement all wipe and reverse wipe effects from scene to scene (changed opening of moon from neck tilt to the more you know)
 
-Implement turnaround gesture
+test turn around
 
-PAINTING - have endpoint. Need PS perspective warp
+test to see if no will work for forearmwave
 
+buttons to static textures Q - I?
+
+Fix moon
+
+PAINTING
