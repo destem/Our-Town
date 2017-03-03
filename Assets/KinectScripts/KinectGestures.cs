@@ -453,9 +453,10 @@ public class KinectGestures : MonoBehaviour
                         if ((timestamp - gestureData.timestamp) <= 2f)
                         {
                             bool isInPose = jointsTracked[rightHandIndex] && jointsTracked[rightShoulderIndex] && jointsTracked[leftHandIndex] && jointsTracked[leftShoulderIndex] &&
-                            Mathf.Abs(jointsPos[rightHandIndex].y - jointsPos[leftHandIndex].y) < .2 &&
+                            Mathf.Abs(jointsPos[rightHandIndex].y - jointsPos[leftHandIndex].y) < .1 &&
                             //distance between hands is less than a decimeter apart
-                            Mathf.Abs(jointsPos[rightHandIndex].x - jointsPos[leftHandIndex].x) < .1;
+                            Mathf.Abs(jointsPos[rightHandIndex].x - jointsPos[leftHandIndex].x) < .1 &&
+                            Mathf.Abs(jointsPos[rightHandIndex].z - jointsPos[leftHandIndex].z) < .1;
 
                             if (isInPose)
                             {

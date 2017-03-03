@@ -22,6 +22,7 @@ public class TownScene : MonoBehaviour {
     public Material displayMat;
     public Material packer;
     public Material imageFade;
+    public Material wipeMat;
     Material growMat2;
     RenderTexture buff;
     RenderTexture buff2;
@@ -38,6 +39,7 @@ public class TownScene : MonoBehaviour {
     public float growthThreshhold = 1f;
     bool next = false;
     bool usingGrowth = false;
+    bool usingWipe = false;
     
     RenderTexture _createTexture(int w, int h)
     {
@@ -64,6 +66,8 @@ public class TownScene : MonoBehaviour {
     {
         StopAllCoroutines();
         usingGrowth = false;
+        usingWipe = false;
+        wipeMat.SetFloat("_Value", 1.05f);
         growMat2 = new Material(growMat);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
@@ -121,6 +125,10 @@ public class TownScene : MonoBehaviour {
             Graphics.Blit(buff, dest, displayMat);
             //Graphics.Blit(buff, dest);
             ResetUVs();
+        }
+        else if (usingWipe)
+        {
+            Graphics.Blit(buff, dest, wipeMat);
         }
         else
         {
@@ -191,7 +199,7 @@ public class TownScene : MonoBehaviour {
 
         //FIRE OFF BACKGROUND
         StartCoroutine(BackgroundDetails());
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(10f);
         print("full background, no words");
         SetMaskFour(.99f, .99f);
         gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
@@ -248,6 +256,17 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Wipe");
         //TODO: Actually implement the wipe
+        usingGrowth = false;
+        usingWipe = true;
+        wipeMat.SetFloat("_Value", 1.05f);
+        startTime = Time.time;
+        fadeDuration = 10f;
+        while (Time.time - startTime < fadeDuration + .1f)
+        {
+            wipeMat.SetFloat("_Value", 1 - (Time.time - startTime) / fadeDuration);
+            yield return null;
+        }
+        OurTownManager.GotoMoon();
     }
 
     IEnumerator FirstHouses()

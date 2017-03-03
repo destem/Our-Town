@@ -22,6 +22,7 @@ public class MoonScene : MonoBehaviour {
 
     public Material growMat;
     public Material displayMat;
+    public Material fadeMat;
 
     Material growMat2;
     RenderTexture buff;
@@ -63,6 +64,8 @@ public class MoonScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        usingGrowth = true;
+        fadeMat.SetVector("_Value", Vector4.zero);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
 
         growMat2 = new Material(growMat);
@@ -121,7 +124,10 @@ public class MoonScene : MonoBehaviour {
             //Graphics.Blit(buff, dest);
             ResetUVs();
         }
-
+        else
+        {
+            Graphics.Blit(source, dest, fadeMat);
+        }
 
     }
 
@@ -130,7 +136,7 @@ public class MoonScene : MonoBehaviour {
     IEnumerator RunScene()
     {
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
-        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -199,7 +205,7 @@ public class MoonScene : MonoBehaviour {
 
         growMat.SetTexture("_MaskOneTex", MaskOneFinalTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoFinalTex);
-        SetMaskOne(0.5f, .98f);
+        SetMaskOne(0.475f, .667f);
         yield return null;
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
@@ -228,6 +234,15 @@ public class MoonScene : MonoBehaviour {
         }
         next = false;
         print("Wipeout");
+        usingGrowth = false;
+        float startTime = Time.time;
+        float fadeDuration = 5f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        fadeMat.SetVector("_Value", Vector4.one);
     }
 
     IEnumerator HouseSilhouettes()

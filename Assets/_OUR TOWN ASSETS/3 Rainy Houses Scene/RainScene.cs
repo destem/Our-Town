@@ -17,6 +17,8 @@ public class RainScene : MonoBehaviour {
 
     public Material growMat;
     public Material displayMat;
+    public Material wipeMat;
+    public Material fadeMat;
 
     Material growMat2;
     RenderTexture buff;
@@ -33,6 +35,7 @@ public class RainScene : MonoBehaviour {
     public float growthThreshhold = 1f;
     bool next = false;
     bool usingGrowth = true;
+    bool usingWipe = false;
 
     RenderTexture _createTexture(int w, int h)
     {
@@ -53,6 +56,9 @@ public class RainScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        usingGrowth = true;
+        usingWipe = false;
+        wipeMat.SetFloat("_Value", -1f);
         growMat2 = new Material(growMat);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
@@ -102,6 +108,10 @@ public class RainScene : MonoBehaviour {
             //Graphics.Blit(buff, dest);
             ResetUVs();
         }
+        else if (usingWipe)
+        {
+            Graphics.Blit(source, dest, wipeMat);
+        }
         else
         {
             Graphics.Blit(rotatedTown, dest);
@@ -117,7 +127,7 @@ public class RainScene : MonoBehaviour {
         growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
 
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
-        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -155,7 +165,18 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        StartCoroutine("WipeFirstHalf");
+        usingGrowth = false;
+        usingWipe = true;
+        wipeMat.SetFloat("_Value", -1f);
+        float startTime = Time.time;
+        float fadeDuration = 2f;
+        while (Time.time - startTime < fadeDuration + .05)
+        {
+            wipeMat.SetFloat("_Value", ((Time.time - startTime) / fadeDuration) - 1f);
+            yield return null;
+        }
+
+        //StartCoroutine("WipeFirstHalf");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
         while (!next && !gesture.IsCurrentGesture())
@@ -163,7 +184,14 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        StartCoroutine("WipeSecondHalf");
+        startTime = Time.time;
+        fadeDuration = 2f;
+        while (Time.time - startTime < fadeDuration + .05)
+        {
+            wipeMat.SetFloat("_Value", (Time.time - startTime) / fadeDuration);
+            yield return null;
+        }
+        //StartCoroutine("WipeSecondHalf");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next && !gesture.IsCurrentGesture())
@@ -375,7 +403,11 @@ public class RainScene : MonoBehaviour {
 
     IEnumerator LastRain()
     {
-        SetMaskFour(.5f, .5f);
+        for (int i = 0; i < 20; i++)
+        {
+            SetMaskFour(i/20f, .95f);
+            yield return null;
+        }
         float wordDelay = 2f;
         float[] coords = { 0.292f, 0.084f, 0.148f, 0.092f, 0.056f, 0.343f, 0.860f, 0.981f, 0.579f, 0.788f,
                            0.500f, 0.020f, 0.516f, 0.038f };
@@ -390,12 +422,20 @@ public class RainScene : MonoBehaviour {
 
     IEnumerator Houses()
     {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
+        float houseDelay = 1f;
+        float[] coords = { 0.473f, 0.589f, 0.525f, 0.582f, 0.389f, 0.511f, 0.618f, 0.597f, 0.329f, 0.632f,
+                           0.663f, 0.557f, 0.293f, 0.473f, 0.697f, 0.504f, 0.716f, 0.501f, 0.255f, 0.465f,
+                           0.761f, 0.697f, 0.204f, 0.405f, 0.807f, 0.348f, 0.166f, 0.462f, 0.132f, 0.738f,
+                           0.885f, 0.426f, 0.059f, 0.426f, 0.931f, 0.309f, 0.002f, 0.547f, 0.996f, 0.568f,
+                           0.474f, 0.223f, 0.518f, 0.238f, 0.563f, 0.170f, 0.390f, 0.212f, 0.591f, 0.483f,
+                           0.635f, 0.106f, 0.338f, 0.192f, 0.293f, 0.195f, 0.274f, 0.348f, 0.249f, 0.163f,
+                           0.221f, 0.174f, 0.636f, 0.131f, 0.740f, 0.441f, 0.838f, 0.422f, 0.131f, 0.230f,
+                           0.033f, 0.309f };
         print("bring in the houses");
         for (int i = 0; i < coords.Length; i += 2)
         {
-            SetMaskThree(coords[i], coords[i + 1]);
-            yield return null;
+            SetMaskTwo(coords[i], coords[i + 1]);
+            yield return new WaitForSeconds(houseDelay);
         }
 
     }
