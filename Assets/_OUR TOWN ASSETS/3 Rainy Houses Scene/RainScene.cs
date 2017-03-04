@@ -69,6 +69,7 @@ public class RainScene : MonoBehaviour {
         final2 = _createTexture(startMask.width, startMask.height);
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
+        ResetUVs();
 
         growMat.SetTexture("_MaskOneTex", black);
         growMat.SetTexture("_MaskTwoTex", black);
@@ -208,6 +209,7 @@ public class RainScene : MonoBehaviour {
         }
         next = false;
         usingGrowth = false;
+        usingWipe = false;
         print("rotated town");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);

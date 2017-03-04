@@ -5,6 +5,7 @@ using UnityEngine;
 public class OurTownManager : MonoBehaviour {
 
     public Texture2D testPattern;
+    public Material fadeMat;
     bool justStarted = true;
     static TownScene townScene;
     static MoonScene moonScene;
@@ -32,59 +33,81 @@ public class OurTownManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (justStarted && Input.anyKeyDown)
+        if (justStarted && Input.GetKeyDown(KeyCode.Return))
         {
+            StopAllCoroutines();
             justStarted = false;
-            GotoTown();
+            //GotoTown();
+            StartCoroutine("FadeToTown");
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha1))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoTown();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha2))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoMoon();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha3))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoRain();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha4))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoTree();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha5))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoMist();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha6))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoOcean();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha7))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoPainting();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha8))
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha8))
         {
+            StopAllCoroutines();
             DisableAll();
             GotoStar();
         }
+        if (!justStarted && Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            fadeMat.SetVector("_Value", Vector4.zero);
+            justStarted = true;
+        }
     }
+
 
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
         if (justStarted)
         {
             Graphics.Blit(testPattern, dest);
+        }
+        else
+        {
+            Graphics.Blit(source, dest, fadeMat);
         }
     }
 
@@ -98,6 +121,18 @@ public class OurTownManager : MonoBehaviour {
         oceanScene.enabled = false;
         paintingScene.enabled = false;
         starScene.enabled = false;
+    }
+
+    IEnumerator FadeToTown()
+    {
+        float startTime = Time.time;
+        float fadeDuration = 1f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        GotoTown();
     }
 
     public static void GotoTown()

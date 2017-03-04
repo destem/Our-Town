@@ -26,9 +26,9 @@ public class MistScene : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        offset += Time.deltaTime * scrollSpeed;
-        scrollMat.mainTextureOffset = new Vector2(offset, 0f);
-        scrollMat.SetFloat("_offset", offset);
+        //offset += Time.deltaTime * scrollSpeed;
+        //scrollMat.mainTextureOffset = new Vector2(offset, 0f);
+        //scrollMat.SetFloat("_offset", offset);
         next = false;
 
         if (Input.GetButtonDown("Jump"))

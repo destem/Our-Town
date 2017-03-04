@@ -72,6 +72,7 @@ public class StarScene : MonoBehaviour
         }
         coordList = new List<Vector2>(coordArray);
         coordList = Shuffle(coordList);
+        ResetUVs();
 
         dynamicBackground = Instantiate(full);
         usingGrowth = true;
@@ -94,6 +95,7 @@ public class StarScene : MonoBehaviour
     {
         StopAllCoroutines();
         usingGrowth = true;
+        ResetUVs();
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);

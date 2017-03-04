@@ -64,6 +64,7 @@ public class MoonScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        ResetUVs();
         usingGrowth = true;
         fadeMat.SetVector("_Value", Vector4.zero);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
@@ -236,13 +237,14 @@ public class MoonScene : MonoBehaviour {
         print("Wipeout");
         usingGrowth = false;
         float startTime = Time.time;
-        float fadeDuration = 5f;
+        float fadeDuration = 1.5f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
             yield return null;
         }
         fadeMat.SetVector("_Value", Vector4.one);
+
     }
 
     IEnumerator HouseSilhouettes()

@@ -61,6 +61,7 @@ public class OceanScene : MonoBehaviour
     void Reset()
     {
         StopAllCoroutines();
+        ResetUVs();
         usingGrowth = true;
         uvOffset = 0f;
         imageLerp = 0;

@@ -65,12 +65,14 @@ public class TownScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        
         usingGrowth = false;
         usingWipe = false;
         wipeMat.SetFloat("_Value", 1.05f);
         growMat2 = new Material(growMat);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
+        ResetUVs();
 
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height);
@@ -186,7 +188,7 @@ public class TownScene : MonoBehaviour {
         yield return null;
         StartCoroutine(Windows());
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
 
         StartCoroutine(HouseDetails());
         gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
@@ -199,7 +201,7 @@ public class TownScene : MonoBehaviour {
 
         //FIRE OFF BACKGROUND
         StartCoroutine(BackgroundDetails());
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(20f);
         print("full background, no words");
         SetMaskFour(.99f, .99f);
         gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
@@ -384,7 +386,7 @@ public class TownScene : MonoBehaviour {
 
     IEnumerator HouseDetails()
     {
-        float detailDelay = 1.09f;
+        float detailDelay = 2.09f;
         float[] coords = { 0.930f, 0.459f, 0.928f, 0.237f, 0.860f, 0.573f, 0.823f, 0.474f, 0.841f, 0.154f,
                            0.837f, 0.602f, 0.813f, 0.610f, 0.788f, 0.093f, 0.777f, 0.732f, 0.749f, 0.301f,
                            0.756f, 0.078f, 0.696f, 0.326f, 0.657f, 0.480f, 0.614f, 0.581f, 0.623f, 0.309f,

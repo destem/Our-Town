@@ -74,6 +74,7 @@ public class TreeScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        ResetUVs();
         usingGrowth = false;
         //screenModel.GetComponent<Renderer>().material = chapelMat;
         chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
