@@ -68,13 +68,13 @@ public class TreeScene : MonoBehaviour {
 
         gesture = OurTownGestureListener.Instance;
         chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
+        ResetUVs();
         StartCoroutine(RunScene());
     }
 
     void Reset()
     {
         StopAllCoroutines();
-        ResetUVs();
         usingGrowth = false;
         //screenModel.GetComponent<Renderer>().material = chapelMat;
         chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
@@ -89,6 +89,8 @@ public class TreeScene : MonoBehaviour {
         growMat.SetTexture("_MaskTwoTex", black);
         growMat2.SetTexture("_MaskOneTex", black);
         growMat2.SetTexture("_MaskTwoTex", black);
+        ResetUVs();
+
         StartCoroutine(RunScene());
     }
 
@@ -99,8 +101,8 @@ public class TreeScene : MonoBehaviour {
         ResetUVs();
         next = false;
            
-        Vector3 mousePos = Input.mousePosition;
-        t.text = string.Format("{0:0.000}, {1:0.000}", mousePos.x / Screen.width, mousePos.y / Screen.height);
+        //Vector3 mousePos = Input.mousePosition;
+        //t.text = string.Format("{0:0.000}, {1:0.000}", mousePos.x / Screen.width, mousePos.y / Screen.height);
 
         if (Input.GetButtonDown("Jump"))
         {

@@ -64,7 +64,6 @@ public class MoonScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
-        ResetUVs();
         usingGrowth = true;
         fadeMat.SetVector("_Value", Vector4.zero);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
@@ -87,6 +86,8 @@ public class MoonScene : MonoBehaviour {
         displayMat.SetTexture("_FinalTex", firstTargetTex);
         displayMat.SetTexture("_BGTex", paper);
         //screenModel.GetComponent<Renderer>().material = displayMat;
+        ResetUVs();
+
         StartCoroutine(RunScene());
     }
 

@@ -95,7 +95,6 @@ public class StarScene : MonoBehaviour
     {
         StopAllCoroutines();
         usingGrowth = true;
-        ResetUVs();
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
@@ -104,6 +103,8 @@ public class StarScene : MonoBehaviour
         displayMat.SetTexture("_SecondTex", buff2);
         growMat.SetTexture("_MaskOneTex", maskOneTex);
         growMat.SetTexture("_MaskTwoTex", maskTwoTex);
+        ResetUVs();
+
         StartCoroutine(RunScene());
     }
 

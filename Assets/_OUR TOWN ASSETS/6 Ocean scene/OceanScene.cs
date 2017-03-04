@@ -61,7 +61,6 @@ public class OceanScene : MonoBehaviour
     void Reset()
     {
         StopAllCoroutines();
-        ResetUVs();
         usingGrowth = true;
         uvOffset = 0f;
         imageLerp = 0;
@@ -84,6 +83,7 @@ public class OceanScene : MonoBehaviour
 
         fadeMat.SetTexture("_Chapel", umbrellasOnly);
         fadeMat.SetTexture("_Paper", full);
+        ResetUVs();
 
         StartCoroutine(RunScene());
     }
@@ -106,7 +106,7 @@ public class OceanScene : MonoBehaviour
 
         if (rotate)
         {
-            uvOffset += 0.001f * Time.deltaTime;
+            uvOffset += 0.002f * Time.deltaTime;
         }
     }
 
@@ -157,7 +157,7 @@ public class OceanScene : MonoBehaviour
         next = false;
         StartCoroutine("Umbrellas");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TurnAround);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Tpose);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -182,6 +182,7 @@ public class OceanScene : MonoBehaviour
             yield return null;
         }
         next = false;
+        rotate = false;
         print("Fade to umbrellas and words");
         float startTime = Time.time;
         float fadeTime = 10f;
@@ -203,7 +204,7 @@ public class OceanScene : MonoBehaviour
         yield return null;
         print("fade to last words");
         startTime = Time.time;
-        fadeTime = 10f;
+        fadeTime = 3f;
         while (Time.time - startTime < fadeTime)
         {
             imageLerp = (Time.time - startTime) / fadeTime;
