@@ -14,6 +14,8 @@ public class TreeScene : MonoBehaviour {
     public Texture2D MaskFourTex;
     public Texture2D black;
     public Texture2D full;
+    public Texture2D paper;
+    public Texture2D chapelOnly;
     public Material chapelMat;
     public Material growMat;
     public Material displayMat;
@@ -50,26 +52,24 @@ public class TreeScene : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        growMat2 = new Material(growMat);
-        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
-        growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         //screenModel.GetComponent<Renderer>().material = chapelMat;
-        buff = _createTexture(startMask.width, startMask.height);
-        buff2 = _createTexture(startMask.width, startMask.height); 
-        final = _createTexture(startMask.width, startMask.height);
-        final2 = _createTexture(startMask.width, startMask.height);
+        //buff = _createTexture(startMask.width, startMask.height);
+        //buff2 = _createTexture(startMask.width, startMask.height); 
+        //final = _createTexture(startMask.width, startMask.height);
+        //final2 = _createTexture(startMask.width, startMask.height);
 
-        displayMat.SetTexture("_MainTex", buff);
-        displayMat.SetTexture("_SecondTex", buff2);
-        growMat.SetTexture("_MaskOneTex", black);
-        growMat.SetTexture("_MaskTwoTex", black);
-        growMat2.SetTexture("_MaskOneTex", black);
-        growMat2.SetTexture("_MaskTwoTex", black);
+        //displayMat.SetTexture("_MainTex", buff);
+        //displayMat.SetTexture("_SecondTex", buff2);
+        //growMat.SetTexture("_MaskOneTex", black);
+        //growMat.SetTexture("_MaskTwoTex", black);
+        //growMat2.SetTexture("_MaskOneTex", black);
+        //growMat2.SetTexture("_MaskTwoTex", black);
 
         gesture = OurTownGestureListener.Instance;
-        chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
-        ResetUVs();
-        StartCoroutine(RunScene());
+        //chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
+        //ResetUVs();
+        //StartCoroutine(RunScene());
+        Reset();
     }
 
     void Reset()
@@ -77,11 +77,17 @@ public class TreeScene : MonoBehaviour {
         StopAllCoroutines();
         usingGrowth = false;
         //screenModel.GetComponent<Renderer>().material = chapelMat;
-        chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
+        chapelMat.SetVector("_Value", new Vector4(1f, 0f, 0f, 0f));
+        chapelMat.SetTexture("_Paper", paper);
+        chapelMat.SetTexture("_Chapel", chapelOnly);
+
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
         final2 = _createTexture(startMask.width, startMask.height);
+        growMat2 = new Material(growMat);
+        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
+        growMat2.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
         //Graphics.Blit(startMask, buff, packer);
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
@@ -152,13 +158,6 @@ public class TreeScene : MonoBehaviour {
         //}
         //next = false;
         //print("starting chapel");
-        //float startTime = Time.time;
-        //while (Time.time - startTime < chapelFadeTime)
-        //{
-        //    chapelMat.SetVector("_Value", new Vector4((Time.time - startTime) / chapelFadeTime, 0f, 0f, 0f));
-        //    yield return null;
-        //}
-        chapelMat.SetVector("_Value", new Vector4(1f, 0f, 0f, 0f));
         yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.Sweep);
@@ -171,7 +170,10 @@ public class TreeScene : MonoBehaviour {
         print("first words");
         usingGrowth = true;
         //screenModel.GetComponent<Renderer>().material = displayMat;
+        growMat.SetTexture("_MaskOneTex", MaskOneTex);
+        growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
         growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
+        growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
         SetMaskThree(.215f, .994f);
         yield return null;
         SetMaskThree(.222f, .942f);
@@ -190,9 +192,6 @@ public class TreeScene : MonoBehaviour {
         }
         next = false;
         print("First branches");
-        growMat.SetTexture("_MaskOneTex", MaskOneTex);
-        growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
-        growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
         SetMaskOne(0.500f, 0.879f);
         yield return null;
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
@@ -364,7 +363,21 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
+        chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
+
         print("Fade to black");
+        usingGrowth = false;
+        chapelMat.SetTexture("_Paper", full);
+        chapelMat.SetTexture("_Chapel", black);
+
+        float startTime = Time.time;
+        while (Time.time - startTime < 2f)
+        {
+            chapelMat.SetVector("_Value", new Vector4((Time.time - startTime) / 2f, 0f, 0f, 0f));
+            yield return null;
+        }
+        chapelMat.SetVector("_Value", new Vector4(1f, 0f, 0f, 0f));
+
     }
 
     public void SetMaskOne(float u, float v)

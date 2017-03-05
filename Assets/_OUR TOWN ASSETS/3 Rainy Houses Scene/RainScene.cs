@@ -19,6 +19,7 @@ public class RainScene : MonoBehaviour {
     public Material displayMat;
     public Material wipeMat;
     public Material fadeMat;
+    public Material wordFade;
 
     Material growMat2;
     RenderTexture buff;
@@ -36,6 +37,8 @@ public class RainScene : MonoBehaviour {
     bool next = false;
     bool usingGrowth = true;
     bool usingWipe = false;
+    enum RainRenderType {FadeIn, Growth, HalfWipe, FadeWords, RotatedTown }
+    RainRenderType rainRender = RainRenderType.FadeIn;
 
     RenderTexture _createTexture(int w, int h)
     {
@@ -58,6 +61,9 @@ public class RainScene : MonoBehaviour {
         StopAllCoroutines();
         usingGrowth = true;
         usingWipe = false;
+        rainRender = RainRenderType.FadeIn;
+        fadeMat.SetVector("_Value", Vector4.zero);
+        wordFade.SetVector("_Value", Vector4.zero);
         wipeMat.SetFloat("_Value", -1f);
         growMat2 = new Material(growMat);
         growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
@@ -96,26 +102,41 @@ public class RainScene : MonoBehaviour {
 
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
-        if (usingGrowth)
-        {
-            for (int i = 0; i < iterations; i++)
+        switch (rainRender) {
+            case RainRenderType.Growth:
             {
-                Graphics.Blit(buff, final, growMat);
-                Graphics.Blit(final, buff, growMat);
-                Graphics.Blit(buff2, final2, growMat2);
-                Graphics.Blit(final2, buff2, growMat2);
+                for (int i = 0; i < iterations; i++)
+                {
+                    Graphics.Blit(buff, final, growMat);
+                    Graphics.Blit(final, buff, growMat);
+                    Graphics.Blit(buff2, final2, growMat2);
+                    Graphics.Blit(final2, buff2, growMat2);
+                }
+                Graphics.Blit(buff, dest, displayMat);
+                //Graphics.Blit(buff, dest);
+                ResetUVs();
+                break;
             }
-            Graphics.Blit(buff, dest, displayMat);
-            //Graphics.Blit(buff, dest);
-            ResetUVs();
-        }
-        else if (usingWipe)
-        {
-            Graphics.Blit(source, dest, wipeMat);
-        }
-        else
-        {
-            Graphics.Blit(rotatedTown, dest);
+            case RainRenderType.HalfWipe:
+            {
+                Graphics.Blit(source, dest, wipeMat);
+                break;
+            }
+            case RainRenderType.RotatedTown:
+            {
+                Graphics.Blit(rotatedTown, dest);
+                break;
+            }
+            case RainRenderType.FadeIn:
+            {
+                Graphics.Blit(source, dest, fadeMat);
+                break;
+            }
+            case RainRenderType.FadeWords:
+            {
+                Graphics.Blit(source, dest, wordFade);
+                break;
+            }
         }
 
     }
@@ -134,6 +155,16 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         next = false;
+
+        float startTime = Time.time;
+        float fadeDuration = 0.5f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        fadeMat.SetVector("_Value", Vector4.one);
+        rainRender = RainRenderType.Growth;
         StartCoroutine("FirstRain");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeDown);
@@ -166,18 +197,17 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        usingGrowth = false;
-        usingWipe = true;
+        //usingGrowth = false;
+        // usingWipe = true;
+        rainRender = RainRenderType.HalfWipe;
         wipeMat.SetFloat("_Value", -1f);
-        float startTime = Time.time;
-        float fadeDuration = 2f;
-        while (Time.time - startTime < fadeDuration + .05)
+        startTime = Time.time;
+        fadeDuration = 2f;
+        while (Time.time - startTime < fadeDuration + .08f)
         {
             wipeMat.SetFloat("_Value", ((Time.time - startTime) / fadeDuration) - 1f);
             yield return null;
         }
-
-        //StartCoroutine("WipeFirstHalf");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
         while (!next && !gesture.IsCurrentGesture())
@@ -187,12 +217,11 @@ public class RainScene : MonoBehaviour {
         next = false;
         startTime = Time.time;
         fadeDuration = 2f;
-        while (Time.time - startTime < fadeDuration + .05)
+        while (Time.time - startTime < fadeDuration + .1f)
         {
             wipeMat.SetFloat("_Value", (Time.time - startTime) / fadeDuration);
             yield return null;
         }
-        //StartCoroutine("WipeSecondHalf");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next && !gesture.IsCurrentGesture())
@@ -200,16 +229,22 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        StartCoroutine("EraseWords");
-
+        rainRender = RainRenderType.FadeWords;
+        startTime = Time.time;
+        fadeDuration = 2f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            wordFade.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        wordFade.SetVector("_Value", Vector4.one);
         gesture.SetCurrentGesture(KinectGestures.Gestures.Psi);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         next = false;
-        usingGrowth = false;
-        usingWipe = false;
+        rainRender = RainRenderType.RotatedTown;
         print("rotated town");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
@@ -442,41 +477,7 @@ public class RainScene : MonoBehaviour {
 
     }
 
-    IEnumerator WipeFirstHalf()
-    {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
-        print("wipe non-church side of screen");
-        for (int i = 0; i < coords.Length; i += 2)
-        {
-            SetMaskTwo(coords[i], coords[i + 1]);
-            yield return null;
-        }
-
-    }
-
-    IEnumerator WipeSecondHalf()
-    {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
-        print("wipe other side of screen");
-        for (int i = 0; i < coords.Length; i += 2)
-        {
-            SetMaskOne(coords[i], coords[i + 1]);
-            yield return null;
-        }
-
-    }
-
-    IEnumerator EraseWords()
-    {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
-        print("erase all but four phrases");
-        for (int i = 0; i < coords.Length; i += 2)
-        {
-            SetMaskOne(coords[i], coords[i + 1]);
-            yield return null;
-        }
-
-    }
+  
 
 
 
