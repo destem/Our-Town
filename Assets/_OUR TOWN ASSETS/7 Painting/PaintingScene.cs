@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class PaintingScene : MonoBehaviour {
 
-    public Material paintingMat;
+    public Material micMat;
     public float micThreshold;
     public Material wipeMat;
+    public Texture2D finalPainting;
     bool usingWipe = true;
     OurTownGestureListener gesture;
     bool next = false;
+    enum PaintingRenderType {WipeIn, Building, Mic, Breakdown }
+    PaintingRenderType paintRender = PaintingRenderType.WipeIn;
 
 	// Use this for initialization
 	void Start () {
@@ -21,15 +24,21 @@ public class PaintingScene : MonoBehaviour {
     {
         usingWipe = true;
         next = false;
+        paintRender = PaintingRenderType.WipeIn;
         wipeMat.SetFloat("_Value", 1.05f);
+        micMat.SetFloat("_Loudness", 0);
+        micMat.SetFloat("_Edge", micThreshold);
         StartCoroutine("RunScene");
     }
 	
 	// Update is called once per frame
 	void Update () {
         //print(MicListener.loudness);
-        paintingMat.SetFloat("_Loudness", MicListener.loudness);
-        paintingMat.SetFloat("_Edge", micThreshold);
+        if (paintRender == PaintingRenderType.Mic)
+        {
+            micMat.SetFloat("_Loudness", MicListener.loudness);
+            micMat.SetFloat("_Edge", micThreshold);
+        }
         if (Input.GetButtonDown("Jump"))
         {
             next = true;
@@ -38,20 +47,23 @@ public class PaintingScene : MonoBehaviour {
 
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
-        if (usingWipe)
+        switch (paintRender)
         {
-            Graphics.Blit(source, dest, wipeMat);
+            case PaintingRenderType.WipeIn:
+                Graphics.Blit(source, dest, wipeMat);
+                break;
+            case PaintingRenderType.Mic:
+                Graphics.Blit(finalPainting, dest, micMat);
+                break;
+
         }
-        else
-        {
-            Graphics.Blit(paintingMat.mainTexture, dest, paintingMat);
-        }
+       
     }
 
     IEnumerator RunScene()
     {
-        usingWipe = true;
-        wipeMat.SetFloat("_Value", 1.05f);
+       // usingWipe = true;
+        wipeMat.SetFloat("_Value", -0.05f);
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow); //wipe
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -63,11 +75,20 @@ public class PaintingScene : MonoBehaviour {
         float fadeDuration = 3f;
         while (Time.time - startTime < fadeDuration + .1f)
         {
-            wipeMat.SetFloat("_Value", 1 - (Time.time - startTime) / fadeDuration);
+            wipeMat.SetFloat("_Value",(Time.time - startTime) / fadeDuration);
             yield return null;
         }
-        wipeMat.SetFloat("_Value", -0.05f);
-        usingWipe = false;
+        wipeMat.SetFloat("_Value", 1.05f);
+        //usingWipe = false;
+        paintRender = PaintingRenderType.Mic;
+        gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //wipe
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            //Blit();
+            yield return null;
+        }
+        next = false;
+        OurTownManager.GotoStar();
     }
 
     void OnDisable()

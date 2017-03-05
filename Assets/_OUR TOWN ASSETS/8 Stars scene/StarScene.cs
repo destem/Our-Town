@@ -13,6 +13,10 @@ public class StarScene : MonoBehaviour
     public Texture2D maskTwoTex;
     public Material displayMat;
     public Material growMat;
+    public Material fadeInMat;
+    public Material fadeOutMat;
+    public Material starBlitMat;
+
     //public GameObject screenModel;
     public Texture2D black;
     public float slowSpeed = 0.05f;
@@ -23,12 +27,17 @@ public class StarScene : MonoBehaviour
     Material growMat2;
     RenderTexture buff;
     RenderTexture buff2;
+    RenderTexture finalBuff;
     RenderTexture final;
     RenderTexture final2;
     float brushSize = 2f;
     OurTownGestureListener gesture;
     bool next = false;
     bool usingGrowth = true;
+    enum StarRenderType { FadeIn, Grow, BlitStars, FadeOut}
+    StarRenderType starRender = StarRenderType.FadeIn;
+    int clusterSize = 1;
+    float blitTimeDelay = 0.5f;
 
     Color32[] starBlock;
     Texture2D dynamicBackground;
@@ -72,35 +81,29 @@ public class StarScene : MonoBehaviour
         }
         coordList = new List<Vector2>(coordArray);
         coordList = Shuffle(coordList);
-        ResetUVs();
-
-        dynamicBackground = Instantiate(full);
-        usingGrowth = true;
-        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
-        buff = _createTexture(startMask.width, startMask.height);
-        buff2 = _createTexture(startMask.width, startMask.height);
-        final = _createTexture(startMask.width, startMask.height);
-        final2 = _createTexture(startMask.width, startMask.height);
-
-        displayMat.SetTexture("_MainTex", buff);
-        displayMat.SetTexture("_SecondTex", buff2);
-        growMat.SetTexture("_MaskOneTex", maskOneTex);
-        growMat.SetTexture("_MaskTwoTex", maskTwoTex);
-
         gesture = OurTownGestureListener.Instance;
-        StartCoroutine(RunScene());
+        Reset();
     }
 
     void Reset()
     {
         StopAllCoroutines();
+        fadeOutMat.SetVector("_Value", Vector4.zero);
+        fadeInMat.SetVector("_Value", Vector4.zero);
+        clusterSize = 1;
+        blitTimeDelay = 0.5f;
         usingGrowth = true;
+        starRender = StarRenderType.FadeIn;
+        growMat.SetVector("_Speeds", new Vector4(slowSpeed, mediumSpeed, fastSpeed, growthThreshhold));
+        dynamicBackground = Instantiate(full);
         buff = _createTexture(startMask.width, startMask.height);
         buff2 = _createTexture(startMask.width, startMask.height);
         final = _createTexture(startMask.width, startMask.height);
         final2 = _createTexture(startMask.width, startMask.height);
+        finalBuff = _createTexture(startMask.width, startMask.height); 
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
+        fadeOutMat.SetTexture("_Paper", finalBuff);
         growMat.SetTexture("_MaskOneTex", maskOneTex);
         growMat.SetTexture("_MaskTwoTex", maskTwoTex);
         ResetUVs();
@@ -127,51 +130,110 @@ public class StarScene : MonoBehaviour
 
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
-        if (usingGrowth)
+        switch (starRender)
         {
-            for (int i = 0; i < iterations; i++)
-            {
-                Graphics.Blit(buff, final, growMat);
-                Graphics.Blit(final, buff, growMat);
+            case StarRenderType.Grow:
+                for (int i = 0; i < iterations; i++)
+                {
+                    Graphics.Blit(buff, final, growMat);
+                    Graphics.Blit(final, buff, growMat);
 
-            }
-            Graphics.Blit(buff, dest, displayMat);
-            //Graphics.Blit(buff, dest);
+                }
+                Graphics.Blit(buff, dest, displayMat);
+                //Graphics.Blit(buff, dest);
+                break;
+            case StarRenderType.BlitStars:
+                Graphics.Blit(dynamicBackground, dest, starBlitMat);
+                break;
+            case StarRenderType.FadeIn:
+                Graphics.Blit(source, dest, fadeInMat);
+                break;
+            case StarRenderType.FadeOut:
+                Graphics.Blit(dynamicBackground, finalBuff, starBlitMat);
+                Graphics.Blit(source, dest, fadeOutMat);
+                break;
         }
-        else
-        {
-            Graphics.Blit(dynamicBackground, dest);
-        }
+       
 
     }
 
     IEnumerator RunScene()
     {
         yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Behold);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         next = false;
+        float startTime = Time.time;
+        float fadeDuration = 0.5f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            fadeInMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        fadeInMat.SetVector("_Value", Vector4.one);
+        starRender = StarRenderType.Grow;
         StartCoroutine("StartStarfield");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            yield return null;
-        }
-        next = false;
+        yield return new WaitForSeconds(10f);
         StartCoroutine("MillionYears");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         next = false;
-        usingGrowth = false;
+        //usingGrowth = false;
+        starRender = StarRenderType.BlitStars;
         StartCoroutine("MakeStars");
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        blitTimeDelay = .2f;
+        //clusterSize = 2;
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        blitTimeDelay = 0f;
+        //clusterSize = 4;
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        clusterSize = 4;
+
+        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
+        while (!next && !gesture.IsCurrentGesture())
+        {
+            yield return null;
+        }
+        next = false;
+        clusterSize = 20;
+
+        yield return new WaitForSeconds(10f);
+        starRender = StarRenderType.FadeOut;
+        startTime = Time.time;
+        fadeDuration = 10f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            fadeOutMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        fadeOutMat.SetVector("_Value", Vector4.one);
     }
 
     IEnumerator StartStarfield()
@@ -204,15 +266,18 @@ public class StarScene : MonoBehaviour
         int n = coordList.Count - 1;
         while (n > 0)
         {
-            int cluster = n > 20 ? 20 : n;
+            int cluster = n > clusterSize ? clusterSize : n;
             for (int i = 0; i < cluster; i++)
             {
                 BlitStar((int)coordList[n].x, (int)coordList[n].y);
                 n--;
             }
             dynamicBackground.Apply();
-
-            yield return null;
+            if (blitTimeDelay > 0f)
+            {
+                yield return new WaitForSeconds(blitTimeDelay);
+            }
+            else yield return null;
         }
     }
 

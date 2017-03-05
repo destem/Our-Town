@@ -7,9 +7,11 @@ public class MistScene : MonoBehaviour {
     //public GameObject screen;
     public Material scrollMat;
     public float scrollSpeed;
+    public Material fadeMat;
     float offset = 0f;
     OurTownGestureListener gesture;
     bool next = false;
+    bool usingFade = false;
 
     // Use this for initialization
     void Start () {
@@ -21,6 +23,9 @@ public class MistScene : MonoBehaviour {
     void Reset()
     {
         StopAllCoroutines();
+        usingFade = false;
+        fadeMat.SetVector("_Value", Vector4.zero);
+
         StartCoroutine("RunScene");
     }
 	
@@ -39,7 +44,14 @@ public class MistScene : MonoBehaviour {
 
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
-        Graphics.Blit(scrollMat.mainTexture, dest, scrollMat);
+        if (usingFade)
+        {
+            Graphics.Blit(source, dest, fadeMat);
+        }
+        else
+        {
+            Graphics.Blit(scrollMat.mainTexture, dest, scrollMat);
+        }
     }
 
     IEnumerator RunScene()
@@ -51,6 +63,16 @@ public class MistScene : MonoBehaviour {
             yield return null;
         }
         next = false;
+        usingFade = true;
+        float startTime = Time.time;
+        float fadeDuration = 0.5f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+            yield return null;
+        }
+        fadeMat.SetVector("_Value", Vector4.one);
+
         OurTownManager.GotoOcean();
     }
 }
