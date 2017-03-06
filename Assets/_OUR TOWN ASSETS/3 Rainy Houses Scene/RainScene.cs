@@ -172,7 +172,7 @@ public class RainScene : MonoBehaviour {
         rainRender = RainRenderType.Growth;
         StartCoroutine("FirstRain");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeDown);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;

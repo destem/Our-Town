@@ -159,7 +159,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         StartCoroutine(SmallMoonSky());
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();

@@ -204,7 +204,7 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(20f);
         print("full background, no words");
         SetMaskFour(.99f, .99f);
-        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();

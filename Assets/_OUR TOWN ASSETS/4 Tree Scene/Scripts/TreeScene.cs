@@ -160,7 +160,7 @@ public class TreeScene : MonoBehaviour {
         //print("starting chapel");
         yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.Sweep);
+        gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next  && !gesture.IsCurrentGesture())
         {
             Blit();
