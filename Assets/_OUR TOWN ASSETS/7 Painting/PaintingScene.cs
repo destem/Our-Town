@@ -55,7 +55,9 @@ public class PaintingScene : MonoBehaviour {
             case PaintingRenderType.Mic:
                 Graphics.Blit(finalPainting, dest, micMat);
                 break;
-
+            case PaintingRenderType.Building:
+                Graphics.Blit(finalPainting, dest, micMat);
+                break;
         }
        
     }
@@ -80,7 +82,16 @@ public class PaintingScene : MonoBehaviour {
         }
         wipeMat.SetFloat("_Value", 1.05f);
         //usingWipe = false;
-        paintRender = PaintingRenderType.Mic;
+        paintRender = PaintingRenderType.Building;
+
+        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        {
+            //Blit();
+            yield return null;
+        }
+        next = false;
+        paintRender = PaintingRenderType.Mic; //use mic inputs
+        print("accepting mic levels");
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //wipe
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
