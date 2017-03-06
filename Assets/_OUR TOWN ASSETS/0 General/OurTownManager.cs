@@ -16,6 +16,9 @@ public class OurTownManager : MonoBehaviour {
     static OceanScene oceanScene;
     static PaintingScene paintingScene;
     static StarScene starScene;
+    enum MasterRenderType { logo, fade, emergency}
+    MasterRenderType masterRender = MasterRenderType.logo;
+    Texture2D currentTex;
 
 	// Use this for initialization
 	void Start () {
@@ -38,6 +41,7 @@ public class OurTownManager : MonoBehaviour {
         {
             StopAllCoroutines();
             justStarted = false;
+            masterRender = MasterRenderType.fade;
             //GotoTown();
             StartCoroutine("FadeToTown");
         }
@@ -96,19 +100,80 @@ public class OurTownManager : MonoBehaviour {
             DisableAll();
             fadeMat.SetVector("_Value", Vector4.zero);
             justStarted = true;
+            masterRender = MasterRenderType.logo;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.Q))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[0];
+            masterRender = MasterRenderType.emergency;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.W))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[1];
+            masterRender = MasterRenderType.emergency;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.E))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[2];
+            masterRender = MasterRenderType.emergency;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.R))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[3];
+            masterRender = MasterRenderType.emergency;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.T))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[4];
+            masterRender = MasterRenderType.emergency;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.Y))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[5];
+            masterRender = MasterRenderType.emergency;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.U))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[6];
+            masterRender = MasterRenderType.emergency;
+        }
+        if (!justStarted && Input.GetKeyDown(KeyCode.I))
+        {
+            StopAllCoroutines();
+            DisableAll();
+            currentTex = showImages[7];
+            masterRender = MasterRenderType.emergency;
         }
     }
 
 
     void OnRenderImage(RenderTexture source, RenderTexture dest)
     {
-        if (justStarted)
+        if (masterRender == MasterRenderType.logo)
         {
             Graphics.Blit(testPattern, dest);
         }
-        else
+        else if (masterRender == MasterRenderType.fade)
         {
             Graphics.Blit(source, dest, fadeMat);
+        }
+        else
+        {
+            Graphics.Blit(currentTex, dest);
         }
     }
 
