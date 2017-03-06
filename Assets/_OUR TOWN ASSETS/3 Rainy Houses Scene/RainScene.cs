@@ -14,6 +14,9 @@ public class RainScene : MonoBehaviour {
     public Texture2D paper;
     public Texture2D full;
     public Texture2D rotatedTown;
+    public Texture2D wordsAndRain;
+    public Texture2D wordsOnly;
+    public Texture2D fourPhrases;
 
     public Material growMat;
     public Material displayMat;
@@ -76,6 +79,8 @@ public class RainScene : MonoBehaviour {
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
         ResetUVs();
+        fadeMat.SetTexture("_Chapel", paper);
+        fadeMat.SetTexture("_Paper", black);
 
         growMat.SetTexture("_MaskOneTex", black);
         growMat.SetTexture("_MaskTwoTex", black);
@@ -199,15 +204,20 @@ public class RainScene : MonoBehaviour {
         next = false;
         //usingGrowth = false;
         // usingWipe = true;
-        rainRender = RainRenderType.HalfWipe;
-        wipeMat.SetFloat("_Value", -1f);
+        //rainRender = RainRenderType.HalfWipe;
+        rainRender = RainRenderType.FadeIn;
+        //wipeMat.SetFloat("_Value", -1f);
+        fadeMat.SetVector("_Value", Vector4.zero);
+        fadeMat.SetTexture("_Chapel", wordsAndRain);
+        fadeMat.SetTexture("_Paper", full);
         startTime = Time.time;
         fadeDuration = 2f;
-        while (Time.time - startTime < fadeDuration + .08f)
+        while (Time.time - startTime < fadeDuration)
         {
-            wipeMat.SetFloat("_Value", ((Time.time - startTime) / fadeDuration) - 1f);
+            fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f ,0f ,0f));
             yield return null;
         }
+        fadeMat.SetVector("_Value", Vector4.one);
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
         while (!next && !gesture.IsCurrentGesture())
@@ -215,13 +225,17 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         next = false;
+        fadeMat.SetVector("_Value", Vector4.zero);
+        fadeMat.SetTexture("_Chapel", wordsOnly);
+        fadeMat.SetTexture("_Paper", wordsAndRain);
         startTime = Time.time;
         fadeDuration = 2f;
-        while (Time.time - startTime < fadeDuration + .1f)
+        while (Time.time - startTime < fadeDuration)
         {
-            wipeMat.SetFloat("_Value", (Time.time - startTime) / fadeDuration);
+            fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
             yield return null;
         }
+        fadeMat.SetVector("_Value", Vector4.one);
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next && !gesture.IsCurrentGesture())
@@ -440,9 +454,10 @@ public class RainScene : MonoBehaviour {
 
     IEnumerator LastRain()
     {
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 100; i++)
         {
-            SetMaskFour(i/20f, .95f);
+            // STAGGER THIS
+            SetMaskFour(i/100f, .95f);
             yield return null;
         }
         float wordDelay = 2f;

@@ -123,7 +123,7 @@ public class OurTownManager : MonoBehaviour {
             currentTex = showImages[2];
             masterRender = MasterRenderType.emergency;
         }
-        if (!justStarted && Input.GetKeyDown(KeyCode.R))
+        if (!justStarted && Input.GetKeyDown(KeyCode.F))
         {
             StopAllCoroutines();
             DisableAll();
