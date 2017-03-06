@@ -204,12 +204,14 @@ public class MoonScene : MonoBehaviour {
         Blit();
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
-
         growMat.SetTexture("_MaskOneTex", MaskOneFinalTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoFinalTex);
-        SetMaskOne(0.475f, .667f);
-        yield return null;
 
+        // final masks are in place, fire off the moon
+        SetMaskOne(0.475f, .667f);
+        //yield return new WaitForSeconds(20f);
+        //SetMaskTwo(0.475f, .667f);
+        yield return null;
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -275,7 +277,7 @@ public class MoonScene : MonoBehaviour {
 
     IEnumerator SmallMoonSky()
     {
-        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.5f, 0.75f, 0.465f, 0.010f, 0.99f, 0.99f };
+        float[] coords = { 0.25f, 0.75f, 0.75f, 0.75f, 0.475f, .667f, 0.465f, 0.010f, 0.99f, 0.99f };
         print("small moon stippling");
         for (int i = 0; i < coords.Length; i += 2)
         {
@@ -362,6 +364,9 @@ public class MoonScene : MonoBehaviour {
             SetMaskTwo(coords[i], coords[i + 1]);
             yield return new WaitForSeconds(.5f);
         }
+        SetMaskTwo(.467f, .423f);
+        yield return null;
+        SetMaskTwo(.531f, .423f);
     }
 
     public void SetMaskOne(float u, float v)

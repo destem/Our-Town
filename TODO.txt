@@ -1,13 +1,3 @@
-Expand star blitting events
-
-fix levels on multiplied rain background
-
-more rain drops in stage 1 and 2, more entry points in stage 3
-
-implement all wipe and reverse wipe effects from scene to scene (changed opening of moon from neck tilt to the more you know)
-
-test turn around
-
 test to see if no will work for forearmwave
 
 buttons to static textures Q - I?

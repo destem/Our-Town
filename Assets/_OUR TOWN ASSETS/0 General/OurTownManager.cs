@@ -6,6 +6,7 @@ public class OurTownManager : MonoBehaviour {
 
     public Texture2D testPattern;
     public Material fadeMat;
+    public Texture2D[] showImages;
     bool justStarted = true;
     static TownScene townScene;
     static MoonScene moonScene;
