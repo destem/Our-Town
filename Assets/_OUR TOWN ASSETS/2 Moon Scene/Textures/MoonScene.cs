@@ -252,7 +252,13 @@ public class MoonScene : MonoBehaviour {
 
     IEnumerator HouseSilhouettes()
     {
-        float houseDelay = .5f;
+        float houseDelay = 1;
+        //float[] coords = { 0.492f, 0.036f, 0.510f, 0.031f, 0.548f, 0.031f, 0.569f, 0.042f, 0.373f, 0.031f,
+        //                   0.442f, 0.026f, 0.596f, 0.042f, 0.636f, 0.036f, 0.293f, 0.026f, 0.338f, 0.036f,
+        //                   0.649f, 0.031f, 0.720f, 0.026f, 0.198f, 0.042f, 0.263f, 0.042f, 0.775f, 0.031f,
+        //                   0.819f, 0.051f, 0.116f, 0.046f, 0.154f, 0.036f, 0.845f, 0.042f, 0.878f, 0.057f,
+        //                   0.055f, 0.026f, 0.072f, 0.057f, 0.930f, 0.042f, 0.974f, 0.046f, 0.01f, 0.062f,
+        //                   0.01f, 0.460f, 0.992f, 0.051f, 0.993f, 0.387f };
         float[] coords = { 0.010f, 0.028f, 0.030f, 0.028f, 0.056f, 0.021f, 0.073f, 0.028f, 0.096f, 0.028f,
                            0.116f, 0.021f, 0.138f, 0.021f, 0.154f, 0.028f, 0.173f, 0.021f, 0.199f, 0.025f,
                            0.226f, 0.028f, 0.246f, 0.021f, 0.264f, 0.028f, 0.279f, 0.025f, 0.291f, 0.028f,
@@ -271,6 +277,9 @@ public class MoonScene : MonoBehaviour {
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
+            //yield return null;
+           // SetMaskOne(coords[i+2], coords[i + 3]);
+
             yield return new WaitForSeconds(houseDelay);
         }
 
