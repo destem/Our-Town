@@ -148,12 +148,14 @@ public class RainScene : MonoBehaviour {
 
     IEnumerator RunScene()
     {
+        yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
+
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
         growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
         growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
 
-        yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
+        
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {

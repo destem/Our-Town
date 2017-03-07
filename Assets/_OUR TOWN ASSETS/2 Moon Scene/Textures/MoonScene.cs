@@ -377,7 +377,7 @@ public class MoonScene : MonoBehaviour {
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskTwo(coords[i], coords[i + 1]);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2.5f);
         }
     }
 

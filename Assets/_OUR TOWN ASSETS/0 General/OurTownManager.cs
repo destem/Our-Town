@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ExitGames.Client.Photon.Chat;
 
-public class OurTownManager : MonoBehaviour {
+
+public class OurTownManager : MonoBehaviour, IChatClientListener
+{
 
     public Texture2D testPattern;
     public Material fadeMat;
@@ -16,13 +19,28 @@ public class OurTownManager : MonoBehaviour {
     static OceanScene oceanScene;
     static PaintingScene paintingScene;
     static StarScene starScene;
-    enum MasterRenderType { logo, fade, emergency}
+    enum MasterRenderType { logo, fade, emergency }
     MasterRenderType masterRender = MasterRenderType.logo;
     Texture2D currentTex;
+    string output = "";
 
-	// Use this for initialization
-	void Start () {
+    public string[] ChannelsToJoinOnConnect ;
+    int HistoryLengthToFetch = 0;
+
+    public string UserName { get; set; }
+
+    public ChatClient chatClient;
+
+    // Use this for initialization
+    void Start()
+    {
         Cursor.visible = false;
+        this.chatClient = new ChatClient(this);
+
+        string chatAppId = ChatSettings.Instance.AppId;
+        this.chatClient.Connect(chatAppId, "1.0", new AuthenticationValues(UserName));
+
+        Debug.Log("Connecting as: " + UserName);
         townScene = GetComponent<TownScene>();
         moonScene = GetComponent<MoonScene>();
         rainScene = GetComponent<RainScene>();
@@ -32,11 +50,13 @@ public class OurTownManager : MonoBehaviour {
         paintingScene = GetComponent<PaintingScene>();
         starScene = GetComponent<StarScene>();
         DisableAll();
-	}
+    }
 
     // Update is called once per frame
     void Update()
     {
+        //this.chatClient.Service();
+        //this.chatClient.PublishMessage("OurTown", Time.time.ToString());
         if (justStarted && Input.GetKeyDown(KeyCode.Return))
         {
             StopAllCoroutines();
@@ -241,5 +261,100 @@ public class OurTownManager : MonoBehaviour {
         starScene.enabled = true;
     }
 
-   
+    void OnEnable()
+    {
+        Application.logMessageReceivedThreaded += HandleLog;
+    }
+
+    void OnDisable()
+    {
+        // Remove callback when object goes out of scope
+        Application.logMessageReceived -= HandleLog;
+    }
+
+    void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        //output += logString + "\n";
+        this.chatClient.PublishMessage("OurTown", logString);
+        //stack = stackTrace;
+    }
+    public void OnConnected()
+    {
+        if (this.ChannelsToJoinOnConnect != null && this.ChannelsToJoinOnConnect.Length > 0)
+        {
+            this.chatClient.Subscribe(this.ChannelsToJoinOnConnect, this.HistoryLengthToFetch);
+        }
+
+        this.chatClient.AddFriends(new string[] { "tobi", "ilya" }); // Add some users to the server-list to get their status updates
+        this.chatClient.SetOnlineStatus(ChatUserStatus.Online); // You can set your online state (without a mesage).
+    }
+
+    public void OnDisconnected()
+    {
+    }
+
+    public void OnChatStateChange(ChatState state)
+    {
+
+    }
+
+    public void OnSubscribed(string[] channels, bool[] results)
+    {
+        // in this demo, we simply send a message into each channel. This is NOT a must have!
+        foreach (string channel in channels)
+        {
+            this.chatClient.PublishMessage(channel, "says 'hi'."); // you don't HAVE to send a msg on join but you could.
+
+        }
+    }
+    public void OnUnsubscribed(string[] channels)
+    {
+       
+    }
+
+    public void OnGetMessages(string channelName, string[] senders, object[] messages)
+    {
+       
+    }
+
+    public void OnPrivateMessage(string sender, object message, string channelName)
+    {
+       
+    }
+
+    public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
+    {
+        // this is how you get status updates of friends.
+        // this demo simply adds status updates to the currently shown chat.
+        // you could buffer them or use them any other way, too.
+
+        // TODO: add status updates
+        //if (activeChannel != null)
+        //{
+        //    activeChannel.Add("info", string.Format("{0} is {1}. Msg:{2}", user, status, message));
+        //}
+
+        Debug.LogWarning("status: " + string.Format("{0} is {1}. Msg:{2}", user, status, message));
+    }
+
+    public void AddMessageToSelectedChannel(string msg)
+    {
+       
+    }
+
+    public void DebugReturn(ExitGames.Client.Photon.DebugLevel level, string message)
+    {
+        if (level == ExitGames.Client.Photon.DebugLevel.ERROR)
+        {
+            UnityEngine.Debug.LogError(message);
+        }
+        else if (level == ExitGames.Client.Photon.DebugLevel.WARNING)
+        {
+            UnityEngine.Debug.LogWarning(message);
+        }
+        else
+        {
+            UnityEngine.Debug.Log(message);
+        }
+    }
 }

@@ -202,7 +202,7 @@ public class TownScene : MonoBehaviour {
         //FIRE OFF BACKGROUND
         StartCoroutine(BackgroundDetails());
         yield return new WaitForSeconds(20f);
-        print("full background, no words");
+        Debug.Log("full background, no words");
         SetMaskFour(.99f, .99f);
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
@@ -225,10 +225,10 @@ public class TownScene : MonoBehaviour {
         imageFade.SetTexture("_Chapel", wordsOnly);
         imageFade.SetVector("_Value", Vector4.one);
 
-        print("Words only");
+        Debug.Log("Words only");
        // yield return null;
         yield return new WaitForSeconds(2f); // time for professor to speak. 130 in rehearsal
-        //print("TREES COME IN");
+        //Debug.Log("TREES COME IN");
 
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
@@ -237,7 +237,7 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("Town comes back");
+        Debug.Log("Town comes back");
         imageFade.SetTexture("_Chapel", full);
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
@@ -246,7 +246,7 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("JUST THE HOUSES");
+        Debug.Log("JUST THE HOUSES");
         imageFade.SetTexture("_Chapel", housesOnly);
         yield return null;
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow); //wipe
@@ -256,7 +256,7 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("Wipe");
+        Debug.Log("Wipe");
         //TODO: Actually implement the wipe
         usingGrowth = false;
         usingWipe = true;
@@ -273,7 +273,7 @@ public class TownScene : MonoBehaviour {
 
     IEnumerator FirstHouses()
     {
-        print("first houses");
+        Debug.Log("first houses");
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
         growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
@@ -305,7 +305,7 @@ public class TownScene : MonoBehaviour {
                            0.298f, 0.027f, 0.299f, 0.514f, 0.273f, 0.024f, 0.241f, 0.504f, 0.280f, 0.507f,
                            0.197f, 0.020f, 0.184f, 0.541f, 0.141f, 0.034f, 0.132f, 0.686f, 0.105f, 0.466f,
                            0.078f, 0.579f, 0.074f, 0.253f, 0.025f, 0.363f, 0.034f, 0.404f };
-        print("starting house outlines");
+        Debug.Log("starting house outlines");
         for (int i = 0; i< coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
@@ -327,7 +327,7 @@ public class TownScene : MonoBehaviour {
                            0.148f, 0.768f, 0.133f, 0.688f, 0.127f, 0.538f, 0.086f, 0.020f, 0.093f, 0.020f,
                            0.112f, 0.013f, 0.082f, 0.612f, 0.085f, 0.663f, 0.073f, 0.267f, 0.025f, 0.375f,
                            0.051f, 0.389f, 0.337f, 0.994f };
-        print("starting roofs");
+        Debug.Log("starting roofs");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskTwo(coords[i], coords[i + 1]);
@@ -364,7 +364,7 @@ public class TownScene : MonoBehaviour {
                            0.089f, 0.621f, 0.089f, 0.558f, 0.094f, 0.562f, 0.098f, 0.624f, 0.098f, 0.558f,
                            0.083f, 0.339f, 0.077f, 0.195f, 0.088f, 0.184f, 0.040f, 0.421f, 0.035f, 0.360f,
                            0.043f, 0.367f, 0.046f, 0.236f, 0.031f, 0.329f, 0.031f, 0.281f };
-        print("starting windows");
+        Debug.Log("starting windows");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
@@ -376,7 +376,7 @@ public class TownScene : MonoBehaviour {
     {
         float landDelay = 5.07f;
         float[] coords = { 0.995f, 0.882f, 0.753f, 0.951f, 0.614f, 0.643f, 0.297f, 0.549f, 0.243f, 0.592f, 0.161f, 0.714f, 0.130f, 0.728f };
-        print("starting landscape");
+        Debug.Log("starting landscape");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
@@ -397,7 +397,7 @@ public class TownScene : MonoBehaviour {
                            0.210f, 0.344f, 0.162f, 0.500f, 0.152f, 0.746f, 0.156f, 0.656f, 0.139f, 0.753f, 0.128f, 0.352f,
                            0.114f, 0.416f, 0.125f, 0.531f, 0.094f, 0.071f, 0.093f, 0.724f, 0.079f, 0.394f, 0.078f, 0.344f,
                            0.085f, 0.237f, 0.030f, 0.445f, 0.026f, 0.301f, 0.034f, 0.294f, 0.036f, 0.258f };
-        print("starting house details");
+        Debug.Log("starting house details");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskThree(coords[i], coords[i + 1]);
@@ -413,7 +413,7 @@ public class TownScene : MonoBehaviour {
                            0.570f, 0.613f, 0.464f, 0.132f, 0.468f, 0.039f, 0.502f, 0.413f, 0.427f, 0.391f,
                            0.349f, 0.373f, 0.286f, 0.330f, 0.291f, 0.064f, 0.173f, 0.341f, 0.136f, 0.344f,
                            0.103f, 0.121f, 0.052f, 0.498f };
-        print("background elements");
+        Debug.Log("background elements");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskThree(coords[i], coords[i + 1]);
@@ -431,7 +431,7 @@ public class TownScene : MonoBehaviour {
                            0.727f, 0.020f, 0.862f, 0.269f, 0.552f, 0.166f, 0.834f, 0.507f, 0.974f, 0.976f,
                            0.006f, 0.831f, 0.636f, 0.585f, 0.617f, 0.792f, 0.498f, 0.362f, 0.006f, 0.714f,
                            0.785f, 0.315f, 0.235f, 0.202f };
-        print("starting words");
+        Debug.Log("starting words");
         for (int i = 0; i < coords.Length; i += 2)
         {
             SetMaskOne(coords[i], coords[i + 1]);
@@ -478,7 +478,7 @@ public class TownScene : MonoBehaviour {
         if (usingGrowth){
             for (int i = 0; i < iterations; i++)
                 {
-                //print("update blitting");
+                //Debug.Log("update blitting");
                     Graphics.Blit(buff, final, growMat);
                     Graphics.Blit(final, buff, growMat);
                 }
