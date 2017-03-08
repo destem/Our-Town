@@ -19,6 +19,7 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
     static OceanScene oceanScene;
     static PaintingScene paintingScene;
     static StarScene starScene;
+    static UnityStandardAssets.ImageEffects.ColorCorrectionCurves ccCurves;
     enum MasterRenderType { logo, fade, emergency }
     MasterRenderType masterRender = MasterRenderType.logo;
     Texture2D currentTex;
@@ -60,6 +61,7 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
         oceanScene = GetComponent<OceanScene>();
         paintingScene = GetComponent<PaintingScene>();
         starScene = GetComponent<StarScene>();
+        ccCurves = GetComponent<UnityStandardAssets.ImageEffects.ColorCorrectionCurves>();
         DisableAll();
     }
 
@@ -218,6 +220,7 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
         oceanScene.enabled = false;
         paintingScene.enabled = false;
         starScene.enabled = false;
+        ccCurves.enabled = false;
     }
 
     IEnumerator FadeToTown()

@@ -28,6 +28,7 @@ public class PaintingScene : MonoBehaviour {
     {
         usingWipe = true;
         next = false;
+        GetComponent<UnityStandardAssets.ImageEffects.ColorCorrectionCurves>().enabled = true;
         paintRender = PaintingRenderType.WipeIn;
         wipeMat.SetFloat("_Value", 1.05f);
         micMat.SetFloat("_Loudness", 0);
@@ -46,6 +47,10 @@ public class PaintingScene : MonoBehaviour {
         if (Input.GetButtonDown("Jump"))
         {
             next = true;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Reset();
         }
     }
 
@@ -96,10 +101,11 @@ public class PaintingScene : MonoBehaviour {
         //usingWipe = false;
         paintRender = PaintingRenderType.Building;
 
+        //TOTAL OF FOUR MINUTES
         for (int i = 0; i < 17; i++)
         {
             startTime = Time.time;
-            fadeDuration = 2f;
+            fadeDuration = 14f;
             while (Time.time - startTime < fadeDuration)
             {
                 buildMat.SetVector("level", new Vector4(i, (Time.time - startTime) / fadeDuration, 0f, 0f));
@@ -115,7 +121,7 @@ public class PaintingScene : MonoBehaviour {
         paintRender = PaintingRenderType.Mic; //use mic inputs
         print("Accepting mic levels");
 
-        for (int i = 17; i > 0; i--)
+        for (int i = 17; i > 1; i--)
         {
             startTime = Time.time;
             fadeDuration = 2f;

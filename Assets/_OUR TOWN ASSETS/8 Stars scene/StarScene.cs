@@ -104,7 +104,6 @@ public class StarScene : MonoBehaviour
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
         fadeOutMat.SetTexture("_Paper", finalBuff);
-        
         ResetUVs();
 
         StartCoroutine(RunStarScene());
@@ -164,7 +163,7 @@ public class StarScene : MonoBehaviour
         growMat.SetTexture("_MaskTwoTex", maskTwoTex);
         next = false;
         float startTime = Time.time;
-        float fadeDuration = 20f;
+        float fadeDuration = 15f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeInMat.SetVector("_Value", new Vector4(Mathf.Pow((Time.time - startTime) / fadeDuration, 2), 0f, 0f, 0f));
@@ -190,54 +189,41 @@ public class StarScene : MonoBehaviour
         yield return new WaitForSeconds(10f);
         StartCoroutine("MillionYears");
 
-        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            yield return null;
-        }
-        next = false;
-        //usingGrowth = false;
+        yield return new WaitForSeconds(5f);
+
         starRender = StarRenderType.BlitStars;
+        clusterSize = 1;
+        blitTimeDelay = 0.5f;
+
         StartCoroutine("MakeStars");
-
-        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            yield return null;
-        }
-        next = false;
-        blitTimeDelay = .2f;
-        //clusterSize = 2;
-
-        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            yield return null;
-        }
-        next = false;
-        blitTimeDelay = 0f;
-        //clusterSize = 4;
-
-        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            yield return null;
-        }
-        next = false;
-        clusterSize = 4;
-
-        gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
-        while (!next && !gesture.IsCurrentGesture())
-        {
-            yield return null;
-        }
-        next = false;
-        clusterSize = 20;
-
         yield return new WaitForSeconds(10f);
+        blitTimeDelay = .4f;
+        yield return new WaitForSeconds(10f);
+        blitTimeDelay = .3f;
+        yield return new WaitForSeconds(5f);
+        blitTimeDelay = .2f;
+        yield return new WaitForSeconds(5f);
+        blitTimeDelay = .1f;
+        yield return new WaitForSeconds(10f);
+        blitTimeDelay = 0f;
+        yield return new WaitForSeconds(15f);
+        clusterSize = 2;
+        yield return new WaitForSeconds(10f);
+        clusterSize = 3;
+        yield return new WaitForSeconds(10f);
+        clusterSize = 4;
+        yield return new WaitForSeconds(10f);
+        clusterSize = 5;
+        yield return new WaitForSeconds(10f);
+        clusterSize = 10;
+        yield return new WaitForSeconds(5f);
+        clusterSize = 20;
+        print("at cluster size 20");
+        yield return new WaitForSeconds(5f);
+        print("starting fadeout");
         starRender = StarRenderType.FadeOut;
         startTime = Time.time;
-        fadeDuration = 10f;
+        fadeDuration = 20f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeOutMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
