@@ -90,7 +90,7 @@ public class TownScene : MonoBehaviour {
         imageFade.SetTexture("_Chapel", paper);
         imageFade.SetVector("_Value", Vector4.zero);
         //screenModel.GetComponent<Renderer>().material = displayMat;
-        StartCoroutine(RunScene());
+        StartCoroutine(RunTownScene());
     }
 
     // Update is called once per frame
@@ -141,9 +141,17 @@ public class TownScene : MonoBehaviour {
 
 #endif
 
-    IEnumerator RunScene()
+    IEnumerator RunTownScene()
     {
+        print("Starting town scene");
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
+        print("Waiting to activate The More You Know gesture to fade in with first houses");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -151,7 +159,7 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-
+        print("Fade in");
         float startTime = Time.time;
         float fadeDuration = 0.5f;
         while (Time.time - startTime < fadeDuration)
@@ -164,6 +172,13 @@ public class TownScene : MonoBehaviour {
         usingGrowth = true;
         yield return new WaitForSeconds(1f);
         StartCoroutine(FirstHouses());
+        print("Waiting to activate shrug gesture to start house outlines");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for shrug");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -177,6 +192,13 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(2f);
         StartCoroutine(Roofs());
         yield return null;
+        print("Waiting to activate clap gesture to start windows, landscapes, and details on timer");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for clap");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -191,6 +213,13 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(10f);
 
         StartCoroutine(HouseDetails());
+        print("Waiting to activate double fancy gesture to start background details and full background on timer");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for double fancy");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -204,6 +233,13 @@ public class TownScene : MonoBehaviour {
         yield return new WaitForSeconds(20f);
         Debug.Log("full background, no words");
         SetMaskFour(.99f, .99f);
+        print("Waiting to activate backswing gesture to start words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for backswing");
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -212,7 +248,13 @@ public class TownScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine(Words());
-        
+        print("Waiting to activate clench gesture to go to words only");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for clench");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -229,7 +271,13 @@ public class TownScene : MonoBehaviour {
        // yield return null;
         yield return new WaitForSeconds(2f); // time for professor to speak. 130 in rehearsal
         //Debug.Log("TREES COME IN");
-
+        print("Waiting to activate clap gesture to bring the town back");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for clap");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -239,6 +287,13 @@ public class TownScene : MonoBehaviour {
         next = false;
         Debug.Log("Town comes back");
         imageFade.SetTexture("_Chapel", full);
+        print("Waiting to activate backswing gesture to just have houses");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for backswing");
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -246,9 +301,16 @@ public class TownScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        Debug.Log("JUST THE HOUSES");
+        Debug.Log("Houses only");
         imageFade.SetTexture("_Chapel", housesOnly);
         yield return null;
+        print("Waiting to activate The More You Know gesture to wipe and go to moon");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow); //wipe
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -491,5 +553,6 @@ public class TownScene : MonoBehaviour {
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
     }
 }

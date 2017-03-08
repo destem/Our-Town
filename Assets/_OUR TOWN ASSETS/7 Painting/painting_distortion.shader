@@ -5,6 +5,9 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		_Loudness ("Loudness value from microphone", float) = 0
 		_Edge ("Mic threshold", float) = 0.5
+		_Painting("The Painting Array", 2DArray) = "" {}
+		level("Painting level", Vector) = (0,0,0,0)
+		_Noise("Lerp through tex", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -42,6 +45,9 @@
 			sampler2D _MainTex;
 			float _Loudness;
 			float _Edge;
+			UNITY_DECLARE_TEX2DARRAY(_Painting);
+			float4 level;
+			sampler2D _Noise;
 
 			float3 mod289(float3 x) {
 				return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -129,10 +135,13 @@
 				float largeyOffset = snoise(float2(_Time.y*1.5, i.uv.x*20.0))*0.01;
 				//float2 offset = float2(snoise(float2(_Time.y / 10, i.uv.y)*10.)*.1, snoise(float2(i.uv.x, _Time.y / 10) * 10)* .1) * _Loudness;
 				float2 offset = float2(smallxOffset + largexOffset, smallyOffset + largeyOffset)* clamp(_Loudness - _Edge, 0, 100) * step(_Edge, _Loudness);
-				fixed4 col = tex2D(_MainTex, i.uv + offset);
-				float derp = fbm(i.uv * 100);
+				//fixed4 col = tex2D(_MainTex, i.uv + offset);
+				fixed4 currentCol = UNITY_SAMPLE_TEX2DARRAY(_Painting, float3(i.uv.x + offset.x, i.uv.y + offset.y, level.x));
+				fixed4 previousCol = UNITY_SAMPLE_TEX2DARRAY(_Painting, float3(i.uv.x + offset.x, i.uv.y + offset.y, level.x - 1));
+				float noise = tex2D(_Noise, float2(i.uv.x * 16, i.uv.y*2)).r;
+				//float derp = fbm(i.uv * 100);
 				//col = fixed4(derp, derp, derp, 1.);
-				return col;
+				return lerp(currentCol, previousCol, step(noise, level.y));
 			}
 			ENDCG
 		}

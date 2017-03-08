@@ -20,7 +20,7 @@ public class PaintingScene : MonoBehaviour {
 	void Start () {
         gesture = OurTownGestureListener.Instance;
         buildMat.SetTexture("_Painting", OurTownManager.paintingArray);
-
+        micMat.SetTexture("_Painting", OurTownManager.paintingArray);
         Reset();
     }
 
@@ -32,7 +32,7 @@ public class PaintingScene : MonoBehaviour {
         wipeMat.SetFloat("_Value", 1.05f);
         micMat.SetFloat("_Loudness", 0);
         micMat.SetFloat("_Edge", micThreshold);
-        StartCoroutine("RunScene");
+        StartCoroutine("RunPaintingScene");
     }
 	
 	// Update is called once per frame
@@ -66,10 +66,17 @@ public class PaintingScene : MonoBehaviour {
        
     }
 
-    IEnumerator RunScene()
+    IEnumerator RunPaintingScene()
     {
        // usingWipe = true;
         wipeMat.SetFloat("_Value", -0.05f);
+        print("Waiting to activate The More You Know gesture to start painting");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow); //wipe
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
@@ -77,8 +84,9 @@ public class PaintingScene : MonoBehaviour {
             yield return null;
         }
         next = false;
+        print("start painting");
         float startTime = Time.time;
-        float fadeDuration = 3f;
+        float fadeDuration = 5f;
         while (Time.time - startTime < fadeDuration + .1f)
         {
             wipeMat.SetFloat("_Value",(Time.time - startTime) / fadeDuration);
@@ -98,19 +106,30 @@ public class PaintingScene : MonoBehaviour {
                 yield return null;
             }
         }
-
-        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        print("Waiting to activate mic on 'Take me back'");
+        while (!next)
         {
-            //Blit();
             yield return null;
         }
         next = false;
         paintRender = PaintingRenderType.Mic; //use mic inputs
-        print("accepting mic levels");
-        gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //wipe
-        while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
+        print("Accepting mic levels");
+
+        for (int i = 17; i > 0; i--)
         {
-            //Blit();
+            startTime = Time.time;
+            fadeDuration = 2f;
+            while (Time.time - startTime < fadeDuration)
+            {
+                micMat.SetVector("level", new Vector4(i, (Time.time - startTime) / fadeDuration, 0f, 0f));
+                yield return null;
+            }
+        }
+
+        print("Waiting to kill painting on 'No'");
+        //gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //wipe
+        while (!next)
+        {         
             yield return null;
         }
         next = false;
@@ -120,5 +139,6 @@ public class PaintingScene : MonoBehaviour {
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
     }
 }

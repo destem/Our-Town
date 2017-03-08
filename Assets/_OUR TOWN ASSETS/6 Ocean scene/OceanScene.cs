@@ -85,7 +85,7 @@ public class OceanScene : MonoBehaviour
         fadeMat.SetTexture("_Paper", full);
         ResetUVs();
 
-        StartCoroutine(RunScene());
+        StartCoroutine(RunOceanScene());
     }
 
     // Update is called once per frame
@@ -133,14 +133,21 @@ public class OceanScene : MonoBehaviour
 
     }
 
-    IEnumerator RunScene()
+    IEnumerator RunOceanScene()
     {
+        print("Ocean scene started");
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
         growMat.SetTexture("_MaskTwoTex", MaskTwoTex);
         growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
         growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
-
+        print("Waiting to activate point forward gesture to start horizon");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for point forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.PointForward);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -148,7 +155,13 @@ public class OceanScene : MonoBehaviour
         }
         next = false;
         StartCoroutine("Horizon");
-
+        print("Waiting to activate mic drop gesture to start umbrellas");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for mic drop");
         gesture.SetCurrentGesture(KinectGestures.Gestures.MicDrop);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -156,7 +169,13 @@ public class OceanScene : MonoBehaviour
         }
         next = false;
         StartCoroutine("Umbrellas");
-
+        print("Waiting to activate T pose gesture to start weather and words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for T pose");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Tpose);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -164,7 +183,13 @@ public class OceanScene : MonoBehaviour
         }
         next = false;
         StartCoroutine("WeatherandWords");
-
+        print("Waiting to activate yoga tree gesture to start rotation");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for yoga tree");
         gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -175,7 +200,13 @@ public class OceanScene : MonoBehaviour
         print("starting rotation");
         usingGrowth = false;
         rotate = true;
-
+        print("Waiting to activate lean left gesture to fade to words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for lean left");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanLeft);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -183,15 +214,21 @@ public class OceanScene : MonoBehaviour
         }
         next = false;
         rotate = false;
-        print("Fade to umbrellas and words");
+        print("Fade to umbrellas and words (60)");
         float startTime = Time.time;
-        float fadeTime = 10f;
+        float fadeTime = 60f;
         while (Time.time - startTime < fadeTime)
         {
             imageLerp = (Time.time - startTime) / fadeTime;
             yield return null;
         }
-
+        print("Waiting to activate The More You Know gesture to fade to last words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -202,7 +239,7 @@ public class OceanScene : MonoBehaviour
         fadeMat.SetTexture("_Chapel", hurtFeelings);
         fadeMat.SetTexture("_Paper", umbrellasOnly);
         yield return null;
-        print("fade to last words");
+        print("long fade to last words");
         startTime = Time.time;
         fadeTime = 120f;
         while (Time.time - startTime < fadeTime)
@@ -210,7 +247,21 @@ public class OceanScene : MonoBehaviour
             imageLerp = (Time.time - startTime) / fadeTime;
             yield return null;
         }
-        yield return new WaitForSeconds(2f);
+
+        fadeMat.SetTexture("_Chapel", paper);
+        fadeMat.SetTexture("_Paper", hurtFeelings);
+        yield return null;
+        print("short final fade to blank");
+        startTime = Time.time;
+        fadeTime = 2f;
+        while (Time.time - startTime < fadeTime)
+        {
+            imageLerp = (Time.time - startTime) / fadeTime;
+            yield return null;
+        }
+
+        //yield return new WaitForSeconds(2f);
+        print("Fade complete, moving to painting scene");
         OurTownManager.GotoPainting();
     }
 
@@ -307,5 +358,6 @@ public class OceanScene : MonoBehaviour
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
     }
 }

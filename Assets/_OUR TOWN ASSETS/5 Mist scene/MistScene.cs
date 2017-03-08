@@ -26,7 +26,7 @@ public class MistScene : MonoBehaviour {
         usingFade = false;
         fadeMat.SetVector("_Value", Vector4.zero);
 
-        StartCoroutine("RunScene");
+        StartCoroutine("RunMistScene");
     }
 	
 	// Update is called once per frame
@@ -54,9 +54,17 @@ public class MistScene : MonoBehaviour {
         }
     }
 
-    IEnumerator RunScene()
+    IEnumerator RunMistScene()
     {
+        print("Started mist");
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
+        print("Waiting to activate The More You Know gesture to start Act III");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -72,7 +80,13 @@ public class MistScene : MonoBehaviour {
             yield return null;
         }
         fadeMat.SetVector("_Value", Vector4.one);
-
+        print("Going to ocean scene");
         OurTownManager.GotoOcean();
+    }
+
+    void OnDisable()
+    {
+        Reset();
+        StopAllCoroutines();
     }
 }

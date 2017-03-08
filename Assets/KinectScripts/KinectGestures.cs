@@ -1273,7 +1273,7 @@ public class KinectGestures : MonoBehaviour
 				{
 				case 0:  // gesture detection - phase 1 (shoulder center in front of hip center, means leaning forward)
 					if(jointsTracked[shoulderCenterIndex] && jointsTracked[hipCenterIndex] &&
-						(jointsPos[shoulderCenterIndex].z - jointsPos[hipCenterIndex].z) < -0.1f)
+						(jointsPos[shoulderCenterIndex].z - jointsPos[hipCenterIndex].z) < -0.2f)
 					{
 						SetGestureJoint(ref gestureData, timestamp, shoulderCenterIndex, jointsPos[shoulderCenterIndex]);
 						gestureData.progress = 0.3f;
@@ -1285,7 +1285,7 @@ public class KinectGestures : MonoBehaviour
 					{
 						// check if shoulder center is still in front of the hip center (leaning forward)
 						bool isInPose = jointsTracked[shoulderCenterIndex] && jointsTracked[hipCenterIndex] &&
-							(jointsPos[shoulderCenterIndex].z - jointsPos[leftHipIndex].z) < -0.1f;
+							(jointsPos[shoulderCenterIndex].z - jointsPos[leftHipIndex].z) < -0.2f;
 
 						if(isInPose)
 						{
@@ -1295,7 +1295,9 @@ public class KinectGestures : MonoBehaviour
 
 							gestureData.timestamp = timestamp;
 							gestureData.progress = 0.7f;
-						}
+                                Vector3 jointPos = jointsPos[gestureData.joint];
+                                CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, 0f);
+                            }
 					}
 					else
 					{
@@ -1312,7 +1314,7 @@ public class KinectGestures : MonoBehaviour
 				{
 				case 0:  // gesture detection - phase 1 (shoulder center behind hip center, means leaning back)
 					if(jointsTracked[shoulderCenterIndex] && jointsTracked[hipCenterIndex] &&
-						(jointsPos[shoulderCenterIndex].z - jointsPos[hipCenterIndex].z) > 0.1f)
+						(jointsPos[shoulderCenterIndex].z - jointsPos[hipCenterIndex].z) > 0.2f)
 					{
 						SetGestureJoint(ref gestureData, timestamp, shoulderCenterIndex, jointsPos[shoulderCenterIndex]);
 						gestureData.progress = 0.3f;
@@ -1324,7 +1326,7 @@ public class KinectGestures : MonoBehaviour
 					{
 						// check if shoulder center is still behind of the hip center (leaning back)
 						bool isInPose = jointsTracked[shoulderCenterIndex] && jointsTracked[hipCenterIndex] &&
-							(jointsPos[shoulderCenterIndex].z - jointsPos[leftHipIndex].z) > 0.1f;
+							(jointsPos[shoulderCenterIndex].z - jointsPos[leftHipIndex].z) > 0.2f;
 
 						if(isInPose)
 						{
@@ -1334,7 +1336,10 @@ public class KinectGestures : MonoBehaviour
 
 							gestureData.timestamp = timestamp;
 							gestureData.progress = 0.7f;
-						}
+                                Vector3 jointPos = jointsPos[gestureData.joint];
+                                CheckPoseComplete(ref gestureData, timestamp, jointPos, isInPose, 0f);
+
+                            }
 					}
 					else
 					{

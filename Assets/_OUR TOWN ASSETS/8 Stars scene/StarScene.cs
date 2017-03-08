@@ -107,7 +107,7 @@ public class StarScene : MonoBehaviour
         
         ResetUVs();
 
-        StartCoroutine(RunScene());
+        StartCoroutine(RunStarScene());
     }
 
     // Update is called once per frame
@@ -156,26 +156,35 @@ public class StarScene : MonoBehaviour
 
     }
 
-    IEnumerator RunScene()
+    IEnumerator RunStarScene()
     {
+        print("Starting star scene with slow fade");
         yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
         growMat.SetTexture("_MaskOneTex", maskOneTex);
         growMat.SetTexture("_MaskTwoTex", maskTwoTex);
         next = false;
         float startTime = Time.time;
-        float fadeDuration = 60f;
+        float fadeDuration = 20f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeInMat.SetVector("_Value", new Vector4(Mathf.Pow((Time.time - startTime) / fadeDuration, 2), 0f, 0f, 0f));
             yield return null;
         }
         fadeInMat.SetVector("_Value", Vector4.one);
+        print("Waiting to activate behold gesture to start final sequence");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for behold gesture");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Behold);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         starRender = StarRenderType.Grow;
+        print("begin final sequence");
         StartCoroutine("StartStarfield");
 
         yield return new WaitForSeconds(10f);
@@ -239,7 +248,7 @@ public class StarScene : MonoBehaviour
 
     IEnumerator StartStarfield()
     {
-        print("Start starfield");
+        print("Start starfield, words will follow on delay");
         float[] coords = { 0.469f, 0.392f, 0.479f, 0.454f, 0.489f, 0.439f, 0.499f, 0.413f, 0.509f, 0.392f,
                            0.505f, 0.345f, 0.497f, 0.329f, 0.490f, 0.298f, 0.475f, 0.277f, 0.467f, 0.314f,
                            0.080f, 0.864f, 0.058f, 0.685f, 0.083f, 0.376f, 0.126f, 0.450f, 0.127f, 0.811f,
@@ -339,6 +348,7 @@ public class StarScene : MonoBehaviour
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
     }
 }
 

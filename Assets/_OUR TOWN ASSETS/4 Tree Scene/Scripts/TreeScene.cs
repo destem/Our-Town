@@ -68,7 +68,7 @@ public class TreeScene : MonoBehaviour {
         gesture = OurTownGestureListener.Instance;
         //chapelMat.SetVector("_Value", new Vector4(0f, 0f, 0f, 0f));
         //ResetUVs();
-        //StartCoroutine(RunScene());
+        //StartCoroutine(RunTreeScene());
         Reset();
     }
 
@@ -97,7 +97,7 @@ public class TreeScene : MonoBehaviour {
         growMat2.SetTexture("_MaskTwoTex", black);
         ResetUVs();
 
-        StartCoroutine(RunScene());
+        StartCoroutine(RunTreeScene());
     }
 
     // Update is called once per frame
@@ -147,10 +147,17 @@ public class TreeScene : MonoBehaviour {
 
 #endif
 
-    IEnumerator RunScene()
+    IEnumerator RunTreeScene()
     {
+        print("Starting tree scene");
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
-
+        print("Waiting to activate lean forward gesture to start first words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for lean forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next  && !gesture.IsCurrentGesture())
         {
@@ -158,7 +165,7 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("first words");
+        print("First words");
         usingGrowth = true;
         //screenModel.GetComponent<Renderer>().material = displayMat;
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
@@ -175,6 +182,13 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskThree(.335f, .15f);
         yield return null;
+        print("Waiting to activate psi gesture to start first branches");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for psi");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Psi);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -185,6 +199,13 @@ public class TreeScene : MonoBehaviour {
         print("First branches");
         SetMaskOne(0.500f, 0.879f);
         yield return null;
+        print("Waiting to activate shrug gesture to start central growth");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for shrug");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -192,7 +213,7 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("central growth");
+        print("Central growth");
         SetMaskTwo(.425f, .01f);
         yield return null;
         SetMaskTwo(.446f, .01f);
@@ -200,6 +221,13 @@ public class TreeScene : MonoBehaviour {
         SetMaskTwo(.553f, .01f);
         yield return null;
         SetMaskTwo(.574f, .01f);
+        print("Waiting to activate lean right gesture to start growth from sides");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for lean right");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanRight);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -207,7 +235,7 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("part 4 - growth from sides");
+        print("Growth from sides");
        
         SetMaskTwo(.004f, .01f);
         yield return null;
@@ -232,7 +260,13 @@ public class TreeScene : MonoBehaviour {
         SetMaskOne(.999f, .01f);
         yield return null;
         SetMaskOne(.595f, .01f);
-        yield return null;
+        yield return null; print("Waiting to activate point forward gesture to start second words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for point forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.PointForward);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -257,6 +291,13 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.594f, .462f);
         yield return null;
+        print("Waiting to activate clench gesture to start stage 5 growth");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for clench");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -264,7 +305,7 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("Stage 5 fast");
+        print("Stage 5 fast, starting timer for next phase");
         SetMaskOne(.275f, .005f);
         yield return null;
         SetMaskOne(.36f, .005f);
@@ -294,7 +335,7 @@ public class TreeScene : MonoBehaviour {
         SetMaskThree(.899f, .01f);
         yield return null;
         SetMaskThree(.912f, .01f);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
         print("Stage 5 fast - stage 2");
         SetMaskTwo(.687f, .005f);
         yield return null;
@@ -314,6 +355,13 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.748f, .005f);
         yield return null;
+        print("Waiting to activate shrug gesture to start third set of words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for shrug");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -321,13 +369,20 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("third set of words");
+        print("Third set of words");
         SetMaskOne(.401f, .027f);
         yield return null;
         SetMaskOne(.442f, .84f);
         yield return null;
         SetMaskOne(.594f, .371f);
         yield return null;
+        print("Waiting to activate clap gesture to start final words");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for clap");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -335,7 +390,7 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         next = false;
-        print("final set of words");
+        print("Final set of words");
         SetMaskTwo(.027f, .815f);
         yield return null;
         SetMaskOne(.744f, .502f);
@@ -346,8 +401,14 @@ public class TreeScene : MonoBehaviour {
         yield return null;
         SetMaskOne(.956f, .97f);
         yield return null;
-
-        gesture.SetCurrentGesture(KinectGestures.Gestures.HeadTilt);
+        print("Waiting to activate The More You Know gesture to start final fade");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for The More You Know");
+        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -368,7 +429,7 @@ public class TreeScene : MonoBehaviour {
             yield return null;
         }
         chapelMat.SetVector("_Value", new Vector4(1f, 0f, 0f, 0f));
-
+        print("End of Act II");
     }
 
     public void SetMaskOne(float u, float v)
@@ -422,5 +483,6 @@ public class TreeScene : MonoBehaviour {
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
     }
 }

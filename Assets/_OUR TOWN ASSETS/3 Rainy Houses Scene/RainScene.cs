@@ -86,7 +86,7 @@ public class RainScene : MonoBehaviour {
         growMat.SetTexture("_MaskTwoTex", black);
         growMat2.SetTexture("_MaskOneTex", black);
         growMat2.SetTexture("_MaskTwoTex", black);
-        StartCoroutine(RunScene());
+        StartCoroutine(RunRainScene());
     }
 
     // Update is called once per frame
@@ -146,8 +146,9 @@ public class RainScene : MonoBehaviour {
 
     }
 
-    IEnumerator RunScene()
+    IEnumerator RunRainScene()
     {
+        print("Starting rain scene");
         yield return new WaitForSeconds(1f); //gesture not getting initialized fast enough??
 
         growMat.SetTexture("_MaskOneTex", MaskOneTex);
@@ -155,14 +156,20 @@ public class RainScene : MonoBehaviour {
         growMat2.SetTexture("_MaskOneTex", MaskThreeTex);
         growMat2.SetTexture("_MaskTwoTex", MaskFourTex);
 
-        
+        print("Waiting to activate The More You Know gesture to start fade in and first rain");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         next = false;
-
+        print("Fade in");
         float startTime = Time.time;
         float fadeDuration = 0.5f;
         while (Time.time - startTime < fadeDuration)
@@ -173,7 +180,13 @@ public class RainScene : MonoBehaviour {
         fadeMat.SetVector("_Value", Vector4.one);
         rainRender = RainRenderType.Growth;
         StartCoroutine("FirstRain");
-
+        print("Waiting to activate lean forward gesture to start second rain");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for lean forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -181,7 +194,13 @@ public class RainScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine("SecondRain");
-
+        print("Waiting to activate jump gesture to start downpour");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for jump");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Jump);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -189,7 +208,13 @@ public class RainScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine("LastRain");
-
+        print("Waiting to activate shrug gesture to bring in houses");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for shrug");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -197,16 +222,20 @@ public class RainScene : MonoBehaviour {
         }
         next = false;
         StartCoroutine("Houses");
-
+        print("Waiting to activate swipe up gesture to erase houses");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for swipe up");
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         next = false;
-        //usingGrowth = false;
-        // usingWipe = true;
-        //rainRender = RainRenderType.HalfWipe;
+        print("Erasing houses");
         rainRender = RainRenderType.FadeIn;
         //wipeMat.SetFloat("_Value", -1f);
         fadeMat.SetVector("_Value", Vector4.zero);
@@ -220,13 +249,20 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         fadeMat.SetVector("_Value", Vector4.one);
-
+        print("Waiting to activate swipe gesture to erase rain");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for swipe up");
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
         next = false;
+        print("Erasing rain");
         fadeMat.SetVector("_Value", Vector4.zero);
         fadeMat.SetTexture("_Chapel", wordsOnly);
         fadeMat.SetTexture("_Paper", wordsAndRain);
@@ -238,7 +274,13 @@ public class RainScene : MonoBehaviour {
             yield return null;
         }
         fadeMat.SetVector("_Value", Vector4.one);
-
+        print("Waiting to activate lean forward gesture to fade to final four phrases");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for lean forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -248,12 +290,20 @@ public class RainScene : MonoBehaviour {
         rainRender = RainRenderType.FadeWords;
         startTime = Time.time;
         fadeDuration = 2f;
+        print("Fade to final four");
         while (Time.time - startTime < fadeDuration)
         {
             wordFade.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
             yield return null;
         }
         wordFade.SetVector("_Value", Vector4.one);
+        print("Waiting to activate psi gesture to bring in rotated town");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for psi");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Psi);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -262,7 +312,13 @@ public class RainScene : MonoBehaviour {
         next = false;
         rainRender = RainRenderType.RotatedTown;
         print("rotated town");
-
+        print("Waiting to activate clap gesture to go to chapel");
+        while (!next)
+        {
+            yield return null;
+        }
+        next = false;
+        print("Waiting for clap");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
         while (!next && !gesture.IsCurrentGesture())
         {
@@ -529,5 +585,6 @@ public class RainScene : MonoBehaviour {
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
     }
 }
