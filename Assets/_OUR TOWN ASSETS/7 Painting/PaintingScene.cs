@@ -13,10 +13,14 @@ public class PaintingScene : MonoBehaviour {
     bool next = false;
     enum PaintingRenderType {WipeIn, Building, Mic, Breakdown }
     PaintingRenderType paintRender = PaintingRenderType.WipeIn;
+    
+    public Material buildMat;
 
 	// Use this for initialization
 	void Start () {
         gesture = OurTownGestureListener.Instance;
+        buildMat.SetTexture("_Painting", OurTownManager.paintingArray);
+
         Reset();
     }
 
@@ -56,7 +60,7 @@ public class PaintingScene : MonoBehaviour {
                 Graphics.Blit(finalPainting, dest, micMat);
                 break;
             case PaintingRenderType.Building:
-                Graphics.Blit(finalPainting, dest, micMat);
+                Graphics.Blit(source, dest, buildMat);
                 break;
         }
        
@@ -83,6 +87,17 @@ public class PaintingScene : MonoBehaviour {
         wipeMat.SetFloat("_Value", 1.05f);
         //usingWipe = false;
         paintRender = PaintingRenderType.Building;
+
+        for (int i = 0; i < 17; i++)
+        {
+            startTime = Time.time;
+            fadeDuration = 2f;
+            while (Time.time - startTime < fadeDuration)
+            {
+                buildMat.SetVector("level", new Vector4(i, (Time.time - startTime) / fadeDuration, 0f, 0f));
+                yield return null;
+            }
+        }
 
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {

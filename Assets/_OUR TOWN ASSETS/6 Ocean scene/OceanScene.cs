@@ -204,7 +204,7 @@ public class OceanScene : MonoBehaviour
         yield return null;
         print("fade to last words");
         startTime = Time.time;
-        fadeTime = 3f;
+        fadeTime = 120f;
         while (Time.time - startTime < fadeTime)
         {
             imageLerp = (Time.time - startTime) / fadeTime;

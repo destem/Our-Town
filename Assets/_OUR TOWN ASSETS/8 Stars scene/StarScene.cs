@@ -104,8 +104,7 @@ public class StarScene : MonoBehaviour
         displayMat.SetTexture("_MainTex", buff);
         displayMat.SetTexture("_SecondTex", buff2);
         fadeOutMat.SetTexture("_Paper", finalBuff);
-        growMat.SetTexture("_MaskOneTex", maskOneTex);
-        growMat.SetTexture("_MaskTwoTex", maskTwoTex);
+        
         ResetUVs();
 
         StartCoroutine(RunScene());
@@ -160,20 +159,22 @@ public class StarScene : MonoBehaviour
     IEnumerator RunScene()
     {
         yield return new WaitForSeconds(2f); //gesture not getting initialized fast enough??
+        growMat.SetTexture("_MaskOneTex", maskOneTex);
+        growMat.SetTexture("_MaskTwoTex", maskTwoTex);
+        next = false;
+        float startTime = Time.time;
+        float fadeDuration = 60f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            fadeInMat.SetVector("_Value", new Vector4(Mathf.Pow((Time.time - startTime) / fadeDuration, 2), 0f, 0f, 0f));
+            yield return null;
+        }
+        fadeInMat.SetVector("_Value", Vector4.one);
         gesture.SetCurrentGesture(KinectGestures.Gestures.Behold);
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
         }
-        next = false;
-        float startTime = Time.time;
-        float fadeDuration = 0.5f;
-        while (Time.time - startTime < fadeDuration)
-        {
-            fadeInMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
-            yield return null;
-        }
-        fadeInMat.SetVector("_Value", Vector4.one);
         starRender = StarRenderType.Grow;
         StartCoroutine("StartStarfield");
 

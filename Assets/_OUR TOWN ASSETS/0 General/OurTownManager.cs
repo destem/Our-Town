@@ -27,9 +27,12 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
     public string[] ChannelsToJoinOnConnect ;
     int HistoryLengthToFetch = 0;
 
-    public string UserName { get; set; }
+    string UserName = "OurTownServer";
 
     public ChatClient chatClient;
+
+    public Texture2D[] paintingProgression;
+    public static Texture2DArray paintingArray;
 
     // Use this for initialization
     void Start()
@@ -39,6 +42,14 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
 
         string chatAppId = ChatSettings.Instance.AppId;
         this.chatClient.Connect(chatAppId, "1.0", new AuthenticationValues(UserName));
+        chatClient.Subscribe(new string[] { "OurTown", "All" });
+
+        paintingArray = new Texture2DArray(8192, 1024, 18, TextureFormat.RGB24, false);
+        for (int i = 0; i < 18; i++)
+        {
+            paintingArray.SetPixels(paintingProgression[i].GetPixels(0), i);
+        }
+        paintingArray.Apply();
 
         Debug.Log("Connecting as: " + UserName);
         townScene = GetComponent<TownScene>();
@@ -55,8 +66,8 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
     // Update is called once per frame
     void Update()
     {
-        //this.chatClient.Service();
-        //this.chatClient.PublishMessage("OurTown", Time.time.ToString());
+        chatClient.Service();
+        //chatClient.PublishMessage("OurTown", Time.time.ToString());
         if (justStarted && Input.GetKeyDown(KeyCode.Return))
         {
             StopAllCoroutines();
@@ -270,23 +281,25 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
     {
         // Remove callback when object goes out of scope
         Application.logMessageReceived -= HandleLog;
+        chatClient.Disconnect();
     }
 
     void HandleLog(string logString, string stackTrace, LogType type)
     {
         //output += logString + "\n";
-        this.chatClient.PublishMessage("OurTown", logString);
+        //chatClient.PublishMessage("All", logString);
         //stack = stackTrace;
+        chatClient.SendPrivateMessage("marc", logString);
     }
     public void OnConnected()
     {
-        if (this.ChannelsToJoinOnConnect != null && this.ChannelsToJoinOnConnect.Length > 0)
+        if (ChannelsToJoinOnConnect != null && ChannelsToJoinOnConnect.Length > 0)
         {
-            this.chatClient.Subscribe(this.ChannelsToJoinOnConnect, this.HistoryLengthToFetch);
+            chatClient.Subscribe(ChannelsToJoinOnConnect, HistoryLengthToFetch);
         }
 
-        this.chatClient.AddFriends(new string[] { "tobi", "ilya" }); // Add some users to the server-list to get their status updates
-        this.chatClient.SetOnlineStatus(ChatUserStatus.Online); // You can set your online state (without a mesage).
+        chatClient.AddFriends(new string[] { "tobi", "ilya" }); // Add some users to the server-list to get their status updates
+        chatClient.SetOnlineStatus(ChatUserStatus.Online); // You can set your online state (without a mesage).
     }
 
     public void OnDisconnected()
@@ -303,7 +316,7 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
         // in this demo, we simply send a message into each channel. This is NOT a must have!
         foreach (string channel in channels)
         {
-            this.chatClient.PublishMessage(channel, "says 'hi'."); // you don't HAVE to send a msg on join but you could.
+            chatClient.PublishMessage(channel, "says 'hi'."); // you don't HAVE to send a msg on join but you could.
 
         }
     }
