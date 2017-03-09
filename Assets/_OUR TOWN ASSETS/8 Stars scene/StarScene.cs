@@ -336,5 +336,9 @@ public class StarScene : MonoBehaviour
         Reset();
         StopAllCoroutines();
     }
+    public void Stop()
+    {
+        StopAllCoroutines();
+    }
 }
 

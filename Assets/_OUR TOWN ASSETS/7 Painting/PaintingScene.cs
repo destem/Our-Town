@@ -147,4 +147,8 @@ public class PaintingScene : MonoBehaviour {
         Reset();
         StopAllCoroutines();
     }
+    public void Stop()
+    {
+        StopAllCoroutines();
+    }
 }

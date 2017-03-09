@@ -221,6 +221,14 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
         paintingScene.enabled = false;
         starScene.enabled = false;
         ccCurves.enabled = false;
+        townScene.Stop();
+        moonScene.Stop();
+        rainScene.Stop();
+        treeScene.Stop();
+        mistScene.Stop();
+        oceanScene.Stop();
+        paintingScene.Stop();
+        starScene.Stop();
     }
 
     IEnumerator FadeToTown()

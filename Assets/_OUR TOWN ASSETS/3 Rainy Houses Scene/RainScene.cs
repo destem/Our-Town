@@ -512,6 +512,7 @@ public class RainScene : MonoBehaviour {
 
     IEnumerator LastRain()
     {
+        print("Downpour");
         for (int i = 0; i < 100; i++)
         {
             // STAGGER THIS
@@ -585,6 +586,10 @@ public class RainScene : MonoBehaviour {
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
+    }
+    public void Stop()
+    {
         StopAllCoroutines();
     }
 }

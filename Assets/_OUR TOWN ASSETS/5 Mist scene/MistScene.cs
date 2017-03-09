@@ -89,4 +89,8 @@ public class MistScene : MonoBehaviour {
         Reset();
         StopAllCoroutines();
     }
+    public void Stop()
+    {
+        StopAllCoroutines();
+    }
 }

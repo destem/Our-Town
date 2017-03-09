@@ -555,4 +555,9 @@ public class TownScene : MonoBehaviour {
         Reset();
         StopAllCoroutines();
     }
+
+    public void Stop()
+    {
+        StopAllCoroutines();
+    }
 }

@@ -354,7 +354,7 @@ public class MoonScene : MonoBehaviour {
                            0.756f, 0.670f, 0.750f, 0.282f, 0.768f, 0.104f, 0.827f, 0.146f, 0.815f, 0.559f,
                            0.790f, 0.544f, 0.769f, 0.879f, 0.809f, 0.842f, 0.834f, 0.953f, 0.868f, 0.853f,
                            0.899f, 0.534f, 0.933f, 0.465f, 0.962f, 0.544f, 0.938f, 0.779f, 0.956f, 0.921f,
-                           0.984f, 0.915f };
+                           0.984f, 0.915f, 0.271f, 0.05f };
         print("small moon stippling");
         for (int i = 0; i < coords.Length; i += 2)
         {
@@ -495,6 +495,10 @@ public class MoonScene : MonoBehaviour {
     void OnDisable()
     {
         Reset();
+        StopAllCoroutines();
+    }
+    public void Stop()
+    {
         StopAllCoroutines();
     }
 }
