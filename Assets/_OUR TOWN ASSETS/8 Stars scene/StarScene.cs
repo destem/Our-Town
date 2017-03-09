@@ -196,7 +196,9 @@ public class StarScene : MonoBehaviour
         clusterSize = 1;
         blitTimeDelay = 0.5f;
 
+
         StartCoroutine("MakeStars");
+
         yield return new WaitForSeconds(20f);
         blitTimeDelay = .4f;
         yield return new WaitForSeconds(20f);
@@ -223,26 +225,28 @@ public class StarScene : MonoBehaviour
         clusterSize = 10;
         print("Cluster size: 10");
 
+
         //fade just the background for 10
         print("Background fadeout");
         startTime = Time.time;
         fadeDuration = 20f;
         while (Time.time - startTime < fadeDuration)
         {
-            starBlitMat.SetFloat("_Value", (Time.time - startTime) / fadeDuration);
+            starBlitMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, Mathf.Max((Time.time - startTime - 15) / 5f, 0f), 0f, 0f));
             yield return null;
         }
-        starBlitMat.SetFloat("_Value", 1f);
-        print("Final fadeout");
-        starRender = StarRenderType.FadeOut;
-        startTime = Time.time;
-        fadeDuration = 5f;
-        while (Time.time - startTime < fadeDuration)
-        {
-            fadeOutMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
-            yield return null;
-        }
-        fadeOutMat.SetVector("_Value", Vector4.one);
+        starBlitMat.SetVector("_Value", Vector4.one);
+
+        //print("Final fadeout");
+        //starRender = StarRenderType.FadeOut;
+        //startTime = Time.time;
+        //fadeDuration = 5f;
+        //while (Time.time - startTime < fadeDuration)
+        //{
+        //    fadeOutMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
+        //    yield return null;
+        //}
+        //fadeOutMat.SetVector("_Value", Vector4.one);
     }
 
     IEnumerator StartStarfield()
