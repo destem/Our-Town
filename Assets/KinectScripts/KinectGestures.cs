@@ -1636,7 +1636,7 @@ public class KinectGestures : MonoBehaviour
                         if ((timestamp - gestureData.timestamp) < 1.5f)
                         {
                             bool isInPose = (jointsTracked[rightHandIndex] && jointsTracked[leftHandIndex] && jointsTracked[rightShoulderIndex] && jointsTracked[leftShoulderIndex] && jointsTracked[rightHipIndex] &&
-                            jointsTracked[leftHipIndex] && jointsPos[rightHipIndex].y - jointsPos[rightHandIndex].y > 0f && jointsPos[leftHipIndex].y - jointsPos[leftHandIndex].y > 0f);
+                            jointsTracked[leftHipIndex] && jointsPos[rightHipIndex].y - jointsPos[rightHandIndex].y > -.2f && jointsPos[leftHipIndex].y - jointsPos[leftHandIndex].y > -.2f);
 
                             if (isInPose)
                             {
