@@ -4,6 +4,7 @@
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_OverTex ("Texture", 2D) = "white" {}
+		_Value ("Background fade lerp value", float) = 0
 	}
 	SubShader
 	{
@@ -40,10 +41,12 @@
 			
 			sampler2D _MainTex;
 			sampler2D _OverTex;
+			float _Value;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 main = tex2D(_MainTex, i.uv);
+				fixed4 black = fixed4(0., 0., 0., 1.);
+				fixed4 main = lerp(tex2D(_MainTex, i.uv), black, _Value);
 			    fixed4 over = tex2D(_OverTex, i.uv);
 				fixed4 col = lerp(main, over, over.a);
 				return col;

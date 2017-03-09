@@ -222,14 +222,21 @@ public class StarScene : MonoBehaviour
         yield return new WaitForSeconds(5f);
         clusterSize = 10;
         print("Cluster size: 10");
-        yield return new WaitForSeconds(5f);
-        //clusterSize = 20;
-        //print("at cluster size 20");
-        //yield return new WaitForSeconds(5f);
-        print("starting fadeout");
+
+        //fade just the background for 10
+        print("Background fadeout");
+        startTime = Time.time;
+        fadeDuration = 20f;
+        while (Time.time - startTime < fadeDuration)
+        {
+            starBlitMat.SetFloat("_Value", (Time.time - startTime) / fadeDuration);
+            yield return null;
+        }
+        starBlitMat.SetFloat("_Value", 1f);
+        print("Final fadeout");
         starRender = StarRenderType.FadeOut;
         startTime = Time.time;
-        fadeDuration = 15f;
+        fadeDuration = 5f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeOutMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
