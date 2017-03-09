@@ -164,6 +164,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -171,7 +172,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Fade in");
         float startTime = Time.time;
-        float fadeDuration = 0.5f;
+        float fadeDuration = 5f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
@@ -188,6 +189,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for lean forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -202,6 +204,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for jump");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Jump);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -216,6 +219,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for shrug");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -230,6 +234,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for swipe up");
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -257,6 +262,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for swipe up");
         gesture.SetCurrentGesture(KinectGestures.Gestures.SwipeUp);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -282,6 +288,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for lean forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanForward);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -305,6 +312,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for psi");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Psi);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -320,6 +328,7 @@ public class RainScene : MonoBehaviour {
         next = false;
         print("Waiting for clap");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -585,11 +594,16 @@ public class RainScene : MonoBehaviour {
 
     void OnDisable()
     {
-        Reset();
         StopAllCoroutines();
     }
-    public void Stop()
+
+    void OnEnable()
     {
-        StopAllCoroutines();
+        Reset();
     }
+
+    //public void Stop()
+    //{
+    //    StopAllCoroutines();
+    //}
 }

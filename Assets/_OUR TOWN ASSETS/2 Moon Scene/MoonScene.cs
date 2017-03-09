@@ -147,6 +147,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -165,6 +166,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for double fancy");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -180,6 +182,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for shrug");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -199,6 +202,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for lean left");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanLeft);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -214,6 +218,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for step and sweep");
         gesture.SetCurrentGesture(KinectGestures.Gestures.StepAndSweep);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -252,6 +257,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for backswing");
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -267,6 +273,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for lean left");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanLeft);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -282,6 +289,7 @@ public class MoonScene : MonoBehaviour {
         next = false;
         print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -494,11 +502,16 @@ public class MoonScene : MonoBehaviour {
 
     void OnDisable()
     {
-        Reset();
         StopAllCoroutines();
     }
-    public void Stop()
+
+    void OnEnable()
     {
-        StopAllCoroutines();
+        Reset();
     }
+
+    //public void Stop()
+    //{
+    //    StopAllCoroutines();
+    //}
 }

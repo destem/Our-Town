@@ -340,6 +340,11 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
         return false;
     }
 
+    public void ClearGestureSuccess()
+    {
+        currentGestureComplete = false;
+    }
+
 
     /// <summary>
     /// Invoked when a new user is detected. Here you can start gesture tracking by invoking KinectManager.DetectGesture()-function.

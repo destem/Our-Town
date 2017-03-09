@@ -153,6 +153,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -161,7 +162,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Fade in");
         float startTime = Time.time;
-        float fadeDuration = 0.5f;
+        float fadeDuration = 5f;
         while (Time.time - startTime < fadeDuration)
         {
             imageFade.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
@@ -180,6 +181,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for shrug");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             Blit();
@@ -200,6 +202,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for clap");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap);
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -221,6 +224,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for double fancy");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Here);
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -241,6 +245,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for backswing");
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave);
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -256,6 +261,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for clench");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clench);
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -279,6 +285,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for clap");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Clap); //pop the town back in
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -295,6 +302,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for backswing");
         gesture.SetCurrentGesture(KinectGestures.Gestures.ForearmWave); //houses only
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -312,6 +320,7 @@ public class TownScene : MonoBehaviour {
         next = false;
         print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow); //wipe
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             Blit();
@@ -552,12 +561,16 @@ public class TownScene : MonoBehaviour {
 
     void OnDisable()
     {
-        Reset();
         StopAllCoroutines();
     }
 
-    public void Stop()
+    void OnEnable()
     {
-        StopAllCoroutines();
+        Reset();
     }
+
+    //public void Stop()
+    //{
+    //    StopAllCoroutines();
+    //}
 }

@@ -66,6 +66,7 @@ public class MistScene : MonoBehaviour {
         next = false;
         print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -86,11 +87,16 @@ public class MistScene : MonoBehaviour {
 
     void OnDisable()
     {
-        Reset();
         StopAllCoroutines();
     }
-    public void Stop()
+
+    void OnEnable()
     {
-        StopAllCoroutines();
+        Reset();
     }
+
+    //public void Stop()
+    //{
+    //    StopAllCoroutines();
+    //}
 }

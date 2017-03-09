@@ -163,7 +163,7 @@ public class StarScene : MonoBehaviour
         growMat.SetTexture("_MaskTwoTex", maskTwoTex);
         next = false;
         float startTime = Time.time;
-        float fadeDuration = 15f;
+        float fadeDuration = 20f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeInMat.SetVector("_Value", new Vector4(Mathf.Pow((Time.time - startTime) / fadeDuration, 2), 0f, 0f, 0f));
@@ -178,6 +178,7 @@ public class StarScene : MonoBehaviour
         next = false;
         print("Waiting for behold gesture");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Behold);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -196,15 +197,15 @@ public class StarScene : MonoBehaviour
         blitTimeDelay = 0.5f;
 
         StartCoroutine("MakeStars");
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(20f);
         blitTimeDelay = .4f;
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(20f);
         blitTimeDelay = .3f;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(15f);
         blitTimeDelay = .2f;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(15f);
         blitTimeDelay = .1f;
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(15f);
         blitTimeDelay = 0f;
         yield return new WaitForSeconds(15f);
         clusterSize = 2;
@@ -212,18 +213,18 @@ public class StarScene : MonoBehaviour
         clusterSize = 3;
         yield return new WaitForSeconds(10f);
         clusterSize = 4;
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
         clusterSize = 5;
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
         clusterSize = 10;
         yield return new WaitForSeconds(5f);
         clusterSize = 20;
         print("at cluster size 20");
-        yield return new WaitForSeconds(5f);
+        //yield return new WaitForSeconds(5f);
         print("starting fadeout");
         starRender = StarRenderType.FadeOut;
         startTime = Time.time;
-        fadeDuration = 20f;
+        fadeDuration = 15f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeOutMat.SetVector("_Value", new Vector4((Time.time - startTime) / fadeDuration, 0f, 0f, 0f));
@@ -333,12 +334,17 @@ public class StarScene : MonoBehaviour
 
     void OnDisable()
     {
-        Reset();
         StopAllCoroutines();
     }
-    public void Stop()
+
+    void OnEnable()
     {
-        StopAllCoroutines();
+        Reset();
     }
+
+    //public void Stop()
+    //{
+    //    StopAllCoroutines();
+    //}
 }
 

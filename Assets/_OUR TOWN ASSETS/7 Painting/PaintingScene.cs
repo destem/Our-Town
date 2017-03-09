@@ -75,14 +75,15 @@ public class PaintingScene : MonoBehaviour {
     {
        // usingWipe = true;
         wipeMat.SetFloat("_Value", -0.05f);
-        print("Waiting to activate The More You Know gesture to start painting");
+        print("Waiting to activate Behold gesture to start painting");
         while (!next)
         {
             yield return null;
         }
         next = false;
-        print("Waiting for The More You Know");
-        gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow); //wipe
+        print("Waiting for Behold");
+        gesture.SetCurrentGesture(KinectGestures.Gestures.Behold); //wipe
+        gesture.ClearGestureSuccess();
         while (!next && gesture ? (!gesture.IsCurrentGesture()) : false)
         {
             //Blit();
@@ -144,11 +145,16 @@ public class PaintingScene : MonoBehaviour {
 
     void OnDisable()
     {
-        Reset();
         StopAllCoroutines();
     }
-    public void Stop()
+
+    void OnEnable()
     {
-        StopAllCoroutines();
+        Reset();
     }
+
+    //public void Stop()
+    //{
+    //    StopAllCoroutines();
+    //}
 }

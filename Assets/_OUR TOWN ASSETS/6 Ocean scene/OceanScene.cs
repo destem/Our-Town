@@ -149,6 +149,7 @@ public class OceanScene : MonoBehaviour
         next = false;
         print("Waiting for point forward");
         gesture.SetCurrentGesture(KinectGestures.Gestures.PointForward);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -163,6 +164,7 @@ public class OceanScene : MonoBehaviour
         next = false;
         print("Waiting for mic drop");
         gesture.SetCurrentGesture(KinectGestures.Gestures.MicDrop);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -177,6 +179,7 @@ public class OceanScene : MonoBehaviour
         next = false;
         print("Waiting for T pose");
         gesture.SetCurrentGesture(KinectGestures.Gestures.Tpose);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -191,6 +194,7 @@ public class OceanScene : MonoBehaviour
         next = false;
         print("Waiting for yoga tree");
         gesture.SetCurrentGesture(KinectGestures.Gestures.YogaTree);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -208,6 +212,7 @@ public class OceanScene : MonoBehaviour
         next = false;
         print("Waiting for lean left");
         gesture.SetCurrentGesture(KinectGestures.Gestures.LeanLeft);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -230,6 +235,7 @@ public class OceanScene : MonoBehaviour
         next = false;
         print("Waiting for The More You Know");
         gesture.SetCurrentGesture(KinectGestures.Gestures.TheMoreYouKnow);
+        gesture.ClearGestureSuccess();
         while (!next && !gesture.IsCurrentGesture())
         {
             yield return null;
@@ -357,11 +363,16 @@ public class OceanScene : MonoBehaviour
 
     void OnDisable()
     {
-        Reset();
         StopAllCoroutines();
     }
-    public void Stop()
+
+    void OnEnable()
     {
-        StopAllCoroutines();
+        Reset();
     }
+
+    //public void Stop()
+    //{
+    //    StopAllCoroutines();
+    //}
 }
