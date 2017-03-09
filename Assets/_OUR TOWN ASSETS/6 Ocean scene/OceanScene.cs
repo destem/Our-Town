@@ -245,7 +245,7 @@ public class OceanScene : MonoBehaviour
         fadeMat.SetTexture("_Chapel", hurtFeelings);
         fadeMat.SetTexture("_Paper", umbrellasOnly);
         yield return null;
-        print("long fade to last words");
+        print("2 minute fade to last words");
         startTime = Time.time;
         fadeTime = 120f;
         while (Time.time - startTime < fadeTime)
@@ -259,7 +259,7 @@ public class OceanScene : MonoBehaviour
         yield return null;
         print("short final fade to blank");
         startTime = Time.time;
-        fadeTime = 2f;
+        fadeTime = 5f;
         while (Time.time - startTime < fadeTime)
         {
             imageLerp = (Time.time - startTime) / fadeTime;

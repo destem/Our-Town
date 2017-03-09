@@ -163,7 +163,7 @@ public class StarScene : MonoBehaviour
         growMat.SetTexture("_MaskTwoTex", maskTwoTex);
         next = false;
         float startTime = Time.time;
-        float fadeDuration = 20f;
+        float fadeDuration = 25f;
         while (Time.time - startTime < fadeDuration)
         {
             fadeInMat.SetVector("_Value", new Vector4(Mathf.Pow((Time.time - startTime) / fadeDuration, 2), 0f, 0f, 0f));
@@ -209,17 +209,22 @@ public class StarScene : MonoBehaviour
         blitTimeDelay = 0f;
         yield return new WaitForSeconds(15f);
         clusterSize = 2;
+        print("Cluster size: 2");
         yield return new WaitForSeconds(10f);
         clusterSize = 3;
+        print("Cluster size: 3");
         yield return new WaitForSeconds(10f);
         clusterSize = 4;
+        print("Cluster size: 4");
         yield return new WaitForSeconds(5f);
         clusterSize = 5;
+        print("Cluster size: 5");
         yield return new WaitForSeconds(5f);
         clusterSize = 10;
+        print("Cluster size: 10");
         yield return new WaitForSeconds(5f);
-        clusterSize = 20;
-        print("at cluster size 20");
+        //clusterSize = 20;
+        //print("at cluster size 20");
         //yield return new WaitForSeconds(5f);
         print("starting fadeout");
         starRender = StarRenderType.FadeOut;
