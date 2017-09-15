@@ -1,4 +1,6 @@
-﻿Shader "Our Town/star_display"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Our Town/star_display"
 {
 	Properties
 	{
@@ -34,7 +36,7 @@
 			v2f vert (appdata v)
 			{
 				v2f o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
 				return o;
 			}
@@ -45,11 +47,16 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
+				i.uv -= 0.5; // for centering vertically
+				i.uv.y /= .22222; //for scaling to 16:9 aspect ratio
 				fixed4 black = fixed4(0., 0., 0., 1.);
-				fixed4 main = lerp(tex2D(_MainTex, i.uv), black, _Value.x);
-				fixed4 over = tex2D(_OverTex, i.uv);
+				fixed4 main = lerp(tex2D(_MainTex, i.uv + 0.5), black, _Value.x);
+				fixed4 over = tex2D(_OverTex, i.uv + 0.5);
 			    fixed4 overlerped = lerp(over, black, _Value.y);
 				fixed4 col = lerp(main, overlerped, over.a);
+				col *= step(i.uv.y, 0.5);
+				col *= 1 - step(i.uv.y, -0.5);
+				return col;
 				return col;
 			}
 			ENDCG

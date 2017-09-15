@@ -1,4 +1,6 @@
-﻿Shader "Our Town/chapel_display"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Our Town/chapel_display"
 {
 	Properties
 	{
@@ -35,7 +37,7 @@
 			v2f vert (appdata v)
 			{
 				v2f o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
 //#if UNITY_UV_STARTS_AT_TOP				
 //				o.uv.y = 1 - v.uv.y;
@@ -50,12 +52,18 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
+				i.uv -= 0.5; // for centering vertically
+				i.uv.y /= .22222; //for scaling to 16:9 aspect ratio
+				//i.uv.y *= .11389;
 				//fixed4 mask = tex2D(_MainTex, i.uv);
 				float2 offset = float2(_Value.y, 0.);
-				fixed4 col = tex2D(_Chapel, i.uv + offset);
-				fixed4 paper = tex2D(_Paper, i.uv + offset);
+				fixed4 col = tex2D(_Chapel, i.uv + offset + .5);
+				fixed4 paper = tex2D(_Paper, i.uv + offset + .5);
 				
-				return lerp(paper, col, _Value.x);
+				fixed4 final = lerp(paper, col, _Value.x);
+				final *= step(i.uv.y, 0.5);
+				final *= 1 - step(i.uv.y, -0.5);
+				return final;
 			}
 			ENDCG
 		}

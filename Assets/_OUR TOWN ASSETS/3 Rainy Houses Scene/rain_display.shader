@@ -1,4 +1,6 @@
-﻿Shader "Our Town/rain_display"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Our Town/rain_display"
 {
 	Properties
 	{
@@ -37,7 +39,7 @@
 			v2f vert (appdata v)
 			{
 				v2f o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
 				return o;
 			}
@@ -56,8 +58,10 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float4 source = tex2D(_MainTex, i.uv);
-				float4 second = tex2D(_SecondTex, i.uv);
+				i.uv -= 0.5; // for centering vertically
+				i.uv.y /= .22222; //for scaling to 16:9 aspect ratio
+				float4 source = tex2D(_MainTex, i.uv + 0.5);
+				float4 second = tex2D(_SecondTex, i.uv + 0.5);
 				float maskOneAmount = source.r;
 				float maskTwoAmount = source.b;
 				float maskThreeAmount = second.r;
@@ -68,14 +72,14 @@
 				float maskThreeFade = second.g;
 				float maskFourFade = second.a;
 
-				fixed4 paperCol = tex2D(_BGTex, i.uv);
-				fixed4 finalCol = tex2D(_FinalTex, i.uv);
-				fixed4 final2Col = tex2D(_Final2Tex, i.uv);
+				fixed4 paperCol = tex2D(_BGTex, i.uv + 0.5);
+				fixed4 finalCol = tex2D(_FinalTex, i.uv + 0.5);
+				fixed4 final2Col = tex2D(_Final2Tex, i.uv + 0.5);
 				fixed4 col;
 				float2 transUV;
 				transUV.x = i.uv.x * 32;
 				transUV.y = i.uv.y * 4;
-				fixed4 transVal = tex2D(_TransTex, transUV.xy);
+				fixed4 transVal = tex2D(_TransTex, transUV.xy + 0.5);
 				//change amount to be its own step value - mutate the mask in place, then lerp colors
 				maskOneAmount = 1 - step(transVal, 1 - maskOneFade);
 				maskTwoAmount = 1 - step(transVal, 1 - maskTwoFade);
@@ -87,6 +91,8 @@
 
 				col = lerp(paperCol, finalCol, finalAmount);
 				col *= lerp(paperCol, final2Col, final2Amount);
+				col *= step(i.uv.y, 0.5);
+				col *= 1 - step(i.uv.y, -0.5);
 				return col;
 			}
 			ENDCG

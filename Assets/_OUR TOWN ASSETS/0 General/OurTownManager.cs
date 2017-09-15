@@ -63,6 +63,7 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
         starScene = GetComponent<StarScene>();
         ccCurves = GetComponent<UnityStandardAssets.ImageEffects.ColorCorrectionCurves>();
         DisableAll();
+        fadeMat.SetVector("_Value", Vector4.zero);
     }
 
     // Update is called once per frame
@@ -198,7 +199,7 @@ public class OurTownManager : MonoBehaviour, IChatClientListener
     {
         if (masterRender == MasterRenderType.logo)
         {
-            Graphics.Blit(testPattern, dest);
+            Graphics.Blit(testPattern, dest, fadeMat);
         }
         else if (masterRender == MasterRenderType.fade)
         {
