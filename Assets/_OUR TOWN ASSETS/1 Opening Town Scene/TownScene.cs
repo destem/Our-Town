@@ -355,7 +355,7 @@ public class TownScene : MonoBehaviour {
         SetMaskTwo(.464f, .565f);
         yield return new WaitForSeconds(1.5f);
         Blit();
-        SetMaskOne(.526f, .565f);
+        SetMaskOne(.522f, .563f);
         yield return new WaitForSeconds(2.0f);
         Blit();
         SetMaskTwo(.524f, .557f);

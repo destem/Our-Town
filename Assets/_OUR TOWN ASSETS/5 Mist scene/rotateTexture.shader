@@ -45,7 +45,12 @@ Shader "Our Town/rotateTexture"
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 col = tex2D(_MainTex, float2(i.uv.x + _offset, i.uv.y));
+				i.uv -= 0.5; // for centering vertically
+				i.uv.y /= .22222; //for scaling to 16:9 aspect ratio
+
+				fixed4 col = tex2D(_MainTex, float2(i.uv.x + _offset + 0.5, i.uv.y + 0.5));
+				col *= step(i.uv.y, 0.5);
+				col *= 1 - step(i.uv.y, -0.5);
 				return col;
 			}
 			ENDCG
