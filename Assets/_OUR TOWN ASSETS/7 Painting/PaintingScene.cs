@@ -106,7 +106,7 @@ public class PaintingScene : MonoBehaviour {
         for (int i = 0; i < 17; i++)
         {
             startTime = Time.time;
-            fadeDuration = 16f;
+            fadeDuration = 1f; //1 for testing mic, 16 for show
             while (Time.time - startTime < fadeDuration)
             {
                 buildMat.SetVector("level", new Vector4(i, (Time.time - startTime) / fadeDuration, 0f, 0f));

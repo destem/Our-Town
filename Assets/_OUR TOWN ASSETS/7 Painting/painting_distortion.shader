@@ -131,19 +131,26 @@ Shader "Our Town/painting_distortion"
 
 			fixed4 frag (v2f i) : SV_Target
 			{
+				i.uv -= 0.5; // for centering vertically
+				i.uv.y /= .22222; //for scaling to 16:9 aspect ratio
+
 				float smallxOffset = snoise(float2(_Time.y*15.0, i.uv.y*80.0))*0.001;
 				float largexOffset = snoise(float2(_Time.y*.5,i.uv.y*25.0))*0.002;
 				float smallyOffset = snoise(float2(_Time.y*15.0, i.uv.x*80.0))*0.005;
 				float largeyOffset = snoise(float2(_Time.y*1.5, i.uv.x*20.0))*0.01;
 				//float2 offset = float2(snoise(float2(_Time.y / 10, i.uv.y)*10.)*.1, snoise(float2(i.uv.x, _Time.y / 10) * 10)* .1) * _Loudness;
 				float2 offset = float2(smallxOffset + largexOffset, smallyOffset + largeyOffset)* clamp(_Loudness - _Edge, 0, 100) * step(_Edge, _Loudness);
+				offset += 0.5;
 				//fixed4 col = tex2D(_MainTex, i.uv + offset);
 				fixed4 currentCol = UNITY_SAMPLE_TEX2DARRAY(_Painting, float3(i.uv.x + offset.x, i.uv.y + offset.y, level.x));
 				fixed4 previousCol = UNITY_SAMPLE_TEX2DARRAY(_Painting, float3(i.uv.x + offset.x, i.uv.y + offset.y, level.x - 1));
 				float noise = tex2D(_Noise, float2(i.uv.x * 16, i.uv.y*2) + offset).r;
 				//float derp = fbm(i.uv * 100);
 				//col = fixed4(derp, derp, derp, 1.);
-				return lerp(currentCol, previousCol, level.y);// step(noise, level.y));
+				fixed4 col = lerp(currentCol, previousCol, level.y);// step(noise, level.y));
+				col *= step(i.uv.y, 0.5);
+				col *= 1 - step(i.uv.y, -0.5);
+				return col;
 			}
 			ENDCG
 		}
