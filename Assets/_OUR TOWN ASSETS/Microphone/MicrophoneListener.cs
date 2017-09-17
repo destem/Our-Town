@@ -45,6 +45,10 @@ public class MicrophoneListener : MonoBehaviour
 
     void Start()
     {
+        foreach (string device in Microphone.devices)
+        {
+            Debug.Log("Name: " + device);
+        }
         //start the microphone listener
         if (startMicOnStartup)
         {
@@ -148,7 +152,7 @@ public class MicrophoneListener : MonoBehaviour
             //pause a little before setting clip to avoid lag and bugginess
             if (Time.time - timeSinceRestart > 0.5f && !Microphone.IsRecording(null))
             {
-                src.clip = Microphone.Start(null, true, 10, 44100);
+                src.clip = Microphone.Start("Microphone (Logitech Wireless Headset H760)", true, 10, 44100);
 
                 //wait until microphone position is found (?)
                 while (!(Microphone.GetPosition(null) > 0))
