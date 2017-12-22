@@ -126,6 +126,12 @@ public class GestureTest : MonoBehaviour {
                     StartCoroutine(Success());
                 }
                 break;
+            case KinectGestures.Gestures.Shrug:
+                if (gesture.IsShrug())
+                {
+                    StartCoroutine(Success());
+                }
+                break;
 
         }
     }
@@ -204,6 +210,10 @@ public class GestureTest : MonoBehaviour {
             case "LeanRight":
                 t.text = "LEAN RIGHT";
                 gesture.SetCurrentGesture(KinectGestures.Gestures.LeanRight);
+                break;
+            case "Shrug":
+                t.text = "SHRUG";
+                gesture.SetCurrentGesture(KinectGestures.Gestures.Shrug);
                 break;
         }
 

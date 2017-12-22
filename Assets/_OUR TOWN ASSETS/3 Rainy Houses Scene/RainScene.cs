@@ -117,8 +117,8 @@ public class RainScene : MonoBehaviour {
                     Graphics.Blit(buff2, final2, growMat2);
                     Graphics.Blit(final2, buff2, growMat2);
                 }
-                Graphics.Blit(buff, dest, displayMat);
-                //Graphics.Blit(buff, dest);
+                //Graphics.Blit(buff, dest, displayMat);
+                Graphics.Blit(buff2, dest);
                 ResetUVs();
                 break;
             }

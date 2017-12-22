@@ -40,6 +40,7 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
     private bool headTilt;
     private bool forearmWave;
     private bool forearmPivot;
+    private bool shrug;
     private bool currentGestureComplete;
 
 
@@ -340,6 +341,16 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
         return false;
     }
 
+    public bool IsShrug()
+    {
+        if (shrug)
+        {
+            shrug = false;
+            return true;
+        }
+        return false;
+    }
+
     public void ClearGestureSuccess()
     {
         currentGestureComplete = false;
@@ -468,11 +479,11 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
         currentGestureComplete = true;
 
         if (gesture == KinectGestures.Gestures.SwipeLeft)
-			swipeLeft = true;
-		else if(gesture == KinectGestures.Gestures.SwipeRight)
-			swipeRight = true;
-		else if(gesture == KinectGestures.Gestures.SwipeUp)
-			swipeUp = true;
+            swipeLeft = true;
+        else if (gesture == KinectGestures.Gestures.SwipeRight)
+            swipeRight = true;
+        else if (gesture == KinectGestures.Gestures.SwipeUp)
+            swipeUp = true;
         else if (gesture == KinectGestures.Gestures.SwipeDown)
             swipeDown = true;
         else if (gesture == KinectGestures.Gestures.Psi)
@@ -509,6 +520,8 @@ public class OurTownGestureListener : MonoBehaviour, KinectGestures.GestureListe
             forearmPivot = true;
         else if (gesture == KinectGestures.Gestures.LeanRight)
             leanRight = true;
+        else if (gesture == KinectGestures.Gestures.Shrug)
+            shrug = true;
 
         return true;
 	}
